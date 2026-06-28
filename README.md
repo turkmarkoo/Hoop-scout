@@ -10,21 +10,15 @@ GitHub Pages, and it works offline / from `file://` too (handy courtside).
 - `scraper.js` — browser snippet to pull numbers/positions/stats off FIBA
 
 ## What's in the data now
-`players.js` is populated with the **official confirmed player lists for all 16
-teams** (announced 26 Jun 2026) — 261 players.
+`players.js` holds the **official 12-man game rosters for all 16 teams** — 192
+players — scraped from the FIBA team pages (Detailed view). Each player has:
+number, full name, position (G/F/C), birth year, height (in **centimetres**),
+and club.
 
-Two honest caveats:
-- **Names only.** Jersey numbers, positions, heights and birth years aren't in
-  the public roster text, so they're blank (shown as `#` / `–`) until you add
-  them. Stats are empty until games are scraped.
-- **Pools vs final 12.** Nine teams published a full training-camp pool (more
-  than 12); those are tagged `rosterType:"pool"` and flagged "full pool" in the
-  header — the 12 that dress for a game may be a subset. Teams with exactly 12
-  (Australia, Canada, Japan, Lithuania, New Zealand, Puerto Rico, USA) are
-  `final12`.
-
-Source of names: FIBA's confirmed rosters (republished in plain text by
-TalkBasket). Verify against the live FIBA team pages at the event if in doubt.
+These are the actual rosters FIBA fields, which differ in places from the
+pre-tournament squad announcements (e.g. Australia dress Alex Edwards #31, not
+Isaiah Jorgenson). Stats are still empty — `gp:0` and an empty `gamelog` — until
+game data is added; that's the next pass.
 
 ## Run it
 - **Locally:** open `index.html` in a browser. Done.

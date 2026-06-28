@@ -370,7 +370,7 @@ function playerCard(p){
       <div class="num">${p.number!=null?p.number:'<span class="tbd">#</span>'}</div>
       <div>
         <div class="pname">${p.name}</div>
-        <div class="pmeta">${p.pos||"–"}<span class="dot">·</span>${p.height?p.height+"m":"–"}<span class="dot">·</span>${p.birthYear?"'"+String(p.birthYear).slice(2):"–"}</div>
+        <div class="pmeta">${p.pos||"–"}<span class="dot">·</span>${p.height?(p.height/100).toFixed(2)+"m":"–"}<span class="dot">·</span>${p.birthYear?"'"+String(p.birthYear).slice(2):"–"}</div>
       </div>
     </div>
     <div class="statline">
@@ -466,8 +466,9 @@ function openPlayer(id){
         <span class="chip"><b>${t.code}</b> ${t.name}</span>
         <span class="chip">Group ${t.group}</span>
         <span class="chip">${p.pos||"–"}</span>
-        <span class="chip">${p.height?p.height+" m":"–"}</span>
+        <span class="chip">${p.height?(p.height/100).toFixed(2)+" m":"–"}</span>
         <span class="chip">${p.birthYear?"b. "+p.birthYear:"–"}</span>
+        ${p.club?`<span class="chip">${p.club}</span>`:""}
         ${p._sample?`<span class="sample-tag" style="align-self:center">sample data</span>`:""}
       </div>
     </div>
