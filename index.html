@@ -255,6 +255,23 @@ button.brand:hover .mark b{color:var(--clay-deep)}
 .win-name{font-weight:700;color:var(--text)}
 .lose-name{font-weight:500;color:var(--muted)}
 
+/* clickable filter chips */
+.chip-btn{cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:4px 9px;transition:.12s;line-height:1.3}
+.chip-btn:hover{border-color:var(--clay);background:var(--clay-soft);color:var(--clay-deep)}
+.chip-btn b{color:var(--clay-deep);font-weight:600}
+
+/* percentile + average bars */
+.bar2{display:grid;grid-template-columns:38px 1fr 38px 30px;align-items:center;gap:10px}
+.bar2 .lab{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.track2{position:relative;height:8px;background:var(--panel-3);border-radius:99px}
+.fill2{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,var(--clay-deep),var(--clay));border-radius:99px}
+.avgmark{position:absolute;top:-3px;width:2px;height:14px;background:var(--text);opacity:.5;transform:translateX(-1px);border-radius:1px}
+.bar2 .val2{font-family:var(--mono);font-size:12px;color:var(--text);text-align:right}
+.pctl{font-family:var(--mono);font-size:11px;font-weight:700;color:#fff;text-align:center;border-radius:6px;padding:2px 0;min-width:26px}
+.barkey{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:10px;color:var(--muted-2);flex-wrap:wrap}
+.barkey .mk{width:2px;height:11px;background:var(--text);opacity:.5;display:inline-block}
+.barkey .sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+
 </style>
 </head>
 <body>
@@ -372,10 +389,54 @@ function homeView(){
     <div class="home-results">${(D.games||[]).map(neutralGameCard).join("")}</div>
     <p class="muted-note" style="margin-top:16px">Pick any of the 16 teams above for its roster, per-player event averages, photos and your scouting notes.</p>`;
 }
-function goHome(){ state.team=null; state.query=""; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); }
+function goHome(){ state.team=null; state.query=""; state.filter=null; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); }
 
 
-let state = { team:null, query:"" };
+let state = { team:null, query:"", filter:null };
+
+/* ---------- tournament averages & percentiles ---------- */
+const QUALIFIED = (D.players||[]).filter(p=>p.stats && p.stats.gp>0);
+const LEAGUE = {};
+["ppg","rpg","apg","spg","bpg","mpg"].forEach(k=>{
+  const vals = QUALIFIED.map(p=>p.stats[k]).filter(v=>v!=null && !isNaN(v)).sort((a,b)=>a-b);
+  const n = vals.length;
+  LEAGUE[k] = { vals, n, mean: n?vals.reduce((a,b)=>a+b,0)/n:0, max: n?vals[n-1]:0 };
+});
+function percentile(key,v){
+  const L=LEAGUE[key]; if(!L||!L.n||v==null||isNaN(v)) return null;
+  let below=0, equal=0;
+  for(const x of L.vals){ if(x<v) below++; else if(x===v) equal++; }
+  return Math.round((below + equal/2) / L.n * 100);
+}
+const pctlColor = p => p>=67 ? "#5E9E5E" : p>=34 ? "#C99A3C" : "#C6755B";
+function ordinal(n){ const s=["th","st","nd","rd"], v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); }
+
+/* ---------- tag filtering ---------- */
+function filterBy(type,value,label){
+  state.query=""; const sb=$("#search"); if(sb) sb.value="";
+  if(type==="team"){ state.team=value; state.filter=null; }
+  else { state.team=null; state.filter={type,value:String(value),label}; }
+  if(activeId){
+    if($("#noteArea")) setNote(activeId,{text:$("#noteArea").value});
+    $("#drawer").classList.remove("on"); $("#drawer").setAttribute("aria-hidden","true");
+    $("#scrim").classList.remove("on"); activeId=null;
+  }
+  render();
+}
+function clearFilter(){ state.filter=null; render(); }
+function matchesFilter(p,f){
+  if(f.type==="group") return teamById(p.teamId).group===f.value;
+  if(f.type==="pos")   return (p.pos||"")===f.value;
+  if(f.type==="birthYear") return String(p.birthYear)===f.value;
+  if(f.type==="club")  return (p.club||"")===f.value;
+  return false;
+}
+function filterTitle(f){
+  if(f.type==="pos") return {G:"Guards",F:"Forwards",C:"Centers"}[f.value]||f.value;
+  if(f.type==="group") return "Group "+f.value;
+  if(f.type==="birthYear") return "Born "+f.value;
+  return f.label || f.value;
+}
 
 /* ---------- top meta ---------- */
 $("#evtName").textContent = D.event.short || D.event.name || "";
@@ -395,7 +456,7 @@ function renderGroups(){
       const b = document.createElement("button");
       b.className = "team"+(state.team===tid?" active":"");
       b.innerHTML = `<span class="code">${t.code}</span><span class="nm">${t.name}</span><span class="ct">${count||""}</span>`;
-      b.onclick = ()=>{ state.team=tid; state.query=""; $("#search").value=""; render(); };
+      b.onclick = ()=>{ state.team=tid; state.query=""; state.filter=null; $("#search").value=""; render(); };
       row.appendChild(b);
     });
     col.appendChild(row); wrap.appendChild(col);
@@ -448,6 +509,12 @@ function render(){
     title = t.name; count = list.length;
     meta = `Group ${t.group} · <a href="${t.rosterUrl}" target="_blank" rel="noopener">FIBA roster ↗</a>`;
     if(t.rosterType==="pool") meta += ` <span class="poolnote" title="This is the full training-camp pool (${t.count} players). The final 12 that dress for a game may be a subset.">full pool · ${t.count}</span>`;
+  } else if(state.filter){
+    const f=state.filter;
+    list = D.players.filter(p=>matchesFilter(p,f))
+      .sort((a,b)=>((b.stats?.ppg??-1)-(a.stats?.ppg??-1)) || a.name.localeCompare(b.name));
+    title = filterTitle(f); count = list.length;
+    meta = `<a href="#" onclick="clearFilter();return false">clear ✕</a>`;
   } else {
     title = "Today's games"; list=null;
   }
@@ -475,25 +542,39 @@ function render(){
 let activeId=null, dirtyTimer=null;
 
 function statBars(s){
-  const defs=[["PTS",s.ppg,30],["REB",s.rpg,15],["AST",s.apg,12],["STL",s.spg,5],["BLK",s.bpg,5]];
-  return `<div class="bars">${defs.map(([lab,v,max])=>{
-    const w = Math.max(0,Math.min(100, (Number(v)||0)/max*100));
-    return `<div class="bar"><span class="lab">${lab}</span><span class="track"><span class="fill" style="width:${w}%"></span></span><span class="val">${fmt(v)}</span></div>`;
-  }).join("")}</div>`;
+  const defs=[["PTS","ppg"],["REB","rpg"],["AST","apg"],["STL","spg"],["BLK","bpg"]];
+  const rows = defs.map(([lab,key])=>{
+    const v=s[key]; const L=LEAGUE[key]||{mean:0,max:0};
+    const scale = L.max || 1;
+    const w = Math.max(0,Math.min(100,(Number(v)||0)/scale*100));
+    const avgPos = Math.max(0,Math.min(100,(L.mean||0)/scale*100));
+    const pl = (v==null||isNaN(v)) ? null : percentile(key,v);
+    const col = pl==null ? "var(--muted-2)" : pctlColor(pl);
+    return `<div class="bar2">
+      <span class="lab">${lab}</span>
+      <span class="track2"><span class="fill2" style="width:${w}%"></span><span class="avgmark" style="left:${avgPos}%" title="Tournament avg: ${fmt(L.mean)}"></span></span>
+      <span class="val2">${fmt(v)}</span>
+      <span class="pctl" style="background:${col}" title="${pl!=null?ordinal(pl)+" percentile at the event":"no data"}">${pl!=null?pl:"–"}</span>
+    </div>`;
+  }).join("");
+  return `<div class="bars">${rows}
+    <div class="barkey"><span class="mk"></span> tournament avg &nbsp;·&nbsp; percentile
+      <span class="sw" style="background:#C6755B"></span><span class="sw" style="background:#C99A3C"></span><span class="sw" style="background:#5E9E5E"></span> low→high (100 = best)</div>
+  </div>`;
 }
 
 function gameLog(rows){
-  if(!rows||!rows.length) return `<p style="color:var(--muted-2);font-size:13px;margin:0">No games logged yet.</p>`;
-  const head = ["Game","MIN","PTS","REB","AST","STL","BLK","TO","FG","3P","FT"];
-  const body = rows.map(g=>{
-    const wl = (g.res||"").trim().charAt(0).toUpperCase();
-    const resCls = wl==="W"?"res-w":wl==="L"?"res-l":"";
-    const opp = g.opp? `vs ${g.opp}` : (g.date||"");
+  if(!rows||!rows.length) return `<p class="muted-note">No game log available for this player yet.</p>`;
+  const head=["Date","Opp","MIN","PTS","REB","AST","STL","BLK","TO","FG%","3P%","FT%"];
+  const body=rows.map(g=>{
+    const wl=(g.res||"").charAt(0).toUpperCase();
+    const rc=wl==="W"?"res-w":wl==="L"?"res-l":"";
     return `<tr>
-      <td><span class="${resCls}">${opp}</span></td>
+      <td>${g.date||"–"}</td>
+      <td><span class="${rc}">${wl?wl+" ":""}${g.opp||g.oppName||""}</span></td>
       <td>${g.min??"–"}</td><td class="pts">${g.pts??"–"}</td><td>${g.reb??"–"}</td>
       <td>${g.ast??"–"}</td><td>${g.stl??"–"}</td><td>${g.blk??"–"}</td><td>${g.to??"–"}</td>
-      <td>${g.fgm??"–"}/${g.fga??"–"}</td><td>${g.tpm??"–"}/${g.tpa??"–"}</td><td>${g.ftm??"–"}/${g.fta??"–"}</td>
+      <td>${pct(g.fgPct)}</td><td>${pct(g.tpPct)}</td><td>${pct(g.ftPct)}</td>
     </tr>`;
   }).join("");
   return `<div class="logwrap"><table class="log"><thead><tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>`;
@@ -515,14 +596,12 @@ function openPlayer(id){
         <span class="dr-name">${p.name}</span>
       </div>
       <div class="dr-tags">
-        <span class="chip"><b>${t.code}</b> ${t.name}</span>
-        <span class="chip">Group ${t.group}</span>
-        ${t.record?`<span class="chip"><b>${t.record.w}-${t.record.l}</b> · ${t.record.pts} pts</span>`:""}
-        <span class="chip">${p.pos||"–"}</span>
+        <button class="chip-btn" data-ft="team" data-fv="${t.id}"><b>${t.code}</b> ${t.name}</button>
+        <button class="chip-btn" data-ft="group" data-fv="${t.group}">Group ${t.group}</button>
+        ${p.pos?`<button class="chip-btn" data-ft="pos" data-fv="${p.pos}">${p.pos}</button>`:""}
         <span class="chip">${p.height?(p.height/100).toFixed(2)+" m":"–"}</span>
-        <span class="chip">${p.birthYear?"b. "+p.birthYear:"–"}</span>
-        ${p.club?`<span class="chip">${p.club}</span>`:""}
-        ${p._sample?`<span class="sample-tag" style="align-self:center">sample data</span>`:""}
+        ${p.birthYear?`<button class="chip-btn" data-ft="birthYear" data-fv="${p.birthYear}">b. ${p.birthYear}</button>`:""}
+        ${p.club?`<button class="chip-btn" data-ft="club" data-fv="${String(p.club).replace(/"/g,'&quot;')}">${p.club}</button>`:""}
       </div>
     </div>
 
@@ -547,8 +626,8 @@ function openPlayer(id){
       </div>
 
       <div class="dr-sec">
-        <h4>${t.name} · results</h4>
-        <div id="drResults">${teamGames(p.teamId)}<div style="margin-top:14px">${standings(t.group, p.teamId)}</div></div>
+        <h4>Game log</h4>
+        ${gameLog(p.gamelog)}
       </div>
 
       <div class="notes">
@@ -574,6 +653,7 @@ function openPlayer(id){
 
   // wire up
   $("#drClose").onclick = closeDrawer;
+  dr.querySelectorAll(".chip-btn").forEach(b=>{ b.onclick = ()=> filterBy(b.dataset.ft, b.dataset.fv, b.textContent.trim()); });
   $("#scrim").classList.add("on");
   dr.classList.add("on"); dr.setAttribute("aria-hidden","false");
 
@@ -638,7 +718,7 @@ document.addEventListener("keydown", e=>{ if(e.key==="Escape" && activeId) close
 let searchTimer=null;
 $("#search").addEventListener("input", e=>{
   clearTimeout(searchTimer);
-  searchTimer=setTimeout(()=>{ state.query=e.target.value.trim(); render(); },120);
+  searchTimer=setTimeout(()=>{ state.query=e.target.value.trim(); state.filter=null; render(); },120);
 });
 
 /* ---------- export / import notes ---------- */
