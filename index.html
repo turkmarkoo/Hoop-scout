@@ -287,6 +287,11 @@ a.logopp:hover{text-decoration:underline}
 .statstable tbody tr{cursor:pointer;transition:background .1s}
 .statstable tbody tr:hover td{background:var(--clay-soft)}
 .statstable tbody tr:hover td.hi{background:var(--clay);color:#fff}
+.statsubtabs{display:inline-flex;gap:4px;background:var(--panel-3);border:1px solid var(--line);border-radius:9px;padding:3px;margin-bottom:14px}
+.statsubtabs .subtab{font-family:var(--disp);font-size:12px;font-weight:600;letter-spacing:.03em;color:var(--muted);background:none;border:0;border-radius:6px;padding:6px 15px;cursor:pointer;transition:.12s}
+.statsubtabs .subtab:hover{color:var(--clay-deep)}
+.statsubtabs .subtab.on{background:var(--panel);color:var(--clay-deep);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.adv-note{margin-top:12px;font-size:11px;line-height:1.55;max-width:760px}
 
 /* clickable filter chips */
 .chip-btn{cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:4px 9px;transition:.12s;line-height:1.3}
@@ -434,7 +439,7 @@ function homeView(){
 function goHome(){ state.team=null; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); }
 
 
-let state = { team:null, query:"", filter:null, view:"board", sortKey:"ppg", sortDir:"desc" };
+let state = { team:null, query:"", filter:null, view:"board", statsTab:"basic", sortKey:"ppg", sortDir:"desc" };
 
 /* ---------- tournament averages & percentiles ---------- */
 const QUALIFIED = (D.players||[]).filter(p=>p.stats && p.stats.gp>0);
@@ -537,47 +542,74 @@ function playerCard(p){
 }
 
 /* ---------- stats table (sortable) ---------- */
+const STAT_COLS = {
+  basic: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["ppg","PTS","Points per game"],["rpg","REB","Rebounds per game"],["apg","AST","Assists per game"],["spg","STL","Steals per game"],["bpg","BLK","Blocks per game"],["tpg","TO","Turnovers per game"],["fgPct","FG%","Field-goal %"],["tpPct","3P%","Three-point %"],["ftPct","FT%","Free-throw %"]],
+  advanced: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["p36","P36","Points per 36 minutes (rate-normalised)"],["r36","R36","Rebounds per 36 minutes"],["a36","A36","Assists per 36 minutes"],["astto","A/TO","Assists per turnover — playmaking control"],["stk","STK","Stocks: steals + blocks per game"],["prod","PROD","Box production: PTS+REB+AST+STL+BLK − TO (no missed-shot penalty — shot attempts aren't in the data)"]]
+};
+function metric(p,key){
+  const s=p.stats||{}; const m=s.mpg||0;
+  switch(key){
+    case "p36": return m>0 ? s.ppg/m*36 : 0;
+    case "r36": return m>0 ? s.rpg/m*36 : 0;
+    case "a36": return m>0 ? s.apg/m*36 : 0;
+    case "astto": return s.tpg>0 ? s.apg/s.tpg : (s.apg>0 ? Infinity : 0);
+    case "stk": return (s.spg||0)+(s.bpg||0);
+    case "prod": return (s.ppg||0)+(s.rpg||0)+(s.apg||0)+(s.spg||0)+(s.bpg||0)-(s.tpg||0);
+    default: return (s[key]!=null ? s[key] : -Infinity);
+  }
+}
+function statCell(p,key){
+  const s=p.stats||{};
+  if(key==="pos") return p.pos||"–";
+  if(key==="gp") return s.gp??"–";
+  if(key==="fgPct"||key==="tpPct"||key==="ftPct") return pct(s[key]);
+  if(key==="astto"){ const v=metric(p,"astto"); return isFinite(v) ? v.toFixed(2) : (s.apg>0?"∞":"–"); }
+  return fmt(metric(p,key));
+}
 function sortedPlayers(){
   const key=state.sortKey||"ppg", dir=state.sortDir||"desc";
   const list=D.players.filter(p=>p.stats && p.stats.gp>0).slice();
   const val=p=> key==="name" ? p.name.toLowerCase()
             : key==="team" ? teamById(p.teamId).name.toLowerCase()
             : key==="pos"  ? (p.pos||"")
-            : (p.stats[key]!=null ? p.stats[key] : -Infinity);
+            : metric(p,key);
   list.sort((a,b)=>{
     const x=val(a), y=val(b);
     if(typeof x==="string"){ return dir==="asc" ? x.localeCompare(y) : y.localeCompare(x); }
-    return dir==="asc" ? x-y : y-x;
+    if(x===y) return 0;
+    return dir==="asc" ? (x-y) : (y-x);
   });
   return list;
 }
 function statsView(){
-  const cols=[["pos","POS"],["gp","GP"],["mpg","MIN"],["ppg","PTS"],["rpg","REB"],["apg","AST"],["spg","STL"],["bpg","BLK"],["tpg","TO"],["fgPct","FG%"],["tpPct","3P%"],["ftPct","FT%"]];
-  const list=sortedPlayers();
+  const tab = state.statsTab==="advanced" ? "advanced" : "basic";
+  const cols = STAT_COLS[tab];
+  const list = sortedPlayers();
   const ar=k=> state.sortKey===k ? `<span class="sortar">${state.sortDir==="asc"?"▲":"▼"}</span>` : "";
+  const toggle = `<div class="statsubtabs">
+    <button class="subtab${tab==="basic"?" on":""}" data-tab="basic">Per game</button>
+    <button class="subtab${tab==="advanced"?" on":""}" data-tab="advanced">Advanced</button>
+  </div>`;
   const head=`<tr>
     <th class="rk">#</th>
     <th class="pl sortable${state.sortKey==="name"?" on":""}" data-k="name">Player${ar("name")}</th>
     <th class="sortable${state.sortKey==="team"?" on":""}" data-k="team">Team${ar("team")}</th>
-    ${cols.map(([k,l])=>`<th class="sortable${state.sortKey===k?" on":""}" data-k="${k}">${l}${ar(k)}</th>`).join("")}
+    ${cols.map(([k,l,tip])=>`<th class="sortable${state.sortKey===k?" on":""}" data-k="${k}" title="${tip}">${l}${ar(k)}</th>`).join("")}
   </tr>`;
   const body=list.map((p,i)=>{
-    const s=p.stats, t=teamById(p.teamId);
+    const t=teamById(p.teamId);
+    const cells=cols.map(([k])=>`<td class="${state.sortKey===k?"hi":""}">${statCell(p,k)}</td>`).join("");
     return `<tr class="srow" data-id="${p.id}">
       <td class="rk">${i+1}</td>
       <td class="pl"><span class="snum">${p.number!=null?p.number:""}</span> ${p.name}</td>
       <td class="tm">${t.code}</td>
-      <td>${p.pos||"–"}</td><td>${s.gp??"–"}</td><td>${fmt(s.mpg)}</td>
-      <td class="${state.sortKey==="ppg"?"hi":""}">${fmt(s.ppg)}</td>
-      <td class="${state.sortKey==="rpg"?"hi":""}">${fmt(s.rpg)}</td>
-      <td class="${state.sortKey==="apg"?"hi":""}">${fmt(s.apg)}</td>
-      <td class="${state.sortKey==="spg"?"hi":""}">${fmt(s.spg)}</td>
-      <td class="${state.sortKey==="bpg"?"hi":""}">${fmt(s.bpg)}</td>
-      <td class="${state.sortKey==="tpg"?"hi":""}">${fmt(s.tpg)}</td>
-      <td>${pct(s.fgPct)}</td><td>${pct(s.tpPct)}</td><td>${pct(s.ftPct)}</td>
+      ${cells}
     </tr>`;
   }).join("");
-  return `<div class="statswrap"><table class="statstable"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+  const note = tab==="advanced"
+    ? `<p class="muted-note adv-note"><b>P36 / R36 / A36</b> per-36-minute rates · <b>A/TO</b> assists per turnover · <b>STK</b> steals + blocks · <b>PROD</b> = PTS+REB+AST+STL+BLK − TO. Rates are extrapolated from games played so far; true-shooting/usage metrics need raw shot attempts, which aren't in this snapshot.</p>`
+    : "";
+  return toggle + `<div class="statswrap"><table class="statstable"><thead>${head}</thead><tbody>${body}</tbody></table></div>` + note;
 }
 
 function render(){
@@ -590,6 +622,14 @@ function render(){
     const cEl=$("#secCount"); cEl.hidden=false; cEl.textContent = `${sortedPlayers().length} players`;
     $("#secMeta").innerHTML = `Tap a column to sort · tap a player for their card`;
     board.innerHTML = statsView();
+    board.querySelectorAll(".subtab").forEach(sub=>{
+      sub.onclick = ()=>{ const tb=sub.dataset.tab; if(tb===state.statsTab) return;
+        state.statsTab=tb;
+        const shared=["name","team","pos","gp","mpg"];
+        if(!shared.includes(state.sortKey)){ state.sortKey = tb==="advanced"?"prod":"ppg"; state.sortDir="desc"; }
+        render();
+      };
+    });
     board.querySelectorAll("th.sortable").forEach(th=>{
       th.onclick = ()=>{ const k=th.dataset.k;
         if(state.sortKey===k){ state.sortDir = state.sortDir==="asc"?"desc":"asc"; }
