@@ -297,7 +297,8 @@ window.HOOPDATA = {
       "b": "JPN",
       "sa": 93,
       "sb": 64,
-      "status": "final"
+      "status": "final",
+      "time": "2026-06-27T15:00:00Z"
     },
     {
       "id": "114411",
@@ -307,7 +308,8 @@ window.HOOPDATA = {
       "b": "FRA",
       "sa": 115,
       "sb": 84,
-      "status": "final"
+      "status": "final",
+      "time": "2026-06-27T14:30:00Z"
     },
     {
       "id": "114410",
@@ -317,7 +319,8 @@ window.HOOPDATA = {
       "b": "ITA",
       "sa": 79,
       "sb": 63,
-      "status": "final"
+      "status": "final",
+      "time": "2026-06-28T12:15:00Z"
     },
     {
       "id": "114414",
@@ -327,7 +330,8 @@ window.HOOPDATA = {
       "b": "USA",
       "sa": 66,
       "sb": 128,
-      "status": "final"
+      "status": "final",
+      "time": "2026-06-28T11:45:00Z"
     },
     {
       "id": "114409",
@@ -337,7 +341,8 @@ window.HOOPDATA = {
       "b": "USA",
       "sa": 0,
       "sb": 0,
-      "status": "sched"
+      "status": "sched",
+      "time": "2026-06-30T09:00:00Z"
     },
     {
       "id": "114413",
@@ -347,7 +352,8 @@ window.HOOPDATA = {
       "b": "JPN",
       "sa": 0,
       "sb": 0,
-      "status": "sched"
+      "status": "sched",
+      "time": "2026-06-30T09:00:00Z"
     },
     {
       "id": "114416",
@@ -357,7 +363,8 @@ window.HOOPDATA = {
       "b": "CHN",
       "sa": 72,
       "sb": 90,
-      "status": "final"
+      "status": "final",
+      "time": "2026-06-27T09:30:00Z"
     },
     {
       "id": "114419",
@@ -367,7 +374,8 @@ window.HOOPDATA = {
       "b": "LTU",
       "sa": 89,
       "sb": 103,
-      "status": "final"
+      "status": "final",
+      "time": "2026-06-27T09:00:00Z"
     },
     {
       "id": "114417",
@@ -377,7 +385,8 @@ window.HOOPDATA = {
       "b": "CMR",
       "sa": 0,
       "sb": 0,
-      "status": "sched"
+      "status": "sched",
+      "time": "2026-06-28T14:30:00Z"
     },
     {
       "id": "114415",
@@ -387,7 +396,8 @@ window.HOOPDATA = {
       "b": "CAN",
       "sa": 0,
       "sb": 0,
-      "status": "sched"
+      "status": "sched",
+      "time": "2026-06-28T15:00:00Z"
     },
     {
       "id": "114418",
@@ -397,7 +407,8 @@ window.HOOPDATA = {
       "b": "CAN",
       "sa": 0,
       "sb": 0,
-      "status": "sched"
+      "status": "sched",
+      "time": "2026-06-30T11:45:00Z"
     },
     {
       "id": "114420",
@@ -407,7 +418,8 @@ window.HOOPDATA = {
       "b": "CHN",
       "sa": 0,
       "sb": 0,
-      "status": "sched"
+      "status": "sched",
+      "time": "2026-06-30T11:45:00Z"
     },
     {
       "id": "114423",
@@ -417,7 +429,8 @@ window.HOOPDATA = {
       "b": "TUR",
       "sa": 100,
       "sb": 112,
-      "status": "final"
+      "status": "final",
+      "time": "2026-06-27T17:15:00Z"
     },
     {
       "id": "114424",
@@ -427,7 +440,8 @@ window.HOOPDATA = {
       "b": "PUR",
       "sa": 78,
       "sb": 92,
-      "status": "final"
+      "status": "final",
+      "time": "2026-06-27T17:45:00Z"
     },
     {
       "id": "114425",
@@ -437,7 +451,8 @@ window.HOOPDATA = {
       "b": "NZL",
       "sa": 0,
       "sb": 0,
-      "status": "sched"
+      "status": "sched",
+      "time": "2026-06-28T17:45:00Z"
     },
     {
       "id": "114422",
@@ -447,7 +462,8 @@ window.HOOPDATA = {
       "b": "SLO",
       "sa": 0,
       "sb": 0,
-      "status": "sched"
+      "status": "sched",
+      "time": "2026-06-28T17:15:00Z"
     },
     {
       "id": "114426",
@@ -457,7 +473,8 @@ window.HOOPDATA = {
       "b": "SLO",
       "sa": 0,
       "sb": 0,
-      "status": "sched"
+      "status": "sched",
+      "time": "2026-06-30T17:15:00Z"
     },
     {
       "id": "114421",
@@ -467,7 +484,8 @@ window.HOOPDATA = {
       "b": "TUR",
       "sa": 0,
       "sb": 0,
-      "status": "sched"
+      "status": "sched",
+      "time": "2026-06-30T17:15:00Z"
     },
     {
       "id": "114430",
@@ -477,7 +495,8 @@ window.HOOPDATA = {
       "b": "CIV",
       "sa": 63,
       "sb": 74,
-      "status": "final"
+      "status": "final",
+      "time": "2026-06-27T12:15:00Z"
     },
     {
       "id": "114429",
@@ -487,7 +506,8 @@ window.HOOPDATA = {
       "b": "SRB",
       "sa": 88,
       "sb": 66,
-      "status": "final"
+      "status": "final",
+      "time": "2026-06-27T11:45:00Z"
     },
     {
       "id": "114427",
@@ -497,7 +517,8 @@ window.HOOPDATA = {
       "b": "VEN",
       "sa": 84,
       "sb": 53,
-      "status": "final"
+      "status": "final",
+      "time": "2026-06-28T09:00:00Z"
     },
     {
       "id": "114432",
@@ -507,7 +528,8 @@ window.HOOPDATA = {
       "b": "AUS",
       "sa": 73,
       "sb": 78,
-      "status": "final"
+      "status": "final",
+      "time": "2026-06-28T09:30:00Z"
     },
     {
       "id": "114431",
@@ -517,7 +539,8 @@ window.HOOPDATA = {
       "b": "AUS",
       "sa": 0,
       "sb": 0,
-      "status": "sched"
+      "status": "sched",
+      "time": "2026-06-30T14:30:00Z"
     },
     {
       "id": "114428",
@@ -527,7 +550,8 @@ window.HOOPDATA = {
       "b": "CIV",
       "sa": 0,
       "sb": 0,
-      "status": "sched"
+      "status": "sched",
+      "time": "2026-06-30T14:30:00Z"
     }
   ],
   "players": [
