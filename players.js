@@ -45,7 +45,7 @@ window.HOOPDATA = {
       "cote-divoire"
     ]
   },
-  "updated": "2026-06-28T14:24:53.368Z",
+  "updated": "2026-06-28T16:04:33.009Z",
   "teams": [
     {
       "id": "italy",
@@ -58,8 +58,8 @@ window.HOOPDATA = {
         "w": 1,
         "l": 1,
         "pts": 3,
-        "diff": 13,
-        "pf": 156
+        "diff": 9,
+        "pf": 161
       }
     },
     {
@@ -88,8 +88,8 @@ window.HOOPDATA = {
         "w": 1,
         "l": 1,
         "pts": 3,
-        "diff": -15,
-        "pf": 163
+        "diff": -11,
+        "pf": 172
       }
     },
     {
@@ -317,8 +317,8 @@ window.HOOPDATA = {
       "date": "2026-06-28",
       "a": "FRA",
       "b": "ITA",
-      "sa": 79,
-      "sb": 63,
+      "sa": 88,
+      "sb": 68,
       "status": "final",
       "time": "2026-06-28T12:15:00Z"
     },
@@ -383,8 +383,8 @@ window.HOOPDATA = {
       "date": "2026-06-28",
       "a": "LTU",
       "b": "CMR",
-      "sa": 0,
-      "sb": 0,
+      "sa": 38,
+      "sb": 21,
       "status": "sched",
       "time": "2026-06-28T14:30:00Z"
     },
@@ -394,8 +394,8 @@ window.HOOPDATA = {
       "date": "2026-06-28",
       "a": "CHN",
       "b": "CAN",
-      "sa": 0,
-      "sb": 0,
+      "sa": 20,
+      "sb": 23,
       "status": "sched",
       "time": "2026-06-28T15:00:00Z"
     },
@@ -565,17 +565,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Olimpia Milano (ITA)",
       "stats": {
-        "gp": 1,
-        "mpg": 14.9,
-        "ppg": 9,
+        "gp": 2,
+        "mpg": 16,
+        "ppg": 5.5,
         "rpg": 2,
-        "apg": 4,
-        "spg": 1,
+        "apg": 3.5,
+        "spg": 0.5,
         "bpg": 0,
-        "tpg": 2,
-        "fgPct": 0.5,
-        "tpPct": 0.5,
-        "ftPct": 0
+        "tpg": 2.5,
+        "fgPct": 0.444,
+        "tpPct": 0.375,
+        "ftPct": 0,
+        "fgm": 2,
+        "fga": 4.5,
+        "tpm": 1.5,
+        "tpa": 4,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -607,17 +613,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Olimpia Milano (ITA)",
       "stats": {
-        "gp": 1,
-        "mpg": 19.6,
-        "ppg": 8,
-        "rpg": 4,
-        "apg": 4,
+        "gp": 2,
+        "mpg": 20.5,
+        "ppg": 8.5,
+        "rpg": 2,
+        "apg": 2.5,
         "spg": 1,
         "bpg": 0,
-        "tpg": 3,
-        "fgPct": 0.5,
-        "tpPct": 0.4,
-        "ftPct": 0
+        "tpg": 2,
+        "fgPct": 0.429,
+        "tpPct": 0.273,
+        "ftPct": 1,
+        "fgm": 3,
+        "fga": 7,
+        "tpm": 1.5,
+        "tpa": 5.5,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -649,17 +661,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Orange 1 Basket Bassano (ITA)",
       "stats": {
-        "gp": 1,
-        "mpg": 15.9,
-        "ppg": 13,
-        "rpg": 12,
+        "gp": 2,
+        "mpg": 14.3,
+        "ppg": 7.5,
+        "rpg": 8,
         "apg": 0,
-        "spg": 1,
-        "bpg": 2,
+        "spg": 0.5,
+        "bpg": 1.5,
         "tpg": 0,
-        "fgPct": 0.75,
+        "fgPct": 0.538,
         "tpPct": 0,
-        "ftPct": 0.25
+        "ftPct": 0.25,
+        "fgm": 3.5,
+        "fga": 6.5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0.5,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -691,17 +709,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Basket Santarcangelo SSDRL (ITA)",
       "stats": {
-        "gp": 1,
-        "mpg": 21.4,
-        "ppg": 17,
-        "rpg": 8,
+        "gp": 2,
+        "mpg": 19,
+        "ppg": 8.5,
+        "rpg": 6.5,
         "apg": 0,
         "spg": 0,
-        "bpg": 0,
-        "tpg": 2,
-        "fgPct": 0.545,
+        "bpg": 0.5,
+        "tpg": 3.5,
+        "fgPct": 0.462,
         "tpPct": 1,
-        "ftPct": 0.444
+        "ftPct": 0.444,
+        "fgm": 3,
+        "fga": 6.5,
+        "tpm": 0.5,
+        "tpa": 0.5,
+        "ftm": 2,
+        "fta": 4.5
       },
       "gamelog": [
         {
@@ -733,17 +757,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Acqua S.Bernardo Cantu (ITA)",
       "stats": {
-        "gp": 1,
-        "mpg": 26.6,
-        "ppg": 10,
-        "rpg": 12,
-        "apg": 1,
-        "spg": 0,
-        "bpg": 0,
-        "tpg": 2,
-        "fgPct": 0.4,
-        "tpPct": 0,
-        "ftPct": 0.4
+        "gp": 2,
+        "mpg": 29.1,
+        "ppg": 19.5,
+        "rpg": 9.5,
+        "apg": 0.5,
+        "spg": 1,
+        "bpg": 0.5,
+        "tpg": 2.5,
+        "fgPct": 0.536,
+        "tpPct": 0.5,
+        "ftPct": 0.7,
+        "fgm": 7.5,
+        "fga": 14,
+        "tpm": 1,
+        "tpa": 2,
+        "ftm": 3.5,
+        "fta": 5
       },
       "gamelog": [
         {
@@ -775,17 +805,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Vis 2008 Ferrara (ITA)",
       "stats": {
-        "gp": 1,
-        "mpg": 13.5,
-        "ppg": 3,
-        "rpg": 2,
+        "gp": 2,
+        "mpg": 8.2,
+        "ppg": 1.5,
+        "rpg": 1,
         "apg": 0,
         "spg": 0,
         "bpg": 0,
         "tpg": 0,
         "fgPct": 0.333,
         "tpPct": 0.5,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0.5,
+        "fga": 1.5,
+        "tpm": 0.5,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -817,17 +853,23 @@ window.HOOPDATA = {
       "birthYear": 2010,
       "club": "Olimpia Milano (ITA)",
       "stats": {
-        "gp": 1,
-        "mpg": 14.5,
-        "ppg": 8,
-        "rpg": 3,
-        "apg": 3,
+        "gp": 2,
+        "mpg": 21.4,
+        "ppg": 6.5,
+        "rpg": 3.5,
+        "apg": 2,
         "spg": 0,
         "bpg": 0,
         "tpg": 0,
-        "fgPct": 0.5,
-        "tpPct": 1,
-        "ftPct": 1
+        "fgPct": 0.455,
+        "tpPct": 0.667,
+        "ftPct": 1,
+        "fgm": 2.5,
+        "fga": 5.5,
+        "tpm": 1,
+        "tpa": 1.5,
+        "ftm": 0.5,
+        "fta": 0.5
       },
       "gamelog": [
         {
@@ -859,17 +901,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Olimpia Milano (ITA)",
       "stats": {
-        "gp": 1,
-        "mpg": 20.3,
-        "ppg": 5,
-        "rpg": 6,
+        "gp": 2,
+        "mpg": 24.7,
+        "ppg": 3.5,
+        "rpg": 4,
         "apg": 0,
         "spg": 0,
         "bpg": 0,
         "tpg": 1,
-        "fgPct": 0.286,
+        "fgPct": 0.273,
         "tpPct": 0,
-        "ftPct": 0.25
+        "ftPct": 0.25,
+        "fgm": 1.5,
+        "fga": 5.5,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 0.5,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -901,17 +949,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Basket Santarcangelo SSDRL (ITA)",
       "stats": {
-        "gp": 1,
-        "mpg": 14,
-        "ppg": 7,
-        "rpg": 1,
-        "apg": 4,
+        "gp": 2,
+        "mpg": 16.9,
+        "ppg": 5.5,
+        "rpg": 0.5,
+        "apg": 3.5,
         "spg": 1,
         "bpg": 0,
         "tpg": 2,
-        "fgPct": 0.4,
+        "fgPct": 0.308,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.375,
+        "fgm": 2,
+        "fga": 6.5,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 1.5,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -953,7 +1007,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.5,
         "tpPct": 0.333,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 2,
+        "fga": 4,
+        "tpm": 1,
+        "tpa": 3,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -995,7 +1055,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0.75
+        "ftPct": 0.75,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 3,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -1027,17 +1093,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Aquila Basket Trento (ITA)",
       "stats": {
-        "gp": 1,
-        "mpg": 14.8,
-        "ppg": 5,
+        "gp": 2,
+        "mpg": 17.8,
+        "ppg": 10,
         "rpg": 2,
-        "apg": 1,
-        "spg": 0,
+        "apg": 2,
+        "spg": 0.5,
         "bpg": 0,
-        "tpg": 4,
-        "fgPct": 0.333,
-        "tpPct": 0,
-        "ftPct": 0.5
+        "tpg": 2,
+        "fgPct": 0.5,
+        "tpPct": 0.4,
+        "ftPct": 0.5,
+        "fgm": 4,
+        "fga": 8,
+        "tpm": 1,
+        "tpa": 2.5,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -1069,17 +1141,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Notre Dame H.S. (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 15.7,
+        "gp": 2,
+        "mpg": 16,
         "ppg": 8,
-        "rpg": 2,
-        "apg": 2,
-        "spg": 2,
+        "rpg": 2.5,
+        "apg": 2.5,
+        "spg": 1,
         "bpg": 0,
-        "tpg": 0,
-        "fgPct": 0.5,
+        "tpg": 1.5,
+        "fgPct": 0.538,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 3.5,
+        "fga": 6.5,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -1111,17 +1189,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Hillgrove HS (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 22.7,
-        "ppg": 11,
-        "rpg": 6,
-        "apg": 2,
+        "gp": 2,
+        "mpg": 21.6,
+        "ppg": 9,
+        "rpg": 5,
+        "apg": 3,
         "spg": 0,
         "bpg": 0,
         "tpg": 1,
-        "fgPct": 0.714,
-        "tpPct": 0,
-        "ftPct": 0.333
+        "fgPct": 0.636,
+        "tpPct": 0.2,
+        "ftPct": 0.6,
+        "fgm": 3.5,
+        "fga": 5.5,
+        "tpm": 0.5,
+        "tpa": 2.5,
+        "ftm": 1.5,
+        "fta": 2.5
       },
       "gamelog": [
         {
@@ -1153,17 +1237,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Calvary Christian (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 16.7,
-        "ppg": 9,
-        "rpg": 5,
-        "apg": 6,
-        "spg": 0,
+        "gp": 2,
+        "mpg": 18.3,
+        "ppg": 6.5,
+        "rpg": 3.5,
+        "apg": 4,
+        "spg": 0.5,
         "bpg": 0,
-        "tpg": 1,
-        "fgPct": 0.6,
+        "tpg": 2,
+        "fgPct": 0.5,
         "tpPct": 0.5,
-        "ftPct": 0.667
+        "ftPct": 0.6,
+        "fgm": 2,
+        "fga": 4,
+        "tpm": 1,
+        "tpa": 2,
+        "ftm": 1.5,
+        "fta": 2.5
       },
       "gamelog": [
         {
@@ -1195,17 +1285,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Irmo HighSchool (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 11,
-        "ppg": 3,
-        "rpg": 1,
-        "apg": 2,
-        "spg": 1,
+        "gp": 2,
+        "mpg": 13.2,
+        "ppg": 7.5,
+        "rpg": 3,
+        "apg": 2.5,
+        "spg": 3,
         "bpg": 0,
-        "tpg": 1,
-        "fgPct": 0.333,
-        "tpPct": 0.5,
-        "ftPct": 0
+        "tpg": 2,
+        "fgPct": 0.7,
+        "tpPct": 0.333,
+        "ftPct": 0,
+        "fgm": 3.5,
+        "fga": 5,
+        "tpm": 0.5,
+        "tpa": 1.5,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -1237,17 +1333,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Broughton Magnet High School (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 13.8,
-        "ppg": 10,
-        "rpg": 2,
-        "apg": 2,
+        "gp": 2,
+        "mpg": 15.9,
+        "ppg": 10.5,
+        "rpg": 1.5,
+        "apg": 2.5,
         "spg": 1,
         "bpg": 0,
         "tpg": 1,
-        "fgPct": 1,
-        "tpPct": 0,
-        "ftPct": 1
+        "fgPct": 0.6,
+        "tpPct": 0.333,
+        "ftPct": 1,
+        "fgm": 3,
+        "fga": 5,
+        "tpm": 0.5,
+        "tpa": 1.5,
+        "ftm": 4,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -1279,17 +1381,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Eagles Landing High School (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 17.7,
-        "ppg": 14,
-        "rpg": 8,
-        "apg": 0,
-        "spg": 0,
-        "bpg": 0,
+        "gp": 2,
+        "mpg": 16.6,
+        "ppg": 19.5,
+        "rpg": 7.5,
+        "apg": 1,
+        "spg": 1,
+        "bpg": 0.5,
         "tpg": 1,
-        "fgPct": 0.6,
-        "tpPct": 0.333,
-        "ftPct": 1
+        "fgPct": 0.65,
+        "tpPct": 0.667,
+        "ftPct": 1,
+        "fgm": 6.5,
+        "fga": 10,
+        "tpm": 3,
+        "tpa": 4.5,
+        "ftm": 3.5,
+        "fta": 3.5
       },
       "gamelog": [
         {
@@ -1321,17 +1429,23 @@ window.HOOPDATA = {
       "birthYear": 2010,
       "club": "Faith Family Academy (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 14,
-        "ppg": 4,
-        "rpg": 1,
+        "gp": 2,
+        "mpg": 14.3,
+        "ppg": 5,
+        "rpg": 1.5,
         "apg": 1,
         "spg": 0,
-        "bpg": 2,
+        "bpg": 1.5,
         "tpg": 1,
-        "fgPct": 0.5,
+        "fgPct": 0.667,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0.5,
+        "fgm": 2,
+        "fga": 3,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -1363,17 +1477,23 @@ window.HOOPDATA = {
       "birthYear": 2010,
       "club": "Rainier Beach HS (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 6.6,
-        "ppg": 5,
+        "gp": 2,
+        "mpg": 9.7,
+        "ppg": 6.5,
         "rpg": 1,
-        "apg": 1,
-        "spg": 0,
+        "apg": 2.5,
+        "spg": 1,
         "bpg": 0,
-        "tpg": 1,
-        "fgPct": 0.4,
-        "tpPct": 0.25,
-        "ftPct": 0
+        "tpg": 0.5,
+        "fgPct": 0.5,
+        "tpPct": 0.375,
+        "ftPct": 0,
+        "fgm": 2.5,
+        "fga": 5,
+        "tpm": 1.5,
+        "tpa": 4,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -1405,17 +1525,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Southeastern Prep Academy (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 23.3,
-        "ppg": 23,
-        "rpg": 0,
-        "apg": 4,
-        "spg": 2,
-        "bpg": 1,
+        "gp": 2,
+        "mpg": 20.3,
+        "ppg": 21,
+        "rpg": 1.5,
+        "apg": 7,
+        "spg": 3,
+        "bpg": 0.5,
         "tpg": 1,
-        "fgPct": 0.643,
-        "tpPct": 0.556,
-        "ftPct": 0
+        "fgPct": 0.64,
+        "tpPct": 0.571,
+        "ftPct": 1,
+        "fgm": 8,
+        "fga": 12.5,
+        "tpm": 4,
+        "tpa": 7,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -1447,17 +1573,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "FC Barcelona (ESP)",
       "stats": {
-        "gp": 1,
-        "mpg": 21.5,
-        "ppg": 12,
-        "rpg": 5,
-        "apg": 2,
+        "gp": 2,
+        "mpg": 20.2,
+        "ppg": 14,
+        "rpg": 6,
+        "apg": 1,
         "spg": 1,
-        "bpg": 0,
+        "bpg": 3.5,
         "tpg": 3,
-        "fgPct": 0.625,
+        "fgPct": 0.75,
         "tpPct": 0.667,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 6,
+        "fga": 8,
+        "tpm": 2,
+        "tpa": 3,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -1489,17 +1621,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Northern Nash High School (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 19,
-        "ppg": 12,
-        "rpg": 7,
-        "apg": 0,
+        "gp": 2,
+        "mpg": 17.2,
+        "ppg": 10,
+        "rpg": 4,
+        "apg": 0.5,
         "spg": 0,
         "bpg": 0,
-        "tpg": 1,
-        "fgPct": 0.357,
+        "tpg": 0.5,
+        "fgPct": 0.381,
         "tpPct": 0.333,
-        "ftPct": 0.25
+        "ftPct": 0.333,
+        "fgm": 4,
+        "fga": 10.5,
+        "tpm": 1,
+        "tpa": 3,
+        "ftm": 1,
+        "fta": 3
       },
       "gamelog": [
         {
@@ -1531,17 +1669,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Madison-Ridgeland High School (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 18,
+        "gp": 2,
+        "mpg": 16.7,
         "ppg": 4,
-        "rpg": 7,
+        "rpg": 9,
         "apg": 2,
         "spg": 0,
-        "bpg": 1,
-        "tpg": 1,
-        "fgPct": 0.667,
+        "bpg": 0.5,
+        "tpg": 2,
+        "fgPct": 0.8,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 2,
+        "fga": 2.5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0.5
       },
       "gamelog": [
         {
@@ -1573,17 +1717,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "BCM Gravelines Dunkerque (FRA)",
       "stats": {
-        "gp": 1,
-        "mpg": 16.6,
+        "gp": 2,
+        "mpg": 13.7,
         "ppg": 3,
-        "rpg": 5,
-        "apg": 4,
-        "spg": 2,
+        "rpg": 3,
+        "apg": 2,
+        "spg": 1,
         "bpg": 0,
-        "tpg": 3,
-        "fgPct": 0.111,
-        "tpPct": 0.25,
-        "ftPct": 0
+        "tpg": 2,
+        "fgPct": 0.182,
+        "tpPct": 0.333,
+        "ftPct": 0,
+        "fgm": 1,
+        "fga": 5.5,
+        "tpm": 1,
+        "tpa": 3,
+        "ftm": 0,
+        "fta": 3
       },
       "gamelog": [
         {
@@ -1615,17 +1765,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Cholet Basket (FRA)",
       "stats": {
-        "gp": 1,
-        "mpg": 20.3,
-        "ppg": 16,
-        "rpg": 2,
-        "apg": 1,
+        "gp": 2,
+        "mpg": 22.4,
+        "ppg": 15,
+        "rpg": 3,
+        "apg": 2.5,
         "spg": 0,
-        "bpg": 0,
-        "tpg": 2,
-        "fgPct": 0.625,
-        "tpPct": 1,
-        "ftPct": 1
+        "bpg": 0.5,
+        "tpg": 1,
+        "fgPct": 0.588,
+        "tpPct": 0.667,
+        "ftPct": 1,
+        "fgm": 5,
+        "fga": 8.5,
+        "tpm": 3,
+        "tpa": 4.5,
+        "ftm": 2,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -1657,17 +1813,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Paris Basketball (FRA)",
       "stats": {
-        "gp": 1,
-        "mpg": 15.8,
-        "ppg": 0,
-        "rpg": 2,
-        "apg": 2,
-        "spg": 1,
+        "gp": 2,
+        "mpg": 12.9,
+        "ppg": 2.5,
+        "rpg": 1.5,
+        "apg": 1.5,
+        "spg": 0.5,
         "bpg": 0,
-        "tpg": 1,
-        "fgPct": 0,
+        "tpg": 0.5,
+        "fgPct": 0.667,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0.5,
+        "fgm": 1,
+        "fga": 1.5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0.5,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -1709,7 +1871,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -1741,17 +1909,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "JDA Dijon Basket (FRA)",
       "stats": {
-        "gp": 1,
-        "mpg": 18.4,
-        "ppg": 6,
-        "rpg": 3,
-        "apg": 3,
+        "gp": 2,
+        "mpg": 20.2,
+        "ppg": 7,
+        "rpg": 2.5,
+        "apg": 4,
         "spg": 1,
         "bpg": 0,
         "tpg": 1,
-        "fgPct": 0.5,
-        "tpPct": 0,
-        "ftPct": 0
+        "fgPct": 0.417,
+        "tpPct": 0.286,
+        "ftPct": 0.667,
+        "fgm": 2.5,
+        "fga": 6,
+        "tpm": 1,
+        "tpa": 3.5,
+        "ftm": 1,
+        "fta": 1.5
       },
       "gamelog": [
         {
@@ -1783,17 +1957,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Orleans Loiret Basket (FRA)",
       "stats": {
-        "gp": 1,
-        "mpg": 19.6,
-        "ppg": 8,
-        "rpg": 2,
+        "gp": 2,
+        "mpg": 16.4,
+        "ppg": 6,
+        "rpg": 1.5,
         "apg": 0,
-        "spg": 1,
+        "spg": 0.5,
         "bpg": 0,
         "tpg": 0,
-        "fgPct": 0.75,
-        "tpPct": 0.667,
-        "ftPct": 0
+        "fgPct": 0.667,
+        "tpPct": 0.5,
+        "ftPct": 1,
+        "fgm": 2,
+        "fga": 3,
+        "tpm": 1,
+        "tpa": 2,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -1825,17 +2005,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Nantes Basket Hermine (FRA)",
       "stats": {
-        "gp": 1,
-        "mpg": 21.7,
-        "ppg": 18,
-        "rpg": 7,
-        "apg": 2,
-        "spg": 2,
-        "bpg": 2,
-        "tpg": 3,
-        "fgPct": 0.857,
-        "tpPct": 0.5,
-        "ftPct": 0.833
+        "gp": 2,
+        "mpg": 26.6,
+        "ppg": 20.5,
+        "rpg": 6.5,
+        "apg": 1.5,
+        "spg": 1,
+        "bpg": 1.5,
+        "tpg": 2.5,
+        "fgPct": 0.65,
+        "tpPct": 0.429,
+        "ftPct": 0.8,
+        "fgm": 6.5,
+        "fga": 10,
+        "tpm": 1.5,
+        "tpa": 3.5,
+        "ftm": 6,
+        "fta": 7.5
       },
       "gamelog": [
         {
@@ -1867,17 +2053,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Pôle France (FRA)",
       "stats": {
-        "gp": 1,
-        "mpg": 21.6,
-        "ppg": 14,
-        "rpg": 2,
+        "gp": 2,
+        "mpg": 23.7,
+        "ppg": 11,
+        "rpg": 5,
         "apg": 0,
         "spg": 0,
         "bpg": 2,
-        "tpg": 0,
-        "fgPct": 0.875,
+        "tpg": 1.5,
+        "fgPct": 0.647,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 5.5,
+        "fga": 8.5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -1909,17 +2101,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Pôle France (FRA)",
       "stats": {
-        "gp": 1,
-        "mpg": 14.6,
-        "ppg": 2,
-        "rpg": 1,
-        "apg": 2,
-        "spg": 0,
+        "gp": 2,
+        "mpg": 17.6,
+        "ppg": 5.5,
+        "rpg": 2.5,
+        "apg": 1.5,
+        "spg": 0.5,
         "bpg": 0,
-        "tpg": 0,
-        "fgPct": 0.2,
+        "tpg": 0.5,
+        "fgPct": 0.364,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0.75,
+        "fgm": 2,
+        "fga": 5.5,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 1.5,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -1951,17 +2149,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "SQBB- JSC (FRA)",
       "stats": {
-        "gp": 1,
-        "mpg": 12.5,
-        "ppg": 5,
+        "gp": 2,
+        "mpg": 9.3,
+        "ppg": 3.5,
         "rpg": 1,
-        "apg": 2,
+        "apg": 1,
         "spg": 0,
         "bpg": 0,
-        "tpg": 2,
-        "fgPct": 1,
-        "tpPct": 1,
-        "ftPct": 0
+        "tpg": 1,
+        "fgPct": 0.5,
+        "tpPct": 0.25,
+        "ftPct": 0,
+        "fgm": 1.5,
+        "fga": 3,
+        "tpm": 0.5,
+        "tpa": 2,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -1993,17 +2197,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Cholet Basket (FRA)",
       "stats": {
-        "gp": 1,
-        "mpg": 18,
-        "ppg": 7,
-        "rpg": 0,
-        "apg": 2,
-        "spg": 0,
-        "bpg": 0,
-        "tpg": 3,
+        "gp": 2,
+        "mpg": 20,
+        "ppg": 8,
+        "rpg": 3.5,
+        "apg": 3,
+        "spg": 2,
+        "bpg": 0.5,
+        "tpg": 2.5,
         "fgPct": 0.2,
-        "tpPct": 0.125,
-        "ftPct": 1
+        "tpPct": 0.133,
+        "ftPct": 0.75,
+        "fgm": 2,
+        "fga": 10,
+        "tpm": 1,
+        "tpa": 7.5,
+        "ftm": 3,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -2035,17 +2245,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Caen Basket Calvados (FRA)",
       "stats": {
-        "gp": 1,
-        "mpg": 14.2,
-        "ppg": 5,
-        "rpg": 2,
-        "apg": 0,
-        "spg": 0,
+        "gp": 2,
+        "mpg": 13.9,
+        "ppg": 4,
+        "rpg": 3,
+        "apg": 1.5,
+        "spg": 1.5,
         "bpg": 0,
         "tpg": 1,
         "fgPct": 0.5,
         "tpPct": 0.5,
-        "ftPct": 0
+        "ftPct": 0.5,
+        "fgm": 1.5,
+        "fga": 3,
+        "tpm": 0.5,
+        "tpa": 1,
+        "ftm": 0.5,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -2077,17 +2293,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Meisei High School (JPN)",
       "stats": {
-        "gp": 1,
-        "mpg": 27.8,
-        "ppg": 8,
-        "rpg": 2,
-        "apg": 1,
-        "spg": 4,
-        "bpg": 0,
-        "tpg": 1,
-        "fgPct": 0.231,
-        "tpPct": 0.125,
-        "ftPct": 0.5
+        "gp": 2,
+        "mpg": 29,
+        "ppg": 10,
+        "rpg": 3,
+        "apg": 0.5,
+        "spg": 3,
+        "bpg": 0.5,
+        "tpg": 0.5,
+        "fgPct": 0.348,
+        "tpPct": 0.222,
+        "ftPct": 0.5,
+        "fgm": 4,
+        "fga": 11.5,
+        "tpm": 1,
+        "tpa": 4.5,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -2119,17 +2341,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Fukuoka Ohori High School (JPN)",
       "stats": {
-        "gp": 1,
-        "mpg": 4.7,
+        "gp": 2,
+        "mpg": 4.8,
         "ppg": 0,
-        "rpg": 1,
+        "rpg": 0.5,
         "apg": 0,
-        "spg": 0,
+        "spg": 0.5,
         "bpg": 0,
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0.5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -2161,17 +2389,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Fukuoka Daiichi High School (JPN)",
       "stats": {
-        "gp": 1,
-        "mpg": 13.7,
-        "ppg": 0,
-        "rpg": 0,
+        "gp": 2,
+        "mpg": 16,
+        "ppg": 1,
+        "rpg": 0.5,
         "apg": 0,
         "spg": 0,
-        "bpg": 1,
-        "tpg": 0,
-        "fgPct": 0,
+        "bpg": 0.5,
+        "tpg": 0.5,
+        "fgPct": 0.143,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0.5,
+        "fga": 3.5,
+        "tpm": 0,
+        "tpa": 3,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -2203,17 +2437,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Fukuoka Ohori High School (JPN)",
       "stats": {
-        "gp": 1,
-        "mpg": 18.2,
-        "ppg": 2,
-        "rpg": 3,
+        "gp": 2,
+        "mpg": 9.3,
+        "ppg": 1,
+        "rpg": 1.5,
         "apg": 0,
         "spg": 0,
         "bpg": 0,
-        "tpg": 3,
+        "tpg": 1.5,
         "fgPct": 1,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0.5,
+        "fga": 0.5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -2255,7 +2495,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 2,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -2287,17 +2533,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Higashiyama High School (JPN)",
       "stats": {
-        "gp": 1,
-        "mpg": 8.5,
-        "ppg": 10,
-        "rpg": 2,
-        "apg": 1,
+        "gp": 2,
+        "mpg": 15,
+        "ppg": 16,
+        "rpg": 3,
+        "apg": 2.5,
         "spg": 1,
         "bpg": 0,
-        "tpg": 0,
-        "fgPct": 0.571,
-        "tpPct": 0.5,
-        "ftPct": 0.5
+        "tpg": 1,
+        "fgPct": 0.483,
+        "tpPct": 0.286,
+        "ftPct": 0.333,
+        "fgm": 7,
+        "fga": 14.5,
+        "tpm": 1,
+        "tpa": 3.5,
+        "ftm": 1,
+        "fta": 3
       },
       "gamelog": [
         {
@@ -2329,17 +2581,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Ryukyu Golden Kings U18 (JPN)",
       "stats": {
-        "gp": 1,
-        "mpg": 20.7,
-        "ppg": 11,
-        "rpg": 3,
-        "apg": 4,
-        "spg": 0,
+        "gp": 2,
+        "mpg": 17.1,
+        "ppg": 7,
+        "rpg": 2,
+        "apg": 3.5,
+        "spg": 1,
         "bpg": 0,
-        "tpg": 2,
-        "fgPct": 0.625,
-        "tpPct": 0,
-        "ftPct": 0.333
+        "tpg": 3,
+        "fgPct": 0.6,
+        "tpPct": 0.25,
+        "ftPct": 0.333,
+        "fgm": 3,
+        "fga": 5,
+        "tpm": 0.5,
+        "tpa": 2,
+        "ftm": 0.5,
+        "fta": 1.5
       },
       "gamelog": [
         {
@@ -2371,17 +2629,23 @@ window.HOOPDATA = {
       "birthYear": 2010,
       "club": "Kaishi Kokusai High School (JPN)",
       "stats": {
-        "gp": 1,
+        "gp": 2,
         "mpg": 34.6,
-        "ppg": 3,
-        "rpg": 3,
+        "ppg": 6.5,
+        "rpg": 2.5,
         "apg": 0,
-        "spg": 0,
+        "spg": 0.5,
         "bpg": 0,
-        "tpg": 0,
-        "fgPct": 0.125,
-        "tpPct": 0,
-        "ftPct": 0.5
+        "tpg": 1.5,
+        "fgPct": 0.25,
+        "tpPct": 0.143,
+        "ftPct": 0.333,
+        "fgm": 2.5,
+        "fga": 10,
+        "tpm": 1,
+        "tpa": 7,
+        "ftm": 0.5,
+        "fta": 1.5
       },
       "gamelog": [
         {
@@ -2413,17 +2677,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Fukuoka Ohori High School (JPN)",
       "stats": {
-        "gp": 1,
-        "mpg": 15.9,
+        "gp": 2,
+        "mpg": 16.7,
         "ppg": 3,
-        "rpg": 0,
+        "rpg": 0.5,
         "apg": 0,
-        "spg": 0,
+        "spg": 1,
         "bpg": 0,
-        "tpg": 2,
-        "fgPct": 0.5,
-        "tpPct": 1,
-        "ftPct": 0
+        "tpg": 1,
+        "fgPct": 0.333,
+        "tpPct": 0.5,
+        "ftPct": 0,
+        "fgm": 1,
+        "fga": 3,
+        "tpm": 1,
+        "tpa": 2,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -2455,17 +2725,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Fukuoka Ohori High School (JPN)",
       "stats": {
-        "gp": 1,
-        "mpg": 33.4,
-        "ppg": 27,
-        "rpg": 9,
-        "apg": 3,
-        "spg": 4,
+        "gp": 2,
+        "mpg": 32.9,
+        "ppg": 18.5,
+        "rpg": 8,
+        "apg": 2.5,
+        "spg": 3,
         "bpg": 0,
-        "tpg": 5,
-        "fgPct": 0.522,
-        "tpPct": 0.125,
-        "ftPct": 0.333
+        "tpg": 8,
+        "fgPct": 0.364,
+        "tpPct": 0.071,
+        "ftPct": 0.5,
+        "fgm": 8,
+        "fga": 22,
+        "tpm": 0.5,
+        "tpa": 7,
+        "ftm": 2,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -2497,8 +2773,8 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Chubu University Daiichi High School (JPN)",
       "stats": {
-        "gp": 1,
-        "mpg": 4.3,
+        "gp": 2,
+        "mpg": 2.9,
         "ppg": 0,
         "rpg": 0,
         "apg": 0,
@@ -2507,7 +2783,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -2539,17 +2821,23 @@ window.HOOPDATA = {
       "birthYear": 2010,
       "club": "Yokohama B-Corsairs U18 (JPN)",
       "stats": {
-        "gp": 1,
-        "mpg": 13.8,
-        "ppg": 0,
+        "gp": 2,
+        "mpg": 19.4,
+        "ppg": 2,
         "rpg": 5,
         "apg": 0,
-        "spg": 1,
-        "bpg": 2,
-        "tpg": 0,
-        "fgPct": 0,
+        "spg": 0.5,
+        "bpg": 1,
+        "tpg": 0.5,
+        "fgPct": 1,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 1,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -2591,7 +2879,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.286,
         "tpPct": 0.2,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 2,
+        "fga": 7,
+        "tpm": 1,
+        "tpa": 5,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -2633,7 +2927,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 4,
+        "tpm": 0,
+        "tpa": 2,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -2666,16 +2966,22 @@ window.HOOPDATA = {
       "club": "Vikings Basketball Academy (CMR)",
       "stats": {
         "gp": 0,
-        "mpg": null,
-        "ppg": null,
-        "rpg": null,
-        "apg": null,
-        "spg": null,
-        "bpg": null,
-        "tpg": null,
-        "fgPct": null,
-        "tpPct": null,
-        "ftPct": null
+        "mpg": 0,
+        "ppg": 0,
+        "rpg": 0,
+        "apg": 0,
+        "spg": 0,
+        "bpg": 0,
+        "tpg": 0,
+        "fgPct": 0,
+        "tpPct": 0,
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [],
       "pid": 390517
@@ -2700,7 +3006,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.333,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 1,
+        "fga": 3,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 4,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -2742,7 +3054,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.571,
         "tpPct": 0.667,
-        "ftPct": 0.6
+        "ftPct": 0.6,
+        "fgm": 8,
+        "fga": 14,
+        "tpm": 4,
+        "tpa": 6,
+        "ftm": 3,
+        "fta": 5
       },
       "gamelog": [
         {
@@ -2784,7 +3102,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 3,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -2826,7 +3150,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.333,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 1,
+        "fga": 3,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -2868,7 +3198,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.364,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 4,
+        "fga": 11,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 2,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -2910,7 +3246,13 @@ window.HOOPDATA = {
         "tpg": 5,
         "fgPct": 0.3,
         "tpPct": 0,
-        "ftPct": 0.833
+        "ftPct": 0.833,
+        "fgm": 3,
+        "fga": 10,
+        "tpm": 0,
+        "tpa": 2,
+        "ftm": 5,
+        "fta": 6
       },
       "gamelog": [
         {
@@ -2952,7 +3294,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -2994,7 +3342,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 2,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -3036,7 +3390,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.538,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 7,
+        "fga": 13,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -3078,7 +3438,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.286,
         "tpPct": 0,
-        "ftPct": 0.889
+        "ftPct": 0.889,
+        "fgm": 2,
+        "fga": 7,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 8,
+        "fta": 9
       },
       "gamelog": [
         {
@@ -3120,7 +3486,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.357,
         "tpPct": 0.5,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 5,
+        "fga": 14,
+        "tpm": 1,
+        "tpa": 2,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -3162,7 +3534,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.286,
         "tpPct": 0.333,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 4,
+        "fga": 14,
+        "tpm": 3,
+        "tpa": 9,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -3204,7 +3582,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.333,
         "tpPct": 0.5,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 3,
+        "fga": 9,
+        "tpm": 1,
+        "tpa": 2,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -3246,7 +3630,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 3,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -3288,7 +3678,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.286,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 2,
+        "fga": 7,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -3330,7 +3726,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.5,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 1,
+        "fga": 2,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 2,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -3372,7 +3774,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.409,
         "tpPct": 0.333,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 9,
+        "fga": 22,
+        "tpm": 3,
+        "tpa": 9,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -3414,7 +3822,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.5,
         "tpPct": 0.333,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 2,
+        "fga": 4,
+        "tpm": 1,
+        "tpa": 3,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -3456,7 +3870,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.5,
         "tpPct": 0.333,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 3,
+        "fga": 6,
+        "tpm": 1,
+        "tpa": 3,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -3498,7 +3918,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.333,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 1,
+        "fga": 3,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -3540,7 +3966,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -3582,7 +4014,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 0,
+        "fga": 4,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 5,
+        "fta": 5
       },
       "gamelog": [
         {
@@ -3624,7 +4062,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 0,
+        "fga": 3,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -3666,7 +4110,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -3708,7 +4158,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -3750,7 +4206,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.2,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 1,
+        "fga": 5,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 2,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -3792,7 +4254,13 @@ window.HOOPDATA = {
         "tpg": 3,
         "fgPct": 0.333,
         "tpPct": 0.333,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 1,
+        "fga": 3,
+        "tpm": 1,
+        "tpa": 3,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -3834,7 +4302,13 @@ window.HOOPDATA = {
         "tpg": 4,
         "fgPct": 0.625,
         "tpPct": 0.333,
-        "ftPct": 0.875
+        "ftPct": 0.875,
+        "fgm": 10,
+        "fga": 16,
+        "tpm": 2,
+        "tpa": 6,
+        "ftm": 7,
+        "fta": 8
       },
       "gamelog": [
         {
@@ -3876,7 +4350,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.5,
         "tpPct": 0.5,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 2,
+        "fga": 4,
+        "tpm": 1,
+        "tpa": 2,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -3918,7 +4398,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.4,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 2,
+        "fga": 5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 4,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -3960,7 +4446,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.5,
         "tpPct": 0.5,
-        "ftPct": 0.6
+        "ftPct": 0.6,
+        "fgm": 7,
+        "fga": 14,
+        "tpm": 2,
+        "tpa": 4,
+        "ftm": 3,
+        "fta": 5
       },
       "gamelog": [
         {
@@ -4002,7 +4494,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.583,
         "tpPct": 0.333,
-        "ftPct": 0.6
+        "ftPct": 0.6,
+        "fgm": 7,
+        "fga": 12,
+        "tpm": 1,
+        "tpa": 3,
+        "ftm": 3,
+        "fta": 5
       },
       "gamelog": [
         {
@@ -4044,7 +4542,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.5,
         "tpPct": 0.4,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 4,
+        "fga": 8,
+        "tpm": 2,
+        "tpa": 5,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -4086,7 +4590,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.5,
         "tpPct": 0.5,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 3,
+        "fga": 6,
+        "tpm": 1,
+        "tpa": 2,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -4128,7 +4638,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.333,
         "tpPct": 0.5,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 1,
+        "fga": 3,
+        "tpm": 1,
+        "tpa": 2,
+        "ftm": 2,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -4170,7 +4686,13 @@ window.HOOPDATA = {
         "tpg": 3,
         "fgPct": 0.5,
         "tpPct": 0.5,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 4,
+        "fga": 8,
+        "tpm": 4,
+        "tpa": 8,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -4212,7 +4734,13 @@ window.HOOPDATA = {
         "tpg": 3,
         "fgPct": 0.25,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 2,
+        "fga": 8,
+        "tpm": 0,
+        "tpa": 4,
+        "ftm": 0,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -4254,7 +4782,13 @@ window.HOOPDATA = {
         "tpg": 3,
         "fgPct": 0.167,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 1,
+        "fga": 6,
+        "tpm": 0,
+        "tpa": 5,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -4296,7 +4830,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.4,
         "tpPct": 0.333,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 2,
+        "fga": 5,
+        "tpm": 1,
+        "tpa": 3,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -4338,7 +4878,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.625,
         "tpPct": 0.5,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 10,
+        "fga": 16,
+        "tpm": 2,
+        "tpa": 4,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -4380,7 +4926,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.6,
         "tpPct": 0,
-        "ftPct": 0.917
+        "ftPct": 0.917,
+        "fgm": 3,
+        "fga": 5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 11,
+        "fta": 12
       },
       "gamelog": [
         {
@@ -4422,7 +4974,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.571,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 4,
+        "fga": 7,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 2,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -4464,7 +5022,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.25,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 1,
+        "fga": 4,
+        "tpm": 0,
+        "tpa": 3,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -4506,7 +5070,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -4539,16 +5109,22 @@ window.HOOPDATA = {
       "club": "GUANGDONG HONGYUAN CLUB (CHN)",
       "stats": {
         "gp": 0,
-        "mpg": null,
-        "ppg": null,
-        "rpg": null,
-        "apg": null,
-        "spg": null,
-        "bpg": null,
-        "tpg": null,
-        "fgPct": null,
-        "tpPct": null,
-        "ftPct": null
+        "mpg": 0,
+        "ppg": 0,
+        "rpg": 0,
+        "apg": 0,
+        "spg": 0,
+        "bpg": 0,
+        "tpg": 0,
+        "fgPct": 0,
+        "tpPct": 0,
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [],
       "pid": 416741
@@ -4573,7 +5149,13 @@ window.HOOPDATA = {
         "tpg": 5,
         "fgPct": 0.425,
         "tpPct": 0.316,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 17,
+        "fga": 40,
+        "tpm": 6,
+        "tpa": 19,
+        "ftm": 2,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -4615,7 +5197,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 3,
+        "tpm": 0,
+        "tpa": 3,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -4657,7 +5245,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.462,
         "tpPct": 0.667,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 6,
+        "fga": 13,
+        "tpm": 2,
+        "tpa": 3,
+        "ftm": 6,
+        "fta": 6
       },
       "gamelog": [
         {
@@ -4699,7 +5293,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.5,
         "tpPct": 0,
-        "ftPct": 0.375
+        "ftPct": 0.375,
+        "fgm": 4,
+        "fga": 8,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 3,
+        "fta": 8
       },
       "gamelog": [
         {
@@ -4741,7 +5341,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 5,
+        "tpm": 0,
+        "tpa": 2,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -4783,7 +5389,13 @@ window.HOOPDATA = {
         "tpg": 8,
         "fgPct": 0.538,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 7,
+        "fga": 13,
+        "tpm": 0,
+        "tpa": 2,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -4825,7 +5437,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.667,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 2,
+        "fga": 3,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -4858,16 +5476,22 @@ window.HOOPDATA = {
       "club": "Auckland Tuatara (NZL)",
       "stats": {
         "gp": 0,
-        "mpg": null,
-        "ppg": null,
-        "rpg": null,
-        "apg": null,
-        "spg": null,
-        "bpg": null,
-        "tpg": null,
-        "fgPct": null,
-        "tpPct": null,
-        "ftPct": null
+        "mpg": 0,
+        "ppg": 0,
+        "rpg": 0,
+        "apg": 0,
+        "spg": 0,
+        "bpg": 0,
+        "tpg": 0,
+        "fgPct": 0,
+        "tpPct": 0,
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [],
       "pid": 372743
@@ -4892,7 +5516,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 2,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -4934,7 +5564,13 @@ window.HOOPDATA = {
         "tpg": 4,
         "fgPct": 0.222,
         "tpPct": 0.143,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 2,
+        "fga": 9,
+        "tpm": 1,
+        "tpa": 7,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -4967,16 +5603,22 @@ window.HOOPDATA = {
       "club": "Rotorua Basketball Association (NZL)",
       "stats": {
         "gp": 0,
-        "mpg": null,
-        "ppg": null,
-        "rpg": null,
-        "apg": null,
-        "spg": null,
-        "bpg": null,
-        "tpg": null,
-        "fgPct": null,
-        "tpPct": null,
-        "ftPct": null
+        "mpg": 0,
+        "ppg": 0,
+        "rpg": 0,
+        "apg": 0,
+        "spg": 0,
+        "bpg": 0,
+        "tpg": 0,
+        "fgPct": 0,
+        "tpPct": 0,
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [],
       "pid": 414931
@@ -5001,7 +5643,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -5043,7 +5691,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -5085,7 +5739,13 @@ window.HOOPDATA = {
         "tpg": 3,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 0,
+        "fga": 5,
+        "tpm": 0,
+        "tpa": 3,
+        "ftm": 4,
+        "fta": 8
       },
       "gamelog": [
         {
@@ -5127,7 +5787,13 @@ window.HOOPDATA = {
         "tpg": 4,
         "fgPct": 0.333,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 2,
+        "fga": 6,
+        "tpm": 0,
+        "tpa": 2,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -5169,7 +5835,13 @@ window.HOOPDATA = {
         "tpg": 4,
         "fgPct": 0.714,
         "tpPct": 0.5,
-        "ftPct": 0.533
+        "ftPct": 0.533,
+        "fgm": 10,
+        "fga": 14,
+        "tpm": 3,
+        "tpa": 6,
+        "ftm": 8,
+        "fta": 15
       },
       "gamelog": [
         {
@@ -5211,7 +5883,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -5253,7 +5931,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -5295,7 +5979,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -5337,7 +6027,13 @@ window.HOOPDATA = {
         "tpg": 5,
         "fgPct": 1,
         "tpPct": 1,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 3,
+        "fga": 3,
+        "tpm": 1,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -5379,7 +6075,13 @@ window.HOOPDATA = {
         "tpg": 3,
         "fgPct": 0.4,
         "tpPct": 0,
-        "ftPct": 0.111
+        "ftPct": 0.111,
+        "fgm": 2,
+        "fga": 5,
+        "tpm": 0,
+        "tpa": 2,
+        "ftm": 1,
+        "fta": 9
       },
       "gamelog": [
         {
@@ -5421,7 +6123,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.474,
         "tpPct": 0,
-        "ftPct": 0.4
+        "ftPct": 0.4,
+        "fgm": 9,
+        "fga": 19,
+        "tpm": 0,
+        "tpa": 3,
+        "ftm": 2,
+        "fta": 5
       },
       "gamelog": [
         {
@@ -5463,7 +6171,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -5505,7 +6219,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.5,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 3,
+        "fga": 6,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -5547,7 +6267,13 @@ window.HOOPDATA = {
         "tpg": 3,
         "fgPct": 0.333,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 1,
+        "fga": 3,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -5589,7 +6315,13 @@ window.HOOPDATA = {
         "tpg": 3,
         "fgPct": 0.333,
         "tpPct": 0.375,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 5,
+        "fga": 15,
+        "tpm": 3,
+        "tpa": 8,
+        "ftm": 4,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -5631,7 +6363,13 @@ window.HOOPDATA = {
         "tpg": 4,
         "fgPct": 0.48,
         "tpPct": 0.333,
-        "ftPct": 0.833
+        "ftPct": 0.833,
+        "fgm": 12,
+        "fga": 25,
+        "tpm": 3,
+        "tpa": 9,
+        "ftm": 5,
+        "fta": 6
       },
       "gamelog": [
         {
@@ -5673,7 +6411,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 3,
+        "tpm": 0,
+        "tpa": 2,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -5715,7 +6459,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.308,
         "tpPct": 0.429,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 4,
+        "fga": 13,
+        "tpm": 3,
+        "tpa": 7,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -5757,7 +6507,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -5799,7 +6555,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 1,
         "tpPct": 1,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 1,
+        "fga": 1,
+        "tpm": 1,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -5841,7 +6603,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.625,
         "tpPct": 0.5,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 5,
+        "fga": 8,
+        "tpm": 1,
+        "tpa": 2,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -5883,7 +6651,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 2,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -5925,7 +6699,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 2,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -5967,7 +6747,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.5,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 3,
+        "fga": 6,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -6009,7 +6795,13 @@ window.HOOPDATA = {
         "tpg": 4,
         "fgPct": 0.333,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 2,
+        "fga": 6,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 2,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -6051,7 +6843,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.333,
         "tpPct": 0.2,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 3,
+        "fga": 9,
+        "tpm": 1,
+        "tpa": 5,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -6093,7 +6891,13 @@ window.HOOPDATA = {
         "tpg": 3,
         "fgPct": 0.565,
         "tpPct": 0.667,
-        "ftPct": 0.833
+        "ftPct": 0.833,
+        "fgm": 13,
+        "fga": 23,
+        "tpm": 6,
+        "tpa": 9,
+        "ftm": 5,
+        "fta": 6
       },
       "gamelog": [
         {
@@ -6135,7 +6939,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -6177,7 +6987,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.333,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 3,
+        "fga": 9,
+        "tpm": 0,
+        "tpa": 2,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -6219,7 +7035,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -6261,7 +7083,13 @@ window.HOOPDATA = {
         "tpg": 5,
         "fgPct": 0.438,
         "tpPct": 0.222,
-        "ftPct": 0.9
+        "ftPct": 0.9,
+        "fgm": 14,
+        "fga": 32,
+        "tpm": 2,
+        "tpa": 9,
+        "ftm": 9,
+        "fta": 10
       },
       "gamelog": [
         {
@@ -6303,7 +7131,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -6345,7 +7179,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0.333,
         "tpPct": 0.333,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 2,
+        "fga": 6,
+        "tpm": 1,
+        "tpa": 3,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -6387,7 +7227,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0.75,
         "tpPct": 0,
-        "ftPct": 0.833
+        "ftPct": 0.833,
+        "fgm": 3,
+        "fga": 4,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 5,
+        "fta": 6
       },
       "gamelog": [
         {
@@ -6429,7 +7275,13 @@ window.HOOPDATA = {
         "tpg": 2,
         "fgPct": 0.333,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 2,
+        "fga": 6,
+        "tpm": 0,
+        "tpa": 3,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -6471,7 +7323,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -6513,7 +7371,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -6545,17 +7409,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "club santa rosa (VEN)",
       "stats": {
-        "gp": 1,
-        "mpg": 5.8,
-        "ppg": 2,
+        "gp": 2,
+        "mpg": 10,
+        "ppg": 3.5,
         "rpg": 2,
         "apg": 0,
-        "spg": 1,
+        "spg": 0.5,
         "bpg": 0,
-        "tpg": 0,
-        "fgPct": 0,
-        "tpPct": 0,
-        "ftPct": 0.5
+        "tpg": 0.5,
+        "fgPct": 0.5,
+        "tpPct": 0.333,
+        "ftPct": 0.5,
+        "fgm": 1,
+        "fga": 2,
+        "tpm": 0.5,
+        "tpa": 1.5,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -6587,17 +7457,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Dreamland Gran Canaria (ESP)",
       "stats": {
-        "gp": 1,
-        "mpg": 29.9,
-        "ppg": 14,
-        "rpg": 5,
-        "apg": 5,
+        "gp": 2,
+        "mpg": 28.8,
+        "ppg": 10,
+        "rpg": 3,
+        "apg": 3.5,
         "spg": 2,
         "bpg": 0,
         "tpg": 3,
-        "fgPct": 0.333,
-        "tpPct": 0.222,
-        "ftPct": 0
+        "fgPct": 0.267,
+        "tpPct": 0.154,
+        "ftPct": 1,
+        "fgm": 4,
+        "fga": 15,
+        "tpm": 1,
+        "tpa": 6.5,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -6629,17 +7505,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Angeles de Cocuima (VEN)",
       "stats": {
-        "gp": 1,
-        "mpg": 30,
-        "ppg": 7,
-        "rpg": 7,
-        "apg": 1,
-        "spg": 3,
+        "gp": 2,
+        "mpg": 24.8,
+        "ppg": 4.5,
+        "rpg": 5.5,
+        "apg": 1.5,
+        "spg": 2.5,
         "bpg": 0,
         "tpg": 2,
-        "fgPct": 0.375,
-        "tpPct": 0.25,
-        "ftPct": 0
+        "fgPct": 0.286,
+        "tpPct": 0.167,
+        "ftPct": 0,
+        "fgm": 2,
+        "fga": 7,
+        "tpm": 0.5,
+        "tpa": 3,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -6671,17 +7553,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "ASD Stella Azzurra Brindisi (ITA)",
       "stats": {
-        "gp": 1,
-        "mpg": 30.5,
-        "ppg": 8,
-        "rpg": 9,
-        "apg": 1,
-        "spg": 2,
-        "bpg": 0,
+        "gp": 2,
+        "mpg": 27.9,
+        "ppg": 5,
+        "rpg": 7.5,
+        "apg": 1.5,
+        "spg": 1.5,
+        "bpg": 1,
         "tpg": 3,
-        "fgPct": 0.273,
+        "fgPct": 0.235,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 2,
+        "fga": 8.5,
+        "tpm": 0,
+        "tpa": 5,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -6713,17 +7601,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "rider de baruta (VEN)",
       "stats": {
-        "gp": 1,
-        "mpg": 28.2,
-        "ppg": 11,
-        "rpg": 2,
-        "apg": 5,
-        "spg": 2,
-        "bpg": 1,
-        "tpg": 3,
-        "fgPct": 0.4,
+        "gp": 2,
+        "mpg": 21.2,
+        "ppg": 8,
+        "rpg": 1.5,
+        "apg": 2.5,
+        "spg": 2.5,
+        "bpg": 0.5,
+        "tpg": 1.5,
+        "fgPct": 0.417,
         "tpPct": 0.2,
-        "ftPct": 1
+        "ftPct": 0.833,
+        "fgm": 2.5,
+        "fga": 6,
+        "tpm": 0.5,
+        "tpa": 2.5,
+        "ftm": 2.5,
+        "fta": 3
       },
       "gamelog": [
         {
@@ -6755,8 +7649,8 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "La Laguna Tenerife (ESP)",
       "stats": {
-        "gp": 1,
-        "mpg": 0.1,
+        "gp": 2,
+        "mpg": 2.4,
         "ppg": 0,
         "rpg": 0,
         "apg": 0,
@@ -6765,7 +7659,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 1.5,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -6797,17 +7697,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Cocodrilos de Caracas (VEN)",
       "stats": {
-        "gp": 1,
-        "mpg": 25.8,
-        "ppg": 13,
-        "rpg": 1,
-        "apg": 3,
-        "spg": 3,
-        "bpg": 1,
-        "tpg": 6,
-        "fgPct": 0.5,
-        "tpPct": 0,
-        "ftPct": 0.6
+        "gp": 2,
+        "mpg": 24.8,
+        "ppg": 13.5,
+        "rpg": 1.5,
+        "apg": 2.5,
+        "spg": 1.5,
+        "bpg": 0.5,
+        "tpg": 4,
+        "fgPct": 0.4,
+        "tpPct": 0.167,
+        "ftPct": 0.714,
+        "fgm": 5,
+        "fga": 12.5,
+        "tpm": 1,
+        "tpa": 6,
+        "ftm": 2.5,
+        "fta": 3.5
       },
       "gamelog": [
         {
@@ -6839,17 +7745,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "escuela jose arias eba (VEN)",
       "stats": {
-        "gp": 1,
-        "mpg": 12.3,
-        "ppg": 4,
+        "gp": 2,
+        "mpg": 10.3,
+        "ppg": 4.5,
         "rpg": 1,
         "apg": 1,
-        "spg": 0,
-        "bpg": 1,
-        "tpg": 1,
-        "fgPct": 0.143,
-        "tpPct": 0,
-        "ftPct": 1
+        "spg": 0.5,
+        "bpg": 0.5,
+        "tpg": 0.5,
+        "fgPct": 0.25,
+        "tpPct": 0.111,
+        "ftPct": 1,
+        "fgm": 1.5,
+        "fga": 6,
+        "tpm": 0.5,
+        "tpa": 4.5,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -6881,17 +7793,23 @@ window.HOOPDATA = {
       "birthYear": 2011,
       "club": "Pablo Laso Academy (ESP)",
       "stats": {
-        "gp": 1,
-        "mpg": 17.6,
-        "ppg": 2,
-        "rpg": 1,
-        "apg": 3,
-        "spg": 6,
+        "gp": 2,
+        "mpg": 17.9,
+        "ppg": 5,
+        "rpg": 4,
+        "apg": 3.5,
+        "spg": 3.5,
         "bpg": 0,
-        "tpg": 4,
-        "fgPct": 0.25,
-        "tpPct": 0,
-        "ftPct": 0
+        "tpg": 4.5,
+        "fgPct": 0.3,
+        "tpPct": 0.333,
+        "ftPct": 0.375,
+        "fgm": 1.5,
+        "fga": 5,
+        "tpm": 0.5,
+        "tpa": 1.5,
+        "ftm": 1.5,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -6923,17 +7841,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "trapichito de guarenas (VEN)",
       "stats": {
-        "gp": 1,
-        "mpg": 2.7,
-        "ppg": 0,
-        "rpg": 1,
-        "apg": 0,
+        "gp": 2,
+        "mpg": 9,
+        "ppg": 2,
+        "rpg": 2,
+        "apg": 0.5,
         "spg": 0,
         "bpg": 0,
         "tpg": 0,
-        "fgPct": 0,
+        "fgPct": 0.143,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 1,
+        "fgm": 0.5,
+        "fga": 3.5,
+        "tpm": 0,
+        "tpa": 1.5,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -6965,17 +7889,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Norwood Flames (AUS)",
       "stats": {
-        "gp": 1,
-        "mpg": 8.9,
+        "gp": 2,
+        "mpg": 12.1,
         "ppg": 2,
-        "rpg": 3,
+        "rpg": 1.5,
         "apg": 0,
-        "spg": 3,
-        "bpg": 0,
+        "spg": 2,
+        "bpg": 0.5,
         "tpg": 0,
         "fgPct": 0.25,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 1,
+        "fga": 4,
+        "tpm": 0,
+        "tpa": 1.5,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -7007,17 +7937,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Trotamundos (VEN)",
       "stats": {
-        "gp": 1,
-        "mpg": 8.2,
+        "gp": 2,
+        "mpg": 10.9,
         "ppg": 0,
         "rpg": 0,
         "apg": 0,
         "spg": 0,
-        "bpg": 0,
+        "bpg": 0.5,
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 2,
+        "tpm": 0,
+        "tpa": 1.5,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -7049,17 +7985,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Queensland State (AUS)",
       "stats": {
-        "gp": 1,
-        "mpg": 21.5,
-        "ppg": 12,
-        "rpg": 2,
-        "apg": 7,
-        "spg": 2,
+        "gp": 2,
+        "mpg": 14.4,
+        "ppg": 6,
+        "rpg": 1.5,
+        "apg": 3.5,
+        "spg": 1,
         "bpg": 0,
-        "tpg": 3,
-        "fgPct": 0.429,
-        "tpPct": 0.4,
-        "ftPct": 0.8
+        "tpg": 2,
+        "fgPct": 0.273,
+        "tpPct": 0.222,
+        "ftPct": 0.8,
+        "fgm": 1.5,
+        "fga": 5.5,
+        "tpm": 1,
+        "tpa": 4.5,
+        "ftm": 2,
+        "fta": 2.5
       },
       "gamelog": [
         {
@@ -7091,17 +8033,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Victoria State (AUS)",
       "stats": {
-        "gp": 1,
-        "mpg": 10.7,
-        "ppg": 4,
-        "rpg": 0,
-        "apg": 0,
+        "gp": 2,
+        "mpg": 9.2,
+        "ppg": 2,
+        "rpg": 0.5,
+        "apg": 1,
         "spg": 0,
         "bpg": 0,
         "tpg": 0,
-        "fgPct": 1,
+        "fgPct": 0.4,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 1,
+        "fga": 2.5,
+        "tpm": 0,
+        "tpa": 1.5,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -7133,17 +8081,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Victoria State (AUS)",
       "stats": {
-        "gp": 1,
-        "mpg": 15.5,
-        "ppg": 8,
-        "rpg": 2,
+        "gp": 2,
+        "mpg": 14.6,
+        "ppg": 8.5,
+        "rpg": 3,
         "apg": 0,
-        "spg": 1,
-        "bpg": 0,
+        "spg": 0.5,
+        "bpg": 0.5,
         "tpg": 1,
-        "fgPct": 0.571,
-        "tpPct": 0,
-        "ftPct": 0
+        "fgPct": 0.538,
+        "tpPct": 0.333,
+        "ftPct": 0,
+        "fgm": 3.5,
+        "fga": 6.5,
+        "tpm": 1.5,
+        "tpa": 4.5,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -7175,17 +8129,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Cairns Taipans (AUS)",
       "stats": {
-        "gp": 1,
-        "mpg": 23.8,
-        "ppg": 11,
-        "rpg": 5,
-        "apg": 8,
-        "spg": 2,
-        "bpg": 0,
-        "tpg": 6,
-        "fgPct": 0.333,
-        "tpPct": 0,
-        "ftPct": 1
+        "gp": 2,
+        "mpg": 28.2,
+        "ppg": 14.5,
+        "rpg": 7,
+        "apg": 7.5,
+        "spg": 2.5,
+        "bpg": 1.5,
+        "tpg": 7,
+        "fgPct": 0.5,
+        "tpPct": 0.5,
+        "ftPct": 0.875,
+        "fgm": 3.5,
+        "fga": 7,
+        "tpm": 0.5,
+        "tpa": 1,
+        "ftm": 7,
+        "fta": 8
       },
       "gamelog": [
         {
@@ -7217,17 +8177,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Centre of Excellence (AUS)",
       "stats": {
-        "gp": 1,
-        "mpg": 23.8,
-        "ppg": 10,
+        "gp": 2,
+        "mpg": 27.8,
+        "ppg": 9,
         "rpg": 4,
-        "apg": 4,
-        "spg": 2,
-        "bpg": 1,
-        "tpg": 2,
-        "fgPct": 0.571,
+        "apg": 4.5,
+        "spg": 1.5,
+        "bpg": 0.5,
+        "tpg": 3,
+        "fgPct": 0.333,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 0.75,
+        "fgm": 3,
+        "fga": 9,
+        "tpm": 0,
+        "tpa": 2.5,
+        "ftm": 3,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -7259,17 +8225,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Victoria State (AUS)",
       "stats": {
-        "gp": 1,
-        "mpg": 11.3,
-        "ppg": 5,
+        "gp": 2,
+        "mpg": 8.6,
+        "ppg": 3.5,
         "rpg": 2,
-        "apg": 1,
-        "spg": 0,
+        "apg": 0.5,
+        "spg": 0.5,
         "bpg": 0,
         "tpg": 0,
-        "fgPct": 0.5,
-        "tpPct": 0.5,
-        "ftPct": 0
+        "fgPct": 0.429,
+        "tpPct": 0.333,
+        "ftPct": 0,
+        "fgm": 1.5,
+        "fga": 3.5,
+        "tpm": 0.5,
+        "tpa": 1.5,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -7301,17 +8273,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Centre of Excellence (AUS)",
       "stats": {
-        "gp": 1,
-        "mpg": 19.1,
-        "ppg": 0,
-        "rpg": 6,
+        "gp": 2,
+        "mpg": 20.3,
+        "ppg": 8,
+        "rpg": 5,
         "apg": 1,
-        "spg": 2,
+        "spg": 1,
         "bpg": 0,
         "tpg": 2,
-        "fgPct": 0,
-        "tpPct": 0,
-        "ftPct": 0
+        "fgPct": 0.278,
+        "tpPct": 0.375,
+        "ftPct": 0.75,
+        "fgm": 2.5,
+        "fga": 9,
+        "tpm": 1.5,
+        "tpa": 4,
+        "ftm": 1.5,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -7343,17 +8321,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Western Australia (AUS)",
       "stats": {
-        "gp": 1,
-        "mpg": 14.7,
-        "ppg": 12,
-        "rpg": 11,
-        "apg": 1,
+        "gp": 2,
+        "mpg": 14.6,
+        "ppg": 7,
+        "rpg": 8,
+        "apg": 0.5,
         "spg": 0,
-        "bpg": 2,
-        "tpg": 2,
-        "fgPct": 0.6,
+        "bpg": 1,
+        "tpg": 1,
+        "fgPct": 0.467,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 3.5,
+        "fga": 7.5,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -7385,17 +8369,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Victoria State (AUS)",
       "stats": {
-        "gp": 1,
-        "mpg": 19.5,
-        "ppg": 0,
-        "rpg": 1,
-        "apg": 0,
+        "gp": 2,
+        "mpg": 22.4,
+        "ppg": 3,
+        "rpg": 4,
+        "apg": 1,
         "spg": 0,
-        "bpg": 2,
-        "tpg": 2,
-        "fgPct": 0,
+        "bpg": 3,
+        "tpg": 1,
+        "fgPct": 0.25,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 1,
+        "fgm": 1,
+        "fga": 4,
+        "tpm": 0,
+        "tpa": 2,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -7427,17 +8417,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Centre of Excellence (AUS)",
       "stats": {
-        "gp": 1,
-        "mpg": 21.6,
-        "ppg": 15,
-        "rpg": 7,
-        "apg": 0,
-        "spg": 2,
-        "bpg": 2,
-        "tpg": 3,
-        "fgPct": 0.778,
+        "gp": 2,
+        "mpg": 17.9,
+        "ppg": 9.5,
+        "rpg": 9.5,
+        "apg": 0.5,
+        "spg": 1,
+        "bpg": 1,
+        "tpg": 2,
+        "fgPct": 0.563,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 4.5,
+        "fga": 8,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0.5,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -7469,17 +8465,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Spire Academy (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 15.5,
-        "ppg": 9,
-        "rpg": 4,
+        "gp": 2,
+        "mpg": 13.6,
+        "ppg": 9.5,
+        "rpg": 3.5,
         "apg": 0,
         "spg": 0,
-        "bpg": 3,
-        "tpg": 1,
-        "fgPct": 0.444,
+        "bpg": 2,
+        "tpg": 0.5,
+        "fgPct": 0.533,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.429,
+        "fgm": 4,
+        "fga": 7.5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 1.5,
+        "fta": 3.5
       },
       "gamelog": [
         {
@@ -7511,17 +8513,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Western Australia (AUS)",
       "stats": {
-        "gp": 1,
-        "mpg": 2.9,
-        "ppg": 2,
-        "rpg": 1,
-        "apg": 0,
+        "gp": 2,
+        "mpg": 8.5,
+        "ppg": 2.5,
+        "rpg": 2.5,
+        "apg": 1,
         "spg": 0,
-        "bpg": 0,
+        "bpg": 0.5,
         "tpg": 0,
-        "fgPct": 0,
+        "fgPct": 0.5,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 0.75,
+        "fgm": 0.5,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 1.5,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -7553,17 +8561,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Igokea m:tel (BIH)",
       "stats": {
-        "gp": 1,
-        "mpg": 18.8,
-        "ppg": 4,
-        "rpg": 6,
-        "apg": 1,
-        "spg": 2,
-        "bpg": 1,
-        "tpg": 1,
+        "gp": 2,
+        "mpg": 17.6,
+        "ppg": 3,
+        "rpg": 5,
+        "apg": 1.5,
+        "spg": 1,
+        "bpg": 0.5,
+        "tpg": 0.5,
         "fgPct": 0.5,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 1,
+        "fgm": 1,
+        "fga": 2,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -7595,17 +8609,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Partizan NIS (SRB)",
       "stats": {
-        "gp": 1,
-        "mpg": 19.1,
-        "ppg": 0,
-        "rpg": 5,
-        "apg": 1,
-        "spg": 1,
+        "gp": 2,
+        "mpg": 20.9,
+        "ppg": 3,
+        "rpg": 7,
+        "apg": 0.5,
+        "spg": 1.5,
         "bpg": 1,
-        "tpg": 1,
+        "tpg": 2.5,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 1,
+        "fgm": 0,
+        "fga": 4,
+        "tpm": 0,
+        "tpa": 0.5,
+        "ftm": 3,
+        "fta": 3
       },
       "gamelog": [
         {
@@ -7637,17 +8657,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Mega Basket (SRB)",
       "stats": {
-        "gp": 1,
-        "mpg": 16.1,
-        "ppg": 10,
-        "rpg": 2,
-        "apg": 4,
-        "spg": 1,
+        "gp": 2,
+        "mpg": 17.7,
+        "ppg": 8.5,
+        "rpg": 2.5,
+        "apg": 3,
+        "spg": 0.5,
         "bpg": 0,
-        "tpg": 1,
-        "fgPct": 0.667,
-        "tpPct": 0.667,
-        "ftPct": 0
+        "tpg": 2,
+        "fgPct": 0.6,
+        "tpPct": 0.6,
+        "ftPct": 1,
+        "fgm": 3,
+        "fga": 5,
+        "tpm": 1.5,
+        "tpa": 2.5,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -7679,17 +8705,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Crvena Zvezda MTS (SRB)",
       "stats": {
-        "gp": 1,
-        "mpg": 23.9,
-        "ppg": 6,
-        "rpg": 1,
-        "apg": 1,
-        "spg": 2,
+        "gp": 2,
+        "mpg": 25.7,
+        "ppg": 10,
+        "rpg": 3,
+        "apg": 1.5,
+        "spg": 1.5,
         "bpg": 0,
-        "tpg": 5,
-        "fgPct": 0.143,
-        "tpPct": 0.333,
-        "ftPct": 0.75
+        "tpg": 4,
+        "fgPct": 0.333,
+        "tpPct": 0.5,
+        "ftPct": 0.75,
+        "fgm": 2.5,
+        "fga": 7.5,
+        "tpm": 2,
+        "tpa": 4,
+        "ftm": 3,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -7721,17 +8753,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Crvena Zvezda MTS (SRB)",
       "stats": {
-        "gp": 1,
-        "mpg": 10.4,
-        "ppg": 0,
-        "rpg": 2,
-        "apg": 1,
+        "gp": 2,
+        "mpg": 10.7,
+        "ppg": 2,
+        "rpg": 1.5,
+        "apg": 0.5,
         "spg": 0,
         "bpg": 0,
-        "tpg": 1,
-        "fgPct": 0,
+        "tpg": 0.5,
+        "fgPct": 0.25,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0.5,
+        "fgm": 0.5,
+        "fga": 2,
+        "tpm": 0,
+        "tpa": 1,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -7763,17 +8801,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Casademont Zaragoza (ESP)",
       "stats": {
-        "gp": 1,
-        "mpg": 25.4,
-        "ppg": 16,
-        "rpg": 4,
+        "gp": 2,
+        "mpg": 21.6,
+        "ppg": 11.5,
+        "rpg": 3.5,
         "apg": 2,
-        "spg": 2,
-        "bpg": 1,
-        "tpg": 1,
-        "fgPct": 0.385,
-        "tpPct": 0.333,
-        "ftPct": 0.571
+        "spg": 1.5,
+        "bpg": 0.5,
+        "tpg": 2.5,
+        "fgPct": 0.389,
+        "tpPct": 0.3,
+        "ftPct": 0.667,
+        "fgm": 3.5,
+        "fga": 9,
+        "tpm": 1.5,
+        "tpa": 5,
+        "ftm": 3,
+        "fta": 4.5
       },
       "gamelog": [
         {
@@ -7815,7 +8859,13 @@ window.HOOPDATA = {
         "tpg": 1,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 0,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -7847,17 +8897,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Partizan NIS (SRB)",
       "stats": {
-        "gp": 1,
-        "mpg": 5.8,
-        "ppg": 2,
-        "rpg": 2,
-        "apg": 0,
+        "gp": 2,
+        "mpg": 11.2,
+        "ppg": 5.5,
+        "rpg": 4,
+        "apg": 0.5,
         "spg": 0,
-        "bpg": 0,
+        "bpg": 1,
         "tpg": 1,
-        "fgPct": 0.5,
+        "fgPct": 0.556,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0.5,
+        "fgm": 2.5,
+        "fga": 4.5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0.5,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -7889,17 +8945,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Mega Basket (SRB)",
       "stats": {
-        "gp": 1,
-        "mpg": 18.2,
-        "ppg": 4,
-        "rpg": 6,
-        "apg": 3,
-        "spg": 2,
+        "gp": 2,
+        "mpg": 19.2,
+        "ppg": 6,
+        "rpg": 7,
+        "apg": 2.5,
+        "spg": 1.5,
         "bpg": 0,
-        "tpg": 1,
-        "fgPct": 0.333,
+        "tpg": 1.5,
+        "fgPct": 0.556,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0.25,
+        "fgm": 2.5,
+        "fga": 4.5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 1,
+        "fta": 4
       },
       "gamelog": [
         {
@@ -7931,17 +8993,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "FC Barcelona (ESP)",
       "stats": {
-        "gp": 1,
-        "mpg": 22.8,
-        "ppg": 17,
-        "rpg": 4,
-        "apg": 1,
-        "spg": 1,
+        "gp": 2,
+        "mpg": 22.1,
+        "ppg": 18,
+        "rpg": 5,
+        "apg": 1.5,
+        "spg": 2,
         "bpg": 2,
-        "tpg": 3,
-        "fgPct": 0.429,
+        "tpg": 2,
+        "fgPct": 0.481,
         "tpPct": 0.4,
-        "ftPct": 0.75
+        "ftPct": 0.857,
+        "fgm": 6.5,
+        "fga": 13.5,
+        "tpm": 2,
+        "tpa": 5,
+        "ftm": 3,
+        "fta": 3.5
       },
       "gamelog": [
         {
@@ -7973,17 +9041,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Pablo Laso Academy (ESP)",
       "stats": {
-        "gp": 1,
-        "mpg": 21.7,
-        "ppg": 2,
-        "rpg": 4,
-        "apg": 2,
-        "spg": 1,
-        "bpg": 1,
-        "tpg": 1,
-        "fgPct": 0.1,
+        "gp": 2,
+        "mpg": 16.9,
+        "ppg": 3,
+        "rpg": 2.5,
+        "apg": 1,
+        "spg": 1.5,
+        "bpg": 0.5,
+        "tpg": 0.5,
+        "fgPct": 0.118,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 1,
+        "fgm": 1,
+        "fga": 8.5,
+        "tpm": 0,
+        "tpa": 1.5,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -8015,17 +9089,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Partizan NIS (SRB)",
       "stats": {
-        "gp": 1,
-        "mpg": 15,
-        "ppg": 5,
+        "gp": 2,
+        "mpg": 14.9,
+        "ppg": 4.5,
         "rpg": 3,
-        "apg": 0,
+        "apg": 1.5,
         "spg": 0,
         "bpg": 0,
         "tpg": 2,
-        "fgPct": 0.333,
+        "fgPct": 0.364,
         "tpPct": 0,
-        "ftPct": 0.167
+        "ftPct": 0.167,
+        "fgm": 2,
+        "fga": 5.5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0.5,
+        "fta": 3
       },
       "gamelog": [
         {
@@ -8067,7 +9147,13 @@ window.HOOPDATA = {
         "tpg": 0,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0.5
+        "ftPct": 0.5,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 1,
+        "fta": 2
       },
       "gamelog": [
         {
@@ -8099,17 +9185,23 @@ window.HOOPDATA = {
       "birthYear": 2010,
       "club": "Phelps High School (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 26.2,
-        "ppg": 8,
-        "rpg": 4,
-        "apg": 6,
-        "spg": 1,
-        "bpg": 0,
-        "tpg": 3,
-        "fgPct": 0.5,
-        "tpPct": 0,
-        "ftPct": 0
+        "gp": 2,
+        "mpg": 29.3,
+        "ppg": 14,
+        "rpg": 4.5,
+        "apg": 5,
+        "spg": 1.5,
+        "bpg": 0.5,
+        "tpg": 2,
+        "fgPct": 0.52,
+        "tpPct": 0.333,
+        "ftPct": 0.5,
+        "fgm": 6.5,
+        "fga": 12.5,
+        "tpm": 0.5,
+        "tpa": 1.5,
+        "ftm": 0.5,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -8141,17 +9233,23 @@ window.HOOPDATA = {
       "birthYear": 2010,
       "club": "Fryshuset Basket (SWE)",
       "stats": {
-        "gp": 1,
-        "mpg": 6.6,
-        "ppg": 4,
+        "gp": 2,
+        "mpg": 6.1,
+        "ppg": 3,
         "rpg": 0,
         "apg": 1,
         "spg": 0,
         "bpg": 0,
-        "tpg": 2,
-        "fgPct": 0.25,
-        "tpPct": 0.5,
-        "ftPct": 0.5
+        "tpg": 1,
+        "fgPct": 0.333,
+        "tpPct": 0.333,
+        "ftPct": 0.5,
+        "fgm": 1,
+        "fga": 3,
+        "tpm": 0.5,
+        "tpa": 1.5,
+        "ftm": 0.5,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -8183,17 +9281,23 @@ window.HOOPDATA = {
       "birthYear": 2010,
       "club": "Salesian (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 10.6,
-        "ppg": 3,
-        "rpg": 1,
-        "apg": 1,
+        "gp": 2,
+        "mpg": 8.7,
+        "ppg": 1.5,
+        "rpg": 0.5,
+        "apg": 0.5,
         "spg": 0,
         "bpg": 0,
         "tpg": 0,
-        "fgPct": 0.5,
-        "tpPct": 0.5,
-        "ftPct": 0
+        "fgPct": 0.333,
+        "tpPct": 0.333,
+        "ftPct": 0,
+        "fgm": 0.5,
+        "fga": 1.5,
+        "tpm": 0.5,
+        "tpa": 1.5,
+        "ftm": 0,
+        "fta": 0
       },
       "gamelog": [
         {
@@ -8225,17 +9329,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Newark East Side (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 12.4,
-        "ppg": 4,
-        "rpg": 2,
+        "gp": 2,
+        "mpg": 10.6,
+        "ppg": 3,
+        "rpg": 1,
         "apg": 0,
-        "spg": 1,
-        "bpg": 1,
-        "tpg": 3,
-        "fgPct": 0.5,
+        "spg": 0.5,
+        "bpg": 0.5,
+        "tpg": 2,
+        "fgPct": 0.333,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 1.5,
+        "fga": 4.5,
+        "tpm": 0,
+        "tpa": 2,
+        "ftm": 0,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -8267,17 +9377,23 @@ window.HOOPDATA = {
       "birthYear": 2010,
       "club": "Hypersonics Baasketball (CIV)",
       "stats": {
-        "gp": 1,
-        "mpg": 29.8,
-        "ppg": 11,
-        "rpg": 4,
-        "apg": 3,
+        "gp": 2,
+        "mpg": 31.4,
+        "ppg": 12,
+        "rpg": 3,
+        "apg": 2,
         "spg": 4,
         "bpg": 0,
-        "tpg": 3,
-        "fgPct": 0.2,
-        "tpPct": 0,
-        "ftPct": 0.875
+        "tpg": 1.5,
+        "fgPct": 0.24,
+        "tpPct": 0.125,
+        "ftPct": 0.846,
+        "fgm": 3,
+        "fga": 12.5,
+        "tpm": 0.5,
+        "tpa": 4,
+        "ftm": 5.5,
+        "fta": 6.5
       },
       "gamelog": [
         {
@@ -8309,17 +9425,23 @@ window.HOOPDATA = {
       "birthYear": 2010,
       "club": "JTS FUSION (CIV)",
       "stats": {
-        "gp": 1,
-        "mpg": 27.2,
+        "gp": 2,
+        "mpg": 29.6,
         "ppg": 16,
         "rpg": 6,
         "apg": 2,
-        "spg": 1,
-        "bpg": 2,
-        "tpg": 6,
-        "fgPct": 0.417,
-        "tpPct": 0.6,
-        "ftPct": 0.75
+        "spg": 1.5,
+        "bpg": 1,
+        "tpg": 4.5,
+        "fgPct": 0.333,
+        "tpPct": 0.385,
+        "ftPct": 0.5,
+        "fgm": 5.5,
+        "fga": 16.5,
+        "tpm": 2.5,
+        "tpa": 6.5,
+        "ftm": 2.5,
+        "fta": 5
       },
       "gamelog": [
         {
@@ -8351,17 +9473,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Brave Lions (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 29.9,
-        "ppg": 18,
-        "rpg": 2,
-        "apg": 2,
-        "spg": 4,
-        "bpg": 1,
-        "tpg": 2,
-        "fgPct": 0.615,
-        "tpPct": 0.4,
-        "ftPct": 0
+        "gp": 2,
+        "mpg": 31.2,
+        "ppg": 13.5,
+        "rpg": 7.5,
+        "apg": 1.5,
+        "spg": 2,
+        "bpg": 1.5,
+        "tpg": 2.5,
+        "fgPct": 0.5,
+        "tpPct": 0.286,
+        "ftPct": 0.5,
+        "fgm": 6,
+        "fga": 12,
+        "tpm": 1,
+        "tpa": 3.5,
+        "ftm": 0.5,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -8393,17 +9521,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "JTS FUSION (CIV)",
       "stats": {
-        "gp": 1,
-        "mpg": 12.8,
+        "gp": 2,
+        "mpg": 13.1,
         "ppg": 2,
-        "rpg": 4,
+        "rpg": 2.5,
         "apg": 0,
         "spg": 0,
         "bpg": 1,
-        "tpg": 2,
-        "fgPct": 0,
+        "tpg": 1,
+        "fgPct": 0.2,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 0.5,
+        "fga": 2.5,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 1,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -8435,17 +9569,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Brave Lions (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 7.9,
+        "gp": 2,
+        "mpg": 7.7,
         "ppg": 0,
         "rpg": 1,
         "apg": 0,
-        "spg": 1,
-        "bpg": 0,
-        "tpg": 1,
+        "spg": 0.5,
+        "bpg": 0.5,
+        "tpg": 0.5,
         "fgPct": 0,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0,
+        "fgm": 0,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -8477,17 +9617,23 @@ window.HOOPDATA = {
       "birthYear": 2010,
       "club": "Wilson Academy (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 27.3,
-        "ppg": 4,
-        "rpg": 11,
-        "apg": 2,
-        "spg": 3,
-        "bpg": 2,
-        "tpg": 6,
-        "fgPct": 0.667,
+        "gp": 2,
+        "mpg": 26.7,
+        "ppg": 6.5,
+        "rpg": 9,
+        "apg": 1,
+        "spg": 2,
+        "bpg": 3.5,
+        "tpg": 3.5,
+        "fgPct": 0.857,
         "tpPct": 0,
-        "ftPct": 0
+        "ftPct": 0.5,
+        "fgm": 3,
+        "fga": 3.5,
+        "tpm": 0,
+        "tpa": 0.5,
+        "ftm": 0.5,
+        "fta": 1
       },
       "gamelog": [
         {
@@ -8519,17 +9665,23 @@ window.HOOPDATA = {
       "birthYear": 2009,
       "club": "Wilson Academy (USA)",
       "stats": {
-        "gp": 1,
-        "mpg": 7.2,
-        "ppg": 3,
+        "gp": 2,
+        "mpg": 4.6,
+        "ppg": 1.5,
         "rpg": 0,
-        "apg": 0,
-        "spg": 1,
+        "apg": 0.5,
+        "spg": 0.5,
         "bpg": 0,
-        "tpg": 2,
-        "fgPct": 1,
+        "tpg": 1,
+        "fgPct": 0.5,
         "tpPct": 0,
-        "ftPct": 1
+        "ftPct": 1,
+        "fgm": 0.5,
+        "fga": 1,
+        "tpm": 0,
+        "tpa": 0,
+        "ftm": 0.5,
+        "fta": 0.5
       },
       "gamelog": [
         {

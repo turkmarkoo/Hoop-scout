@@ -544,8 +544,10 @@ function playerCard(p){
 /* ---------- stats table (sortable) ---------- */
 const STAT_COLS = {
   basic: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["ppg","PTS","Points per game"],["rpg","REB","Rebounds per game"],["apg","AST","Assists per game"],["spg","STL","Steals per game"],["bpg","BLK","Blocks per game"],["tpg","TO","Turnovers per game"],["fgPct","FG%","Field-goal %"],["tpPct","3P%","Three-point %"],["ftPct","FT%","Free-throw %"]],
-  advanced: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["p36","P36","Points per 36 minutes (rate-normalised)"],["r36","R36","Rebounds per 36 minutes"],["a36","A36","Assists per 36 minutes"],["astto","A/TO","Assists per turnover — playmaking control"],["stk","STK","Stocks: steals + blocks per game"],["prod","PROD","Box production: PTS+REB+AST+STL+BLK − TO (no missed-shot penalty — shot attempts aren't in the data)"]]
+  advanced: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["ts","TS%","True Shooting %: PTS / (2·(FGA + 0.44·FTA)) — scoring efficiency across 2s, 3s and FTs. Shown for ≥6 FGA."],["efg","eFG%","Effective FG %: (FGM + 0.5·3PM) / FGA — credits the extra point on threes. Shown for ≥6 FGA."],["p36","P36","Points per 36 minutes (rate-normalised)"],["r36","R36","Rebounds per 36 minutes"],["a36","A36","Assists per 36 minutes"],["astto","A/TO","Assists per turnover — playmaking control"],["stk","STK","Stocks: steals + blocks per game"],["prod","PROD","Box production: PTS+REB+AST+STL+BLK − TO"]]
 };
+function tsDen(s){ return 2*((s.fga||0)+0.44*(s.fta||0)); }
+function tsQual(s){ return (s.fga||0)*(s.gp||0) >= 6; }  // require a real shot sample
 function metric(p,key){
   const s=p.stats||{}; const m=s.mpg||0;
   switch(key){
@@ -555,6 +557,8 @@ function metric(p,key){
     case "astto": return s.tpg>0 ? s.apg/s.tpg : (s.apg>0 ? Infinity : 0);
     case "stk": return (s.spg||0)+(s.bpg||0);
     case "prod": return (s.ppg||0)+(s.rpg||0)+(s.apg||0)+(s.spg||0)+(s.bpg||0)-(s.tpg||0);
+    case "ts": return (tsQual(s)&&tsDen(s)>0) ? s.ppg/tsDen(s) : -Infinity;
+    case "efg": return (tsQual(s)&&s.fga>0) ? (s.fgm+0.5*s.tpm)/s.fga : -Infinity;
     default: return (s[key]!=null ? s[key] : -Infinity);
   }
 }
@@ -562,7 +566,10 @@ function statCell(p,key){
   const s=p.stats||{};
   if(key==="pos") return p.pos||"–";
   if(key==="gp") return s.gp??"–";
-  if(key==="fgPct"||key==="tpPct"||key==="ftPct") return pct(s[key]);
+  if(key==="ts"||key==="efg"){ const v=metric(p,key); return v===-Infinity ? "–" : pct(v); }
+  if(key==="fgPct") return s.fga ? `<span title="${s.fgm}/${s.fga} FG per game">${pct(s.fgPct)}</span>` : pct(s.fgPct);
+  if(key==="tpPct") return s.tpa ? `<span title="${s.tpm}/${s.tpa} 3PT per game">${pct(s.tpPct)}</span>` : pct(s.tpPct);
+  if(key==="ftPct") return s.fta ? `<span title="${s.ftm}/${s.fta} FT per game">${pct(s.ftPct)}</span>` : pct(s.ftPct);
   if(key==="astto"){ const v=metric(p,"astto"); return isFinite(v) ? v.toFixed(2) : (s.apg>0?"∞":"–"); }
   return fmt(metric(p,key));
 }
@@ -607,7 +614,7 @@ function statsView(){
     </tr>`;
   }).join("");
   const note = tab==="advanced"
-    ? `<p class="muted-note adv-note"><b>P36 / R36 / A36</b> per-36-minute rates · <b>A/TO</b> assists per turnover · <b>STK</b> steals + blocks · <b>PROD</b> = PTS+REB+AST+STL+BLK − TO. Rates are extrapolated from games played so far; true-shooting/usage metrics need raw shot attempts, which aren't in this snapshot.</p>`
+    ? `<p class="muted-note adv-note"><b>TS%</b> true shooting = PTS / (2·(FGA + 0.44·FTA)) · <b>eFG%</b> = (FGM + 0.5·3PM) / FGA · <b>P36 / R36 / A36</b> per-36-minute rates · <b>A/TO</b> assists per turnover · <b>STK</b> steals + blocks · <b>PROD</b> = PTS+REB+AST+STL+BLK − TO. TS%/eFG% are shown for players with at least 6 field-goal attempts; per-game rates extrapolate from games played so far. Hover a FG%/3P%/FT% cell on the Per game tab to see makes/attempts.</p>`
     : "";
   return toggle + `<div class="statswrap"><table class="statstable"><thead>${head}</thead><tbody>${body}</tbody></table></div>` + note;
 }
