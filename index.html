@@ -254,6 +254,8 @@ button.brand:hover .mark b{color:var(--clay-deep)}
 .gamecard .gc-teams{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;font-family:var(--disp);font-size:16px}
 .win-name{font-weight:700;color:var(--text)}
 .lose-name{font-weight:500;color:var(--muted)}
+@keyframes spin{to{transform:rotate(360deg)}}
+#refresh.spin .ri{animation:spin .8s linear infinite;transform-origin:50% 50%}
 
 </style>
 </head>
@@ -271,6 +273,9 @@ button.brand:hover .mark b{color:var(--clay-deep)}
         <input id="search" type="search" placeholder="Search players…" autocomplete="off">
       </div>
       <div class="io">
+        <button class="btn" id="refresh" title="Refresh live scores now">
+          <svg class="ri" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"/></svg>Refresh
+        </button>
         <button class="btn" id="export" title="Download all your notes as a JSON backup">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>Notes
         </button>
@@ -341,7 +346,7 @@ function teamGames(teamId){
     const us=home?g.sa:g.sb, them=home?g.sb:g.sa;
     let right;
     if(g.status==='final'){ const win=us>them; right=`<span class="gst ${win?'win':'loss'}">${win?'W':'L'}</span><span class="sc">${us}–${them}</span>`; }
-    else if(g.status==='live'){ right=`<span class="gst live">Live</span><span class="sc">${us}–${them}</span>`; }
+    else if(g.status==='live'){ right=`<span class="gst live">${g.clock?('● '+g.clock):'Live'}</span><span class="sc">${us}–${them}</span>`; }
     else right=`<span class="gst upcoming">Upcoming</span>`;
     return `<div class="gamerow"><span class="opp"><span class="cd">vs</span> <b>${opp?opp.name:oppCode}</b></span>${right}</div>`;
   }).join("");
@@ -357,7 +362,7 @@ function neutralGameCard(g){
   const A=codeToTeam(g.a),B=codeToTeam(g.b);
   let badge;
   if(g.status==='final') badge=`<span class="sc">${g.sa}–${g.sb}</span> <span class="gst final">Final</span>`;
-  else if(g.status==='live') badge=`<span class="sc">${g.sa}–${g.sb}</span> <span class="gst live">Live</span>`;
+  else if(g.status==='live') badge=`<span class="sc">${g.sa}–${g.sb}</span> <span class="gst live">${g.clock?('● '+g.clock):'Live'}</span>`;
   else badge=`<span class="gst upcoming">Today</span>`;
   const aw=g.status==='final'&&g.sa>g.sb, bw=g.status==='final'&&g.sb>g.sa;
   return `<div class="panelcard gamecard">
@@ -365,12 +370,14 @@ function neutralGameCard(g){
     <div class="gc-teams"><span class="${aw?'win-name':'lose-name'}">${A?A.name:g.a}</span><span class="cd">vs</span><span class="${bw?'win-name':'lose-name'}">${B?B.name:g.b}</span></div>
   </div>`;
 }
+function homeNote(){
+  if(D._refreshed){ const s=Math.max(1,Math.round((Date.now()-D._refreshed)/1000)); return `Live scores · updated ${s<90?s+'s':Math.round(s/60)+'m'} ago · auto-refreshing`; }
+  if(D._liveError){ const upd=D.updated?new Date(D.updated).toUTCString().replace('GMT','UTC'):''; return `Live refresh unavailable — showing snapshot${upd?` from ${upd}`:''}`; }
+  return 'Fetching live scores…';
+}
 function homeView(){
-  const games=(D.games||[]).map(neutralGameCard).join("");
-  const upd=D.updated?new Date(D.updated):null;
-  const when=upd?upd.toUTCString().replace('GMT','UTC'):'';
-  return `<div class="home-note">Snapshot${when?` · ${when}`:''} — scores refresh when you re-upload the data.</div>
-    <div class="home-results">${games}</div>
+  return `<div class="home-note">${homeNote()}</div>
+    <div class="home-results">${(D.games||[]).map(neutralGameCard).join("")}</div>
     <p class="muted-note" style="margin-top:16px">Pick any of the 16 teams above for its roster, per-player event averages, photos and your scouting notes.</p>`;
 }
 function goHome(){ state.team=null; state.query=""; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); }
@@ -549,8 +556,7 @@ function openPlayer(id){
 
       <div class="dr-sec">
         <h4>${t.name} · results</h4>
-        ${teamGames(p.teamId)}
-        <div style="margin-top:14px">${standings(t.group, p.teamId)}</div>
+        <div id="drResults">${teamGames(p.teamId)}<div style="margin-top:14px">${standings(t.group, p.teamId)}</div></div>
       </div>
 
       <div class="notes">
@@ -674,8 +680,82 @@ let toastTimer=null;
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on");
   clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("on"),2200); }
 
+/* ---------- live score refresh ----------
+   FIBA blocks direct cross-origin reads, so the public light-score endpoint is
+   relayed through a CORS proxy. Swap PROXIES[0] for your own Cloudflare Worker
+   to drop the third-party dependency. If every proxy fails we keep the scores
+   that shipped in players.js, so the board never goes blank. */
+const LIGHT = id => `https://www.fiba.basketball/en/events/api/game-live-info/${id}/light`;
+const PROXIES = [
+  url => "https://corsproxy.io/?url=" + encodeURIComponent(url),
+  url => "https://api.allorigins.win/raw?url=" + encodeURIComponent(url)
+];
+const POLL_LIVE = 12000, POLL_IDLE = 45000;   // ms between auto-refreshes
+let liveTimer = null, refreshing = false;
+
+async function fetchGame(id){
+  let lastErr;
+  for(const px of PROXIES){
+    try{
+      const r = await fetch(px(LIGHT(id)), {cache:"no-store"});
+      if(!r.ok){ lastErr = new Error("status "+r.status); continue; }
+      return JSON.parse(await r.text()).game.content;
+    }catch(e){ lastErr = e; }
+  }
+  throw lastErr || new Error("fetch failed");
+}
+
+/* update only the score-bearing regions, so the roster grid & scroll stay put */
+function paintScores(){
+  const hr = $(".home-results"); if(hr) hr.innerHTML = (D.games||[]).map(neutralGameCard).join("");
+  const hn = $(".home-note"); if(hn) hn.textContent = homeNote();
+  const tp = $(".teampanel"); if(tp && state.team) tp.outerHTML = teamPanel(state.team);
+  const dr = $("#drResults");
+  if(dr && activeId){ const p = D.players.find(x=>x.id===activeId); if(p){ const t=teamById(p.teamId);
+    dr.innerHTML = teamGames(p.teamId) + `<div style="margin-top:14px">${standings(t.group,p.teamId)}</div>`; } }
+}
+
+async function refreshScores(manual){
+  const games = D.games || [];
+  if(!games.length || refreshing) return;
+  refreshing = true;
+  const btn = $("#refresh"); if(btn) btn.classList.add("spin");
+  const results = await Promise.allSettled(games.map(g => fetchGame(g.id)));
+  let anyLive = false, anyOk = false;
+  results.forEach((res,i) => {
+    if(res.status !== "fulfilled" || !res.value) return;
+    anyOk = true;
+    const c = res.value, g = games[i];
+    const st = c.status===5 ? "final" : (c.status>=3 ? "live" : "upcoming");
+    g.status = st;
+    if(c.teamA) g.sa = c.teamA.score;
+    if(c.teamB) g.sb = c.teamB.score;
+    g.clock = st==="live" ? `${c.quarter||""} ${c.remainingTime||""}`.trim() : "";
+    if(st==="live") anyLive = true;
+  });
+  if(anyOk){ D._refreshed = Date.now(); D._liveError = false; } else D._liveError = true;
+  paintScores();
+  refreshing = false;
+  if(btn) btn.classList.remove("spin");
+  if(manual) toast(anyOk ? "Scores updated" : "Couldn't reach live scores");
+  scheduleRefresh(anyLive);
+}
+
+function scheduleRefresh(anyLive){
+  clearTimeout(liveTimer);
+  if(document.hidden) return;                  // pause polling in background tabs
+  liveTimer = setTimeout(()=>refreshScores(), anyLive ? POLL_LIVE : POLL_IDLE);
+}
+
+document.addEventListener("visibilitychange", ()=>{
+  if(document.hidden) clearTimeout(liveTimer); else refreshScores();   // catch up when tab refocuses
+});
+$("#refresh").onclick = ()=> refreshScores(true);
+
 /* ---------- boot ---------- */
 render();
+refreshScores();
+
 </script>
 </body>
 </html>
