@@ -45,7 +45,7 @@ window.HOOPDATA = {
       "cote-divoire"
     ]
   },
-  "updated": "2026-06-28T13:10:00Z",
+  "updated": "2026-06-28T14:24:53.368Z",
   "teams": [
     {
       "id": "italy",
@@ -56,8 +56,10 @@ window.HOOPDATA = {
       "rosterUrl": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/teams/italy#roster",
       "record": {
         "w": 1,
-        "l": 0,
-        "pts": 2
+        "l": 1,
+        "pts": 3,
+        "diff": 13,
+        "pf": 156
       }
     },
     {
@@ -68,9 +70,11 @@ window.HOOPDATA = {
       "count": 12,
       "rosterUrl": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/teams/usa#roster",
       "record": {
-        "w": 1,
+        "w": 2,
         "l": 0,
-        "pts": 2
+        "pts": 4,
+        "diff": 93,
+        "pf": 243
       }
     },
     {
@@ -81,9 +85,11 @@ window.HOOPDATA = {
       "count": 12,
       "rosterUrl": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/teams/france#roster",
       "record": {
-        "w": 0,
+        "w": 1,
         "l": 1,
-        "pts": 1
+        "pts": 3,
+        "diff": -15,
+        "pf": 163
       }
     },
     {
@@ -95,8 +101,10 @@ window.HOOPDATA = {
       "rosterUrl": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/teams/japan#roster",
       "record": {
         "w": 0,
-        "l": 1,
-        "pts": 1
+        "l": 2,
+        "pts": 2,
+        "diff": -91,
+        "pf": 130
       }
     },
     {
@@ -109,7 +117,9 @@ window.HOOPDATA = {
       "record": {
         "w": 0,
         "l": 1,
-        "pts": 1
+        "pts": 1,
+        "diff": -18,
+        "pf": 72
       }
     },
     {
@@ -122,7 +132,9 @@ window.HOOPDATA = {
       "record": {
         "w": 0,
         "l": 1,
-        "pts": 1
+        "pts": 1,
+        "diff": -14,
+        "pf": 89
       }
     },
     {
@@ -135,7 +147,9 @@ window.HOOPDATA = {
       "record": {
         "w": 1,
         "l": 0,
-        "pts": 2
+        "pts": 2,
+        "diff": 14,
+        "pf": 103
       }
     },
     {
@@ -148,7 +162,9 @@ window.HOOPDATA = {
       "record": {
         "w": 1,
         "l": 0,
-        "pts": 2
+        "pts": 2,
+        "diff": 18,
+        "pf": 90
       }
     },
     {
@@ -161,7 +177,9 @@ window.HOOPDATA = {
       "record": {
         "w": 0,
         "l": 1,
-        "pts": 1
+        "pts": 1,
+        "diff": -12,
+        "pf": 100
       }
     },
     {
@@ -174,7 +192,9 @@ window.HOOPDATA = {
       "record": {
         "w": 0,
         "l": 1,
-        "pts": 1
+        "pts": 1,
+        "diff": -14,
+        "pf": 78
       }
     },
     {
@@ -187,7 +207,9 @@ window.HOOPDATA = {
       "record": {
         "w": 1,
         "l": 0,
-        "pts": 2
+        "pts": 2,
+        "diff": 14,
+        "pf": 92
       }
     },
     {
@@ -200,7 +222,9 @@ window.HOOPDATA = {
       "record": {
         "w": 1,
         "l": 0,
-        "pts": 2
+        "pts": 2,
+        "diff": 12,
+        "pf": 112
       }
     },
     {
@@ -213,7 +237,9 @@ window.HOOPDATA = {
       "record": {
         "w": 0,
         "l": 2,
-        "pts": 2
+        "pts": 2,
+        "diff": -42,
+        "pf": 116
       }
     },
     {
@@ -226,7 +252,9 @@ window.HOOPDATA = {
       "record": {
         "w": 2,
         "l": 0,
-        "pts": 4
+        "pts": 4,
+        "diff": 27,
+        "pf": 166
       }
     },
     {
@@ -239,7 +267,9 @@ window.HOOPDATA = {
       "record": {
         "w": 1,
         "l": 1,
-        "pts": 3
+        "pts": 3,
+        "diff": 9,
+        "pf": 150
       }
     },
     {
@@ -252,14 +282,217 @@ window.HOOPDATA = {
       "record": {
         "w": 1,
         "l": 1,
-        "pts": 3
+        "pts": 3,
+        "diff": 6,
+        "pf": 147
       }
     }
   ],
   "games": [
     {
+      "id": "114412",
+      "group": "A",
+      "date": "2026-06-27",
+      "a": "ITA",
+      "b": "JPN",
+      "sa": 93,
+      "sb": 64,
+      "status": "final"
+    },
+    {
+      "id": "114411",
+      "group": "A",
+      "date": "2026-06-27",
+      "a": "USA",
+      "b": "FRA",
+      "sa": 115,
+      "sb": 84,
+      "status": "final"
+    },
+    {
+      "id": "114410",
+      "group": "A",
+      "date": "2026-06-28",
+      "a": "FRA",
+      "b": "ITA",
+      "sa": 79,
+      "sb": 63,
+      "status": "final"
+    },
+    {
+      "id": "114414",
+      "group": "A",
+      "date": "2026-06-28",
+      "a": "JPN",
+      "b": "USA",
+      "sa": 66,
+      "sb": 128,
+      "status": "final"
+    },
+    {
+      "id": "114409",
+      "group": "A",
+      "date": "2026-06-30",
+      "a": "ITA",
+      "b": "USA",
+      "sa": 0,
+      "sb": 0,
+      "status": "sched"
+    },
+    {
+      "id": "114413",
+      "group": "A",
+      "date": "2026-06-30",
+      "a": "FRA",
+      "b": "JPN",
+      "sa": 0,
+      "sb": 0,
+      "status": "sched"
+    },
+    {
+      "id": "114416",
+      "group": "B",
+      "date": "2026-06-27",
+      "a": "CMR",
+      "b": "CHN",
+      "sa": 72,
+      "sb": 90,
+      "status": "final"
+    },
+    {
+      "id": "114419",
+      "group": "B",
+      "date": "2026-06-27",
+      "a": "CAN",
+      "b": "LTU",
+      "sa": 89,
+      "sb": 103,
+      "status": "final"
+    },
+    {
+      "id": "114417",
+      "group": "B",
+      "date": "2026-06-28",
+      "a": "LTU",
+      "b": "CMR",
+      "sa": 0,
+      "sb": 0,
+      "status": "sched"
+    },
+    {
+      "id": "114415",
+      "group": "B",
+      "date": "2026-06-28",
+      "a": "CHN",
+      "b": "CAN",
+      "sa": 0,
+      "sb": 0,
+      "status": "sched"
+    },
+    {
+      "id": "114418",
+      "group": "B",
+      "date": "2026-06-30",
+      "a": "CMR",
+      "b": "CAN",
+      "sa": 0,
+      "sb": 0,
+      "status": "sched"
+    },
+    {
+      "id": "114420",
+      "group": "B",
+      "date": "2026-06-30",
+      "a": "LTU",
+      "b": "CHN",
+      "sa": 0,
+      "sb": 0,
+      "status": "sched"
+    },
+    {
+      "id": "114423",
+      "group": "C",
+      "date": "2026-06-27",
+      "a": "NZL",
+      "b": "TUR",
+      "sa": 100,
+      "sb": 112,
+      "status": "final"
+    },
+    {
+      "id": "114424",
+      "group": "C",
+      "date": "2026-06-27",
+      "a": "SLO",
+      "b": "PUR",
+      "sa": 78,
+      "sb": 92,
+      "status": "final"
+    },
+    {
+      "id": "114425",
+      "group": "C",
+      "date": "2026-06-28",
+      "a": "PUR",
+      "b": "NZL",
+      "sa": 0,
+      "sb": 0,
+      "status": "sched"
+    },
+    {
+      "id": "114422",
+      "group": "C",
+      "date": "2026-06-28",
+      "a": "TUR",
+      "b": "SLO",
+      "sa": 0,
+      "sb": 0,
+      "status": "sched"
+    },
+    {
+      "id": "114426",
+      "group": "C",
+      "date": "2026-06-30",
+      "a": "NZL",
+      "b": "SLO",
+      "sa": 0,
+      "sb": 0,
+      "status": "sched"
+    },
+    {
+      "id": "114421",
+      "group": "C",
+      "date": "2026-06-30",
+      "a": "PUR",
+      "b": "TUR",
+      "sa": 0,
+      "sb": 0,
+      "status": "sched"
+    },
+    {
+      "id": "114430",
+      "group": "D",
+      "date": "2026-06-27",
+      "a": "VEN",
+      "b": "CIV",
+      "sa": 63,
+      "sb": 74,
+      "status": "final"
+    },
+    {
+      "id": "114429",
+      "group": "D",
+      "date": "2026-06-27",
+      "a": "AUS",
+      "b": "SRB",
+      "sa": 88,
+      "sb": 66,
+      "status": "final"
+    },
+    {
       "id": "114427",
       "group": "D",
+      "date": "2026-06-28",
       "a": "SRB",
       "b": "VEN",
       "sa": 84,
@@ -269,6 +502,7 @@ window.HOOPDATA = {
     {
       "id": "114432",
       "group": "D",
+      "date": "2026-06-28",
       "a": "CIV",
       "b": "AUS",
       "sa": 73,
@@ -276,50 +510,24 @@ window.HOOPDATA = {
       "status": "final"
     },
     {
-      "id": "114414",
-      "group": "A",
-      "a": "JPN",
-      "b": "USA",
-      "sa": 8,
-      "sb": 14,
-      "status": "live"
-    },
-    {
-      "id": "114410",
-      "group": "A",
-      "a": "FRA",
-      "b": "ITA",
+      "id": "114431",
+      "group": "D",
+      "date": "2026-06-30",
+      "a": "VEN",
+      "b": "AUS",
       "sa": 0,
       "sb": 0,
-      "status": "live"
+      "status": "sched"
     },
     {
-      "id": "114417",
-      "group": "B",
-      "a": "LTU",
-      "b": "CMR",
-      "status": "upcoming"
-    },
-    {
-      "id": "114415",
-      "group": "B",
-      "a": "CHN",
-      "b": "CAN",
-      "status": "upcoming"
-    },
-    {
-      "id": "114422",
-      "group": "C",
-      "a": "TUR",
-      "b": "SLO",
-      "status": "upcoming"
-    },
-    {
-      "id": "114425",
-      "group": "C",
-      "a": "PUR",
-      "b": "NZL",
-      "status": "upcoming"
+      "id": "114428",
+      "group": "D",
+      "date": "2026-06-30",
+      "a": "SRB",
+      "b": "CIV",
+      "sa": 0,
+      "sb": 0,
+      "status": "sched"
     }
   ],
   "players": [
@@ -359,7 +567,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.5,
           "tpPct": 0.5,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 369114
@@ -400,7 +609,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.5,
           "tpPct": 0.4,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 368931
@@ -441,7 +651,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.75,
           "tpPct": 0,
-          "ftPct": 0.25
+          "ftPct": 0.25,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 369113
@@ -482,7 +693,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.545,
           "tpPct": 1,
-          "ftPct": 0.444
+          "ftPct": 0.444,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 290360
@@ -523,7 +735,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.4,
           "tpPct": 0,
-          "ftPct": 0.4
+          "ftPct": 0.4,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 370375
@@ -564,7 +777,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.333,
           "tpPct": 0.5,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 370373
@@ -605,7 +819,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.5,
           "tpPct": 1,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 390077
@@ -646,7 +861,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.286,
           "tpPct": 0,
-          "ftPct": 0.25
+          "ftPct": 0.25,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 365149
@@ -687,7 +903,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.4,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 393939
@@ -728,7 +945,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.5,
           "tpPct": 0.333,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 417538
@@ -769,7 +987,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0.75
+          "ftPct": 0.75,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 365114
@@ -810,7 +1029,8 @@ window.HOOPDATA = {
           "to": 4,
           "fgPct": 0.333,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 369012
@@ -851,7 +1071,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.5,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 417414
@@ -892,7 +1113,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.714,
           "tpPct": 0,
-          "ftPct": 0.333
+          "ftPct": 0.333,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 417637
@@ -933,7 +1155,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.6,
           "tpPct": 0.5,
-          "ftPct": 0.667
+          "ftPct": 0.667,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 386978
@@ -974,7 +1197,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.333,
           "tpPct": 0.5,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 392502
@@ -1015,7 +1239,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 1,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 392510
@@ -1056,7 +1281,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.6,
           "tpPct": 0.333,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 387041
@@ -1097,7 +1323,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.5,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 417645
@@ -1138,7 +1365,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.4,
           "tpPct": 0.25,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 410516
@@ -1179,7 +1407,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.643,
           "tpPct": 0.556,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 386976
@@ -1220,7 +1449,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.625,
           "tpPct": 0.667,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 348230
@@ -1261,7 +1491,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.357,
           "tpPct": 0.333,
-          "ftPct": 0.25
+          "ftPct": 0.25,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 392244
@@ -1302,7 +1533,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.667,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 392512
@@ -1343,7 +1575,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.111,
           "tpPct": 0.25,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 416414
@@ -1384,7 +1617,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.625,
           "tpPct": 1,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 391162
@@ -1425,7 +1659,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 390739
@@ -1466,7 +1701,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 391532
@@ -1507,7 +1743,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.5,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 391776
@@ -1548,7 +1785,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.75,
           "tpPct": 0.667,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 416395
@@ -1589,7 +1827,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.857,
           "tpPct": 0.5,
-          "ftPct": 0.833
+          "ftPct": 0.833,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 344995
@@ -1630,7 +1869,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.875,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 390758
@@ -1671,7 +1911,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.2,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 392912
@@ -1712,7 +1953,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 1,
           "tpPct": 1,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 391212
@@ -1753,7 +1995,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.2,
           "tpPct": 0.125,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 367018
@@ -1794,7 +2037,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.5,
           "tpPct": 0.5,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114411-USA-FRA"
         }
       ],
       "pid": 416173
@@ -1835,7 +2079,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.231,
           "tpPct": 0.125,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 397205
@@ -1876,7 +2121,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 416878
@@ -1917,7 +2163,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 416875
@@ -1958,7 +2205,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 1,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 397208
@@ -1999,7 +2247,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 397247
@@ -2040,7 +2289,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.571,
           "tpPct": 0.5,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 418029
@@ -2081,7 +2331,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.625,
           "tpPct": 0,
-          "ftPct": 0.333
+          "ftPct": 0.333,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 397250
@@ -2122,7 +2373,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.125,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 397283
@@ -2163,7 +2415,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.5,
           "tpPct": 1,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 397252
@@ -2204,7 +2457,8 @@ window.HOOPDATA = {
           "to": 5,
           "fgPct": 0.522,
           "tpPct": 0.125,
-          "ftPct": 0.333
+          "ftPct": 0.333,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 347946
@@ -2245,7 +2499,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 418032
@@ -2286,7 +2541,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114412-ITA-JPN"
         }
       ],
       "pid": 416900
@@ -2327,7 +2583,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.286,
           "tpPct": 0.2,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 415792
@@ -2368,7 +2625,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 415547
@@ -2434,7 +2692,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.333,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 416122
@@ -2475,7 +2734,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.571,
           "tpPct": 0.667,
-          "ftPct": 0.6
+          "ftPct": 0.6,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 390228
@@ -2516,7 +2776,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 390520
@@ -2557,7 +2818,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.333,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 415544
@@ -2598,7 +2860,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.364,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 390270
@@ -2639,7 +2902,8 @@ window.HOOPDATA = {
           "to": 5,
           "fgPct": 0.3,
           "tpPct": 0,
-          "ftPct": 0.833
+          "ftPct": 0.833,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 414706
@@ -2680,7 +2944,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 416760
@@ -2721,7 +2986,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 304072
@@ -2762,7 +3028,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.538,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 390537
@@ -2803,7 +3070,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.286,
           "tpPct": 0,
-          "ftPct": 0.889
+          "ftPct": 0.889,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392458
@@ -2844,7 +3112,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.357,
           "tpPct": 0.5,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392709
@@ -2885,7 +3154,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.286,
           "tpPct": 0.333,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392461
@@ -2926,7 +3196,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.333,
           "tpPct": 0.5,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 368075
@@ -2967,7 +3238,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 417638
@@ -3008,7 +3280,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.286,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392705
@@ -3049,7 +3322,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.5,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 393172
@@ -3090,7 +3364,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.409,
           "tpPct": 0.333,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392706
@@ -3131,7 +3406,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.5,
           "tpPct": 0.333,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392708
@@ -3172,7 +3448,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.5,
           "tpPct": 0.333,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 417101
@@ -3213,7 +3490,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.333,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392462
@@ -3254,7 +3532,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 416112
@@ -3295,7 +3574,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392388
@@ -3336,7 +3616,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392283
@@ -3377,7 +3658,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 288103
@@ -3418,7 +3700,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392400
@@ -3459,7 +3742,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.2,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392395
@@ -3500,7 +3784,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.333,
           "tpPct": 0.333,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392372
@@ -3541,7 +3826,8 @@ window.HOOPDATA = {
           "to": 4,
           "fgPct": 0.625,
           "tpPct": 0.333,
-          "ftPct": 0.875
+          "ftPct": 0.875,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 362565
@@ -3582,7 +3868,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.5,
           "tpPct": 0.5,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392396
@@ -3623,7 +3910,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.4,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 394104
@@ -3664,7 +3952,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.5,
           "tpPct": 0.5,
-          "ftPct": 0.6
+          "ftPct": 0.6,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 395518
@@ -3705,7 +3994,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.583,
           "tpPct": 0.333,
-          "ftPct": 0.6
+          "ftPct": 0.6,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 362560
@@ -3746,7 +4036,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.5,
           "tpPct": 0.4,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114419-CAN-LTU"
         }
       ],
       "pid": 392371
@@ -3787,7 +4078,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.5,
           "tpPct": 0.5,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 396636
@@ -3828,7 +4120,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.333,
           "tpPct": 0.5,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 396809
@@ -3869,7 +4162,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.5,
           "tpPct": 0.5,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 417425
@@ -3910,7 +4204,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.25,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 396659
@@ -3951,7 +4246,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.167,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 396645
@@ -3992,7 +4288,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.4,
           "tpPct": 0.333,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 396644
@@ -4033,7 +4330,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.625,
           "tpPct": 0.5,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 396654
@@ -4074,7 +4372,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.6,
           "tpPct": 0,
-          "ftPct": 0.917
+          "ftPct": 0.917,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 396655
@@ -4115,7 +4414,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.571,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 396643
@@ -4156,7 +4456,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.25,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 417427
@@ -4197,7 +4498,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114416-CMR-CHN"
         }
       ],
       "pid": 396657
@@ -4263,7 +4565,8 @@ window.HOOPDATA = {
           "to": 5,
           "fgPct": 0.425,
           "tpPct": 0.316,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 414888
@@ -4304,7 +4607,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 372744
@@ -4345,7 +4649,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.462,
           "tpPct": 0.667,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 377082
@@ -4386,7 +4691,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.5,
           "tpPct": 0,
-          "ftPct": 0.375
+          "ftPct": 0.375,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 375910
@@ -4427,7 +4733,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 375489
@@ -4468,7 +4775,8 @@ window.HOOPDATA = {
           "to": 8,
           "fgPct": 0.538,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 375911
@@ -4509,7 +4817,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.667,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 390207
@@ -4575,7 +4884,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 415128
@@ -4616,7 +4926,8 @@ window.HOOPDATA = {
           "to": 4,
           "fgPct": 0.222,
           "tpPct": 0.143,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 373242
@@ -4682,7 +4993,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 375490
@@ -4723,7 +5035,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 397477
@@ -4764,7 +5077,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 397373
@@ -4805,7 +5119,8 @@ window.HOOPDATA = {
           "to": 4,
           "fgPct": 0.333,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 397376
@@ -4846,7 +5161,8 @@ window.HOOPDATA = {
           "to": 4,
           "fgPct": 0.714,
           "tpPct": 0.5,
-          "ftPct": 0.533
+          "ftPct": 0.533,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 348608
@@ -4887,7 +5203,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 418664
@@ -4928,7 +5245,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 418663
@@ -4969,7 +5287,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 397369
@@ -5010,7 +5329,8 @@ window.HOOPDATA = {
           "to": 5,
           "fgPct": 1,
           "tpPct": 1,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 418590
@@ -5051,7 +5371,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.4,
           "tpPct": 0,
-          "ftPct": 0.111
+          "ftPct": 0.111,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 397374
@@ -5092,7 +5413,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.474,
           "tpPct": 0,
-          "ftPct": 0.4
+          "ftPct": 0.4,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 348915
@@ -5133,7 +5455,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 397370
@@ -5174,7 +5497,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.5,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 397375
@@ -5215,7 +5539,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.333,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 383651
@@ -5256,7 +5581,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.333,
           "tpPct": 0.375,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 383652
@@ -5297,7 +5623,8 @@ window.HOOPDATA = {
           "to": 4,
           "fgPct": 0.48,
           "tpPct": 0.333,
-          "ftPct": 0.833
+          "ftPct": 0.833,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 393119
@@ -5338,7 +5665,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 418475
@@ -5379,7 +5707,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.308,
           "tpPct": 0.429,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 382902
@@ -5420,7 +5749,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 416812
@@ -5461,7 +5791,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 1,
           "tpPct": 1,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 383637
@@ -5502,7 +5833,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.625,
           "tpPct": 0.5,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 393408
@@ -5543,7 +5875,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 384488
@@ -5584,7 +5917,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 383640
@@ -5625,7 +5959,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.5,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 384042
@@ -5666,7 +6001,8 @@ window.HOOPDATA = {
           "to": 4,
           "fgPct": 0.333,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114424-SLO-PUR"
         }
       ],
       "pid": 383641
@@ -5707,7 +6043,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.333,
           "tpPct": 0.2,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 372063
@@ -5748,7 +6085,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.565,
           "tpPct": 0.667,
-          "ftPct": 0.833
+          "ftPct": 0.833,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 318825
@@ -5789,7 +6127,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 397220
@@ -5830,7 +6169,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.333,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 406248
@@ -5871,7 +6211,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 415038
@@ -5912,7 +6253,8 @@ window.HOOPDATA = {
           "to": 5,
           "fgPct": 0.438,
           "tpPct": 0.222,
-          "ftPct": 0.9
+          "ftPct": 0.9,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 349871
@@ -5953,7 +6295,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 418776
@@ -5994,7 +6337,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.333,
           "tpPct": 0.333,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 397221
@@ -6035,7 +6379,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.75,
           "tpPct": 0,
-          "ftPct": 0.833
+          "ftPct": 0.833,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 418771
@@ -6076,7 +6421,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.333,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 311934
@@ -6117,7 +6463,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 397365
@@ -6158,7 +6505,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114423-NZL-TUR"
         }
       ],
       "pid": 418772
@@ -6199,7 +6547,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 393436
@@ -6240,7 +6589,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.333,
           "tpPct": 0.222,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 378574
@@ -6281,7 +6631,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.375,
           "tpPct": 0.25,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 378547
@@ -6322,7 +6673,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.273,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 378577
@@ -6363,7 +6715,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.4,
           "tpPct": 0.2,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 378576
@@ -6404,7 +6757,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 378582
@@ -6445,7 +6799,8 @@ window.HOOPDATA = {
           "to": 6,
           "fgPct": 0.5,
           "tpPct": 0,
-          "ftPct": 0.6
+          "ftPct": 0.6,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 378548
@@ -6486,7 +6841,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.143,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 418598
@@ -6527,7 +6883,8 @@ window.HOOPDATA = {
           "to": 4,
           "fgPct": 0.25,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 378674
@@ -6568,7 +6925,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 378578
@@ -6609,7 +6967,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.25,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 418597
@@ -6650,7 +7009,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 416965
@@ -6691,7 +7051,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.429,
           "tpPct": 0.4,
-          "ftPct": 0.8
+          "ftPct": 0.8,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 378794
@@ -6732,7 +7093,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 1,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 378798
@@ -6773,7 +7135,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.571,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 374422
@@ -6814,7 +7177,8 @@ window.HOOPDATA = {
           "to": 6,
           "fgPct": 0.333,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 374423
@@ -6855,7 +7219,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.571,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 377273
@@ -6896,7 +7261,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.5,
           "tpPct": 0.5,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 374421
@@ -6937,7 +7303,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 376692
@@ -6978,7 +7345,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.6,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 378800
@@ -7019,7 +7387,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 413478
@@ -7060,7 +7429,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.778,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 386581
@@ -7101,7 +7471,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.444,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 375157
@@ -7142,7 +7513,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 397291
@@ -7183,7 +7555,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.5,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 362408
@@ -7224,7 +7597,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 393646
@@ -7265,7 +7639,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.667,
           "tpPct": 0.667,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 361717
@@ -7306,7 +7681,8 @@ window.HOOPDATA = {
           "to": 5,
           "fgPct": 0.143,
           "tpPct": 0.333,
-          "ftPct": 0.75
+          "ftPct": 0.75,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 361714
@@ -7347,7 +7723,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 361720
@@ -7388,7 +7765,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.385,
           "tpPct": 0.333,
-          "ftPct": 0.571
+          "ftPct": 0.571,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 350029
@@ -7429,7 +7807,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 392582
@@ -7470,7 +7849,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.5,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 361704
@@ -7511,7 +7891,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.333,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 368902
@@ -7552,7 +7933,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.429,
           "tpPct": 0.4,
-          "ftPct": 0.75
+          "ftPct": 0.75,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 351433
@@ -7593,7 +7975,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0.1,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 361706
@@ -7634,7 +8017,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.333,
           "tpPct": 0,
-          "ftPct": 0.167
+          "ftPct": 0.167,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114429-AUS-SRB"
         }
       ],
       "pid": 394107
@@ -7675,7 +8059,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 375832
@@ -7716,7 +8101,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.5,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 417464
@@ -7757,7 +8143,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.25,
           "tpPct": 0.5,
-          "ftPct": 0.5
+          "ftPct": 0.5,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 398396
@@ -7798,7 +8185,8 @@ window.HOOPDATA = {
           "to": 0,
           "fgPct": 0.5,
           "tpPct": 0.5,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 394523
@@ -7839,7 +8227,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.5,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 395272
@@ -7880,7 +8269,8 @@ window.HOOPDATA = {
           "to": 3,
           "fgPct": 0.2,
           "tpPct": 0,
-          "ftPct": 0.875
+          "ftPct": 0.875,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 416897
@@ -7921,7 +8311,8 @@ window.HOOPDATA = {
           "to": 6,
           "fgPct": 0.417,
           "tpPct": 0.6,
-          "ftPct": 0.75
+          "ftPct": 0.75,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 394526
@@ -7962,7 +8353,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0.615,
           "tpPct": 0.4,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 394841
@@ -8003,7 +8395,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 394721
@@ -8044,7 +8437,8 @@ window.HOOPDATA = {
           "to": 1,
           "fgPct": 0,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 398383
@@ -8085,7 +8479,8 @@ window.HOOPDATA = {
           "to": 6,
           "fgPct": 0.667,
           "tpPct": 0,
-          "ftPct": 0
+          "ftPct": 0,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 398382
@@ -8126,7 +8521,8 @@ window.HOOPDATA = {
           "to": 2,
           "fgPct": 1,
           "tpPct": 0,
-          "ftPct": 1
+          "ftPct": 1,
+          "url": "https://www.fiba.basketball/en/events/fiba-u17-basketball-world-cup-2026/games/114430-VEN-CIV"
         }
       ],
       "pid": 417463
