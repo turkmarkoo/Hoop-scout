@@ -7,8 +7,24 @@ GitHub Pages, and it works offline / from `file://` too (handy courtside).
 ## Files
 - `index.html` — the app (all CSS/JS inline)
 - `players.js` — the data (`window.HOOPDATA`): event, 16 teams in 4 groups, players
-- `scraper.js` — browser snippet to pull rosters/box scores off FIBA
-- 3 sample players (Slovenia) are included so it renders on first open — replace them.
+- `scraper.js` — browser snippet to pull numbers/positions/stats off FIBA
+
+## What's in the data now
+`players.js` is populated with the **official confirmed player lists for all 16
+teams** (announced 26 Jun 2026) — 261 players.
+
+Two honest caveats:
+- **Names only.** Jersey numbers, positions, heights and birth years aren't in
+  the public roster text, so they're blank (shown as `#` / `–`) until you add
+  them. Stats are empty until games are scraped.
+- **Pools vs final 12.** Nine teams published a full training-camp pool (more
+  than 12); those are tagged `rosterType:"pool"` and flagged "full pool" in the
+  header — the 12 that dress for a game may be a subset. Teams with exactly 12
+  (Australia, Canada, Japan, Lithuania, New Zealand, Puerto Rico, USA) are
+  `final12`.
+
+Source of names: FIBA's confirmed rosters (republished in plain text by
+TalkBasket). Verify against the live FIBA team pages at the event if in doubt.
 
 ## Run it
 - **Locally:** open `index.html` in a browser. Done.
