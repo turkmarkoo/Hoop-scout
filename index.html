@@ -141,6 +141,12 @@ input,textarea{font-family:inherit}
 .dr-sec{padding:20px 24px; border-bottom:1px solid var(--line-soft)}
 .dr-sec h4{font-family:var(--disp); font-weight:700; letter-spacing:.14em; font-size:12px; text-transform:uppercase; color:var(--muted); margin:0 0 14px; display:flex; align-items:center; gap:9px}
 .dr-sec h4::before{content:""; width:16px; height:2px; background:var(--clay)}
+.shotwrap{margin-top:2px}
+.shotsvg{display:block;width:100%;max-width:460px;height:auto;margin:0 auto}
+.shotsvg text{font-family:var(--disp),'Segoe UI',Arial,sans-serif}
+.shotfoot{display:flex;align-items:center;gap:8px;justify-content:center;font-size:11px;color:var(--muted);margin-top:10px;flex-wrap:wrap}
+.legramp{height:10px;width:130px;border-radius:6px;background:linear-gradient(90deg,#f4ece0,#c9864e,#784221)}
+.shottot{margin-left:auto;font-weight:600;color:var(--text)}
 
 .avg{display:grid; grid-template-columns:repeat(6,1fr); gap:1px; background:var(--line-soft); border:1px solid var(--line-soft); border-radius:11px; overflow:hidden}
 .avg .a{background:var(--panel); padding:11px 6px; text-align:center}
@@ -353,6 +359,7 @@ a.logopp:hover{text-decoration:underline}
 <div class="toast" id="toast"></div>
 
 <script src="players.js"></script>
+<script src="shots.js"></script>
 <script>
 const D = window.HOOPDATA || {event:{},groups:{},teams:[],players:[]};
 const NOTE_KEY = "hoopscout:notes:v1";
@@ -735,6 +742,42 @@ function gameLog(rows){
   return `<div class="logwrap"><table class="log"><thead><tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
 
+
+/* ---------- shot chart (play-by-play zones) ---------- */
+function szFill(m,a){ if(a===0) return '#eae3d6';
+  const lp=(x,y,t)=>x+(y-x)*t, p=m/a, t=Math.max(0,Math.min(1,(p-0.20)/0.45)),
+    lo=[244,236,224],mid=[201,134,82],hi=[120,66,33]; let c;
+  if(t<.5){const u=t/.5;c=[lp(lo[0],mid[0],u),lp(lo[1],mid[1],u),lp(lo[2],mid[2],u)];}
+  else{const u=(t-.5)/.5;c=[lp(mid[0],hi[0],u),lp(mid[1],hi[1],u),lp(mid[2],hi[2],u)];}
+  return 'rgb('+c.map(Math.round).join(',')+')'; }
+function szText(m,a){ if(a===0) return '#9a8f7b'; return (m/a>0.45)?'#fff':'#3a3027'; }
+function shotChartSVG(z,g){
+  let s='';
+  g.zones.forEach(k=>{ const v=z[k]||[0,0]; s+=`<polygon points="${g.poly[k]}" fill="${szFill(v[0],v[1])}" stroke="${g.line}" stroke-width="1.9" stroke-linejoin="round"/>`; });
+  s+=g.detail;
+  g.zones.forEach(k=>{ const v=z[k]||[0,0],m=v[0],a=v[1],pc=a?Math.round(m/a*100)+'%':'–',ma=a?(m+' – '+a):'';
+    if(k==='cornerL'||k==='cornerR'){ const c=g.call[k],col='#3a3027',dot=a?szFill(m,a):g.line;
+      s+=`<line x1="${c.lx0}" y1="${c.ty-4}" x2="${c.t[0]}" y2="${c.t[1]}" stroke="${g.line}" stroke-width="1.3"/>`
+        +`<circle cx="${c.t[0]}" cy="${c.t[1]}" r="2.2" fill="${dot}"/>`
+        +`<text x="${c.tx}" y="${c.ty}" text-anchor="${c.anchor}" font-size="19" font-weight="800" fill="${col}">${pc}</text>`
+        +(a?`<text x="${c.tx}" y="${c.ty+13}" text-anchor="${c.anchor}" font-size="11" font-weight="600" fill="${col}" opacity=".92">${ma}</text>`:'');
+    } else { const f=g.fs[k],col=szText(m,a),x=g.cen[k][0],y=g.cen[k][1];
+      s+=`<text x="${x}" y="${y}" text-anchor="middle" font-size="${f}" font-weight="800" fill="${col}">${pc}</text>`
+        +(a?`<text x="${x}" y="${y+f*0.8}" text-anchor="middle" font-size="${(f*0.58).toFixed(1)}" font-weight="600" fill="${col}" opacity=".92">${ma}</text>`:'');
+    }});
+  return `<svg viewBox="${g.vb}" class="shotsvg" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+}
+function shotChartBlock(p){
+  const S=window.SHOTS;
+  if(!S||!S.geo) return `<p class="muted-note">Shot-location data isn't loaded.</p>`;
+  const z = S.players ? S.players[String(p.pid)] : null;
+  let att=0,mk=0; if(z) S.geo.zones.forEach(k=>{ const v=z[k]; if(v){att+=v[1];mk+=v[0];} });
+  if(!z||!att) return `<p class="muted-note">No play-by-play shot data yet for ${p.name}. Shot locations are parsed per game — so far only the Australia–Serbia game (Group D). This chart fills in as more games are scraped.</p>`;
+  const games=(S.meta&&S.meta.games)||1;
+  return `<div class="shotwrap">${shotChartSVG(z,S.geo)}</div>
+    <div class="shotfoot"><span>cold</span><span class="legramp"></span><span>hot · FG%</span><span class="shottot">${mk}/${att} FG · ${games} game${games>1?'s':''}</span></div>`;
+}
+
 function openPlayer(id){
   const p = D.players.find(x=>x.id===id); if(!p) return;
   activeId=id;
@@ -778,6 +821,11 @@ function openPlayer(id){
           <div class="a"><div class="v">${fmt(s.tpg)}</div><div class="k">TOV</div></div>
         </div>
         ${statBars(s)}
+      </div>
+
+      <div class="dr-sec">
+        <h4>Shot zones</h4>
+        ${shotChartBlock(p)}
       </div>
 
       <div class="dr-sec">
