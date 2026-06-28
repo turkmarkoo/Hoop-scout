@@ -1930,7 +1930,7 @@ window.HOOPDATA = {
       "pos": "G",
       "height": 180,
       "birthYear": 2009,
-      "club": "Ohori Senior High School (JPN)",
+      "club": "Fukuoka Ohori High School (JPN)",
       "stats": {
         "gp": 1,
         "mpg": 18.2,
@@ -2135,7 +2135,7 @@ window.HOOPDATA = {
       "pos": "F",
       "height": 188,
       "birthYear": 2009,
-      "club": "Ohori Senior High School (JPN)",
+      "club": "Fukuoka Ohori High School (JPN)",
       "stats": {
         "gp": 1,
         "mpg": 15.9,
@@ -2176,7 +2176,7 @@ window.HOOPDATA = {
       "pos": "F",
       "height": 194,
       "birthYear": 2009,
-      "club": "Ohori Senior High School (JPN)",
+      "club": "Fukuoka Ohori High School (JPN)",
       "stats": {
         "gp": 1,
         "mpg": 33.4,
@@ -4276,7 +4276,7 @@ window.HOOPDATA = {
       "pos": "G",
       "height": 191,
       "birthYear": 2009,
-      "club": "Basketball Auckland (NZL)",
+      "club": "Auckland Basketball (NZL)",
       "stats": {
         "gp": 1,
         "mpg": 11.6,
@@ -5064,7 +5064,7 @@ window.HOOPDATA = {
       "pos": "F",
       "height": 207,
       "birthYear": 2009,
-      "club": "Mega MIS (SRB)",
+      "club": "Mega Basket (SRB)",
       "stats": {
         "gp": 1,
         "mpg": 32.7,
@@ -7237,7 +7237,7 @@ window.HOOPDATA = {
       "pos": "G",
       "height": 191,
       "birthYear": 2009,
-      "club": "KK Mega Basket (SRB)",
+      "club": "Mega Basket (SRB)",
       "stats": {
         "gp": 1,
         "mpg": 16.1,
@@ -7483,7 +7483,7 @@ window.HOOPDATA = {
       "pos": "F",
       "height": 208,
       "birthYear": 2009,
-      "club": "BC Mega Basket Beograd (SRB)",
+      "club": "Mega Basket (SRB)",
       "stats": {
         "gp": 1,
         "mpg": 18.2,

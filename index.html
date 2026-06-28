@@ -121,7 +121,7 @@ input,textarea{font-family:inherit}
 /* drawer */
 .scrim{position:fixed; inset:0; background:rgba(60,55,46,.32); opacity:0; pointer-events:none; transition:.2s; z-index:40}
 .scrim.on{opacity:1; pointer-events:auto}
-.drawer{position:fixed; top:0; right:0; height:100%; width:560px; max-width:94vw; z-index:50;
+.drawer{position:fixed; top:0; right:0; height:100%; width:680px; max-width:96vw; z-index:50;
   background:var(--bg); border-left:1px solid var(--line); transform:translateX(100%);
   transition:transform .26s cubic-bezier(.2,.7,.2,1); display:flex; flex-direction:column;
   box-shadow:-30px 0 60px rgba(47,51,59,.14)}
@@ -159,10 +159,10 @@ input,textarea{font-family:inherit}
 .bar .val{font-family:var(--mono); font-size:12px; color:var(--text); text-align:right}
 
 .logwrap{overflow-x:auto; margin:0 -4px}
-table.log{width:100%; border-collapse:collapse; font-family:var(--mono); font-size:12.5px}
-table.log th{text-align:right; color:var(--muted-2); font-weight:500; font-size:10px; letter-spacing:.06em; text-transform:uppercase; padding:0 8px 8px; border-bottom:1px solid var(--line); white-space:nowrap}
+table.log{width:100%; border-collapse:collapse; font-family:var(--mono); font-size:12px}
+table.log th{text-align:right; color:var(--muted-2); font-weight:500; font-size:10px; letter-spacing:.04em; text-transform:uppercase; padding:0 6px 8px; border-bottom:1px solid var(--line); white-space:nowrap}
 table.log th:first-child,table.log td:first-child{text-align:left}
-table.log td{text-align:right; padding:9px 8px; border-bottom:1px solid var(--line-soft); white-space:nowrap; color:var(--text)}
+table.log td{text-align:right; padding:8px 6px; border-bottom:1px solid var(--line-soft); white-space:nowrap; color:var(--text)}
 table.log tr:last-child td{border-bottom:0}
 table.log .pts{color:var(--clay-deep); font-weight:600}
 table.log .res-w{color:var(--good)}
@@ -545,14 +545,13 @@ function statBars(s){
   const defs=[["PTS","ppg"],["REB","rpg"],["AST","apg"],["STL","spg"],["BLK","bpg"]];
   const rows = defs.map(([lab,key])=>{
     const v=s[key]; const L=LEAGUE[key]||{mean:0,max:0};
-    const scale = L.max || 1;
-    const w = Math.max(0,Math.min(100,(Number(v)||0)/scale*100));
-    const avgPos = Math.max(0,Math.min(100,(L.mean||0)/scale*100));
     const pl = (v==null||isNaN(v)) ? null : percentile(key,v);
+    const w = pl==null ? 0 : pl;                       // bar fills to the percentile (100 = full)
+    const avgPos = percentile(key, L.mean);            // marker sits where the tournament avg ranks
     const col = pl==null ? "var(--muted-2)" : pctlColor(pl);
     return `<div class="bar2">
       <span class="lab">${lab}</span>
-      <span class="track2"><span class="fill2" style="width:${w}%"></span><span class="avgmark" style="left:${avgPos}%" title="Tournament avg: ${fmt(L.mean)}"></span></span>
+      <span class="track2"><span class="fill2" style="width:${w}%"></span><span class="avgmark" style="left:${avgPos!=null?avgPos:50}%" title="Tournament avg: ${fmt(L.mean)}"></span></span>
       <span class="val2">${fmt(v)}</span>
       <span class="pctl" style="background:${col}" title="${pl!=null?ordinal(pl)+" percentile at the event":"no data"}">${pl!=null?pl:"–"}</span>
     </div>`;
@@ -633,7 +632,7 @@ function openPlayer(id){
       <div class="notes">
         <h4>Scout notes</h4>
         <div class="rate">
-          <span class="lbl">Interest</span>
+          <span class="lbl">Talent</span>
           <div class="stars" id="stars">
             ${[1,2,3,4,5].map(i=>`<button class="star ${i<=n.rating?"on":""}" data-v="${i}" aria-label="${i} star">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z"/></svg>
