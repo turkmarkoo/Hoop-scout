@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HoopScout · U17 World Cup 2026</title>
+<title>MT Scouting · U17 World Cup 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -38,7 +38,8 @@ input,textarea{font-family:inherit}
 .top{position:sticky; top:0; z-index:30; background:rgba(246,244,238,.82);
   backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
 .top-in{max-width:var(--maxw); margin:0 auto; padding:14px 20px; display:flex; align-items:center; gap:18px; flex-wrap:wrap}
-.brand{display:flex; align-items:baseline; gap:10px; min-width:0}
+.brand{display:flex; align-items:center; gap:11px; min-width:0}
+.brand .brand-logo{width:32px; height:32px; border-radius:8px; display:block; flex:none}
 .brand .mark{font-family:var(--disp); font-weight:800; font-size:26px; letter-spacing:.04em; color:var(--text); line-height:1; white-space:nowrap}
 .brand .mark b{color:var(--clay)}
 .brand .sub{color:var(--muted); font-size:12px; letter-spacing:.12em; text-transform:uppercase}
@@ -243,7 +244,7 @@ table.log .res-l{color:var(--warn)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* brand as button */
-button.brand{background:none;border:0;padding:0;cursor:pointer;align-items:baseline}
+button.brand{background:none;border:0;padding:0;cursor:pointer;align-items:center}
 button.brand:hover .mark b{color:var(--clay-deep)}
 
 /* avatars */
@@ -346,8 +347,9 @@ a.logopp:hover{text-decoration:underline}
 
 <header class="top">
   <div class="top-in">
-    <button class="brand" id="brand" type="button" title="Back to home" aria-label="HoopScout — home">
-      <span class="mark">Hoop<b>Scout</b></span>
+    <button class="brand" id="brand" type="button" title="Back to home" aria-label="MT Scouting — home">
+      <img class="brand-logo" src="data:image/png;base64,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" alt="MT Scouting logo" width="32" height="32">
+      <span class="mark">MT <b>Scouting</b></span>
     </button>
     <div class="top-meta">
       <div class="search">
@@ -1050,7 +1052,7 @@ function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on
   clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("on"),2200); }
 
 /* ---------- boot ----------
-   Snapshot model: HoopScout renders the rosters, averages, photos, standings
+   Snapshot model: MT Scouting renders the rosters, averages, photos, standings
    and results that ship in players.js. Nothing is fetched from FIBA at runtime
    — the data refreshes only when players.js is updated. */
 render();
