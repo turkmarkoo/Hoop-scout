@@ -21,6 +21,30 @@
   --r:13px; --maxw:1180px;
   --shadow:0 1px 2px rgba(47,51,59,.04); --shadow-lift:0 10px 28px rgba(47,51,59,.10);
 }
+html{color-scheme:light}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#16181C; --panel:#202329; --panel-2:#1B1E23; --panel-3:#2A2E35;
+  --line:#33373F; --line-soft:#2A2E35;
+  --text:#E7E4DD; --muted:#9AA1AC; --muted-2:#727A86;
+  --clay:#D2925E; --clay-deep:#E1A877; --clay-soft:#37291C;
+  --sage:#7FB3AB; --good:#83BA7E; --warn:#DD8C72;
+  --parch:#272320; --parch-2:#2F2920; --parch-line:#43392A; --ink-note:#E2D8C5;
+  --shadow:0 1px 2px rgba(0,0,0,.45); --shadow-lift:0 12px 30px rgba(0,0,0,.6);
+}
+html[data-theme="dark"] .team .code{background:#2A2E35;color:#A7AEB9}
+html[data-theme="dark"] .dr-head{background:linear-gradient(165deg,#24272E,#1B1E23)}
+html[data-theme="dark"] .tags-in:focus{background:var(--panel)}
+html[data-theme="dark"] .note-area:focus{background-color:var(--panel)}
+html[data-theme="dark"] .card:hover{border-color:#474C56}
+html[data-theme="dark"] .bbrow:hover{border-color:#474C56}
+html[data-theme="dark"] .gst.live,html[data-theme="dark"] .gst.loss{background:#3A241E}
+html[data-theme="dark"] .gst.upcoming{background:#1D2E2B}
+.iconbtn{padding:7px 9px}
+.themeic{vertical-align:-2px}
+.themeic.sun{display:none}
+html[data-theme="dark"] .themeic.moon{display:none}
+html[data-theme="dark"] .themeic.sun{display:inline}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{
@@ -407,12 +431,14 @@ a.logopp:hover{text-decoration:underline}
 #printsheet{display:none}
 @media print{
   body.printing > *{display:none !important}
-  body.printing #printsheet{display:block !important}
-  body.printing #printsheet .op{break-after:page;page-break-after:always;max-width:none;margin:0;padding:12mm;box-sizing:border-box}
+  html,body{background:#fff !important; color-scheme:light !important}
+  body.printing #printsheet{display:block !important; background:#fff !important;
+    --bg:#F6F4EE;--panel:#FFFFFF;--panel-2:#FBFAF5;--panel-3:#F0ECE3;--line:#E7E2D6;--line-soft:#EFEBE1;--text:#2F333B;--muted:#747C88;--muted-2:#A0A6B0;--clay:#C5824E;--clay-deep:#A96A38;--clay-soft:#F2E4D4;--sage:#6FA39B;--good:#6E9F6A;--warn:#C6755B}
+  body.printing #printsheet .op{break-after:page;page-break-after:always;max-width:none;margin:0;padding:12mm;box-sizing:border-box;background:#fff !important;color:#1c1f24 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body.printing #printsheet .op:last-child{break-after:auto;page-break-after:auto}
   @page{margin:0}
 }
-.op{font-family:var(--body);color:#1c1f24;max-width:760px;margin:0 auto;padding:6px}
+.op{font-family:var(--body);color:#1c1f24;background:#fff;max-width:760px;margin:0 auto;padding:6px}
 .op-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #C5824E;padding-bottom:10px;margin-bottom:14px;gap:16px}
 .op-name{font-family:var(--disp);font-size:26px;font-weight:800;line-height:1}
 .op-num{color:#A96A38;font-size:18px}
@@ -519,8 +545,19 @@ a.logopp:hover{text-decoration:underline}
 .bbrm{width:28px;height:28px;border:1px solid var(--line);background:var(--panel);color:var(--muted-2);border-radius:8px;font-size:12px;padding:0;flex:none}
 .bbrm:hover{border-color:var(--warn);color:var(--warn)}
 @media (max-width:560px){ .bbstat{white-space:normal} .bbav{display:none} }
+.cbx{position:relative;min-width:160px}
+.cbx-in{font-family:var(--body);font-size:13px;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 9px;width:100%;text-transform:none;letter-spacing:0}
+.cbx-in:focus{outline:none;border-color:var(--clay)}
+.cbx.open .cbx-in{border-color:var(--clay)}
+.cbx-pop{position:absolute;z-index:50;left:0;right:0;top:calc(100% + 4px);max-height:300px;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-lift);padding:4px}
+.cbx-opt{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;font-size:13px;color:var(--text);white-space:nowrap}
+.cbx-opt .cbx-tm{color:var(--muted);font-family:var(--mono);font-size:11px;flex:none}
+.cbx-opt.active,.cbx-opt:hover{background:var(--panel-3)}
+.cbx-opt.sel{color:var(--clay-deep);font-weight:600}
+.cbx-opt[hidden]{display:none}
 
 </style>
+<script>(function(){try{var t=localStorage.getItem("hoopscout:theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
 </head>
 <body>
 
@@ -550,6 +587,10 @@ a.logopp:hover{text-decoration:underline}
         </button>
         <button class="btn" id="posBtn" title="Rank players and badges within their own position (guards vs guards, etc.) instead of against the whole field">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="3.2"/><path d="M5.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M3 11h3M18 11h3"/></svg><span id="posLabel">By field</span>
+        </button>
+        <button class="btn iconbtn" id="themeBtn" title="Switch between light and dark theme" aria-label="Toggle light or dark theme">
+          <svg class="themeic moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="themeic sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5.1 5.1l1.4 1.4M17.5 17.5l1.4 1.4M18.9 5.1l-1.4 1.4M6.5 17.5l-1.4 1.4"/></svg>
         </button>
         <button class="btn authbtn" id="authBtn" title="Sign in to sync your notes across devices">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6"/></svg><span id="authLabel">Sign in</span>
@@ -795,6 +836,7 @@ function deburr(s){
     .replace(/\u00df/g,"ss").replace(/\u00e6/g,"ae").replace(/\u00c6/g,"ae").replace(/\u0153/g,"oe").replace(/\u0152/g,"oe")
     .toLowerCase().trim();
 }
+function applyTheme(t){ const v=(t==="dark")?"dark":"light"; document.documentElement.setAttribute("data-theme",v); try{localStorage.setItem("hoopscout:theme",v);}catch(_){} }
 function goHome(){ state.team=null; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); }
 
 
@@ -1233,7 +1275,7 @@ function histogramView(){
   const opts=sel=>CHART_STATS.map(s=>'<option value="'+s[0]+'"'+(s[0]===sel?" selected":"")+'>'+s[1]+'</option>').join('');
   const grpOpts=["all","A","B","C","D"].map(gp=>'<option value="'+gp+'"'+(gp===state.chartGroup?" selected":"")+'>'+(gp==="all"?"All groups":"Group "+gp)+'</option>').join('');
   const pool=D.players.filter(p=>p.stats&&p.stats.gp>0).slice().sort((a,b)=>a.name.localeCompare(b.name));
-  const pOpts='<option value="">\u2014 none \u2014</option>'+pool.map(p=>'<option value="'+p.id+'"'+(p.id===state.histPlayer?" selected":"")+'>'+chEsc(p.name)+' ('+chEsc(teamById(p.teamId).code)+')</option>').join('');
+  const pCombo=comboHTML("hPlayer",comboOpts(pool),state.histPlayer,"Search player\u2026",true);
   let cap='';
   if(state.histPlayer){ const hp=D.players.find(p=>p.id===state.histPlayer); const hv=hp?chVal(hp,state.histStat):null;
     if(hp&&hv!=null){ const data=histData(state.histStat,state.chartGroup).map(d=>d.v); let below=0,eq=0; data.forEach(v=>{ if(v<hv)below++; else if(v===hv)eq++; }); const pctl=data.length?Math.round((below+eq/2)/data.length*100):null;
@@ -1242,7 +1284,7 @@ function histogramView(){
   return '<div class="chartctrls">'
     +'<label class="chf">Stat<select id="hStat">'+opts(state.histStat)+'</select></label>'
     +'<label class="chf">Show<select id="hGrp">'+grpOpts+'</select></label>'
-    +'<label class="chf">Highlight<select id="hPlayer">'+pOpts+'</select></label>'
+    +'<label class="chf">Highlight'+pCombo+'</label>'
     +'</div>'+histogramSVG()+cap
     +'<div class="chartnote">Each bar counts how many players fall in that range. Dashed line = tournament average; the clay line marks the highlighted player.</div>';
 }
@@ -1422,11 +1464,42 @@ function compareTable(A,B,cA,cB){
   }).join('');
   return '<table class="cmptbl"><thead><tr><th class="nm" style="color:'+cA+'">'+chEsc(A.name)+'</th><th class="k"></th><th class="nm" style="color:'+cB+'">'+chEsc(B.name)+'</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
+function comboOpts(players){ return players.map(p=>{ const t=teamById(p.teamId); return {val:p.id,label:p.name,tm:t.code,s:deburr(p.name+" "+t.code)}; }); }
+function comboHTML(id,options,curId,placeholder,allowNone){
+  const cur=options.find(o=>o.val===curId); const curLabel=cur?cur.label:"";
+  let html='<div class="cbx" id="'+id+'"><input class="cbx-in" type="text" autocomplete="off" spellcheck="false" placeholder="'+chEsc(placeholder||"Search\u2026")+'" value="'+chEsc(curLabel)+'" data-val="'+chEsc(curId||"")+'"><div class="cbx-pop" hidden>';
+  if(allowNone) html+='<div class="cbx-opt'+(!curId?" sel":"")+'" data-val="" data-s="">\u2014 none \u2014</div>';
+  html+=options.map(o=>'<div class="cbx-opt'+(o.val===curId?" sel":"")+'" data-val="'+chEsc(o.val)+'" data-s="'+chEsc(o.s)+'">'+chEsc(o.label)+'<span class="cbx-tm">'+chEsc(o.tm)+'</span></div>').join('');
+  html+='</div></div>'; return html;
+}
+function wireCombo(id,onPick){
+  const root=$("#"+id); if(!root) return;
+  const inp=root.querySelector(".cbx-in"), pop=root.querySelector(".cbx-pop");
+  const allOpts=()=>Array.from(pop.querySelectorAll(".cbx-opt"));
+  let savedLabel=inp.value, savedVal=inp.dataset.val||"";
+  const open=()=>{ pop.hidden=false; root.classList.add("open"); };
+  const close=()=>{ pop.hidden=true; root.classList.remove("open"); };
+  const vis=()=>allOpts().filter(o=>!o.hidden);
+  const filter=()=>{ const q=deburr(inp.value); let first=null;
+    allOpts().forEach(o=>{ const ok=!q||(o.dataset.s||"").indexOf(q)>=0; o.hidden=!ok; o.classList.remove("active"); if(ok&&!first)first=o; });
+    if(first) first.classList.add("active"); };
+  const pick=o=>{ const v=o.dataset.val||""; close(); onPick(v); };
+  inp.addEventListener("focus",()=>{ savedLabel=inp.value; savedVal=inp.dataset.val||""; inp.value=""; filter(); open(); });
+  inp.addEventListener("input",()=>{ open(); filter(); });
+  inp.addEventListener("keydown",e=>{
+    if(e.key==="ArrowDown"||e.key==="ArrowUp"){ e.preventDefault(); const v=vis(); if(!v.length)return; let i=v.findIndex(o=>o.classList.contains("active")); v.forEach(o=>o.classList.remove("active")); i=e.key==="ArrowDown"?Math.min(v.length-1,i+1):Math.max(0,i-1); if(i<0)i=0; v[i].classList.add("active"); v[i].scrollIntoView({block:"nearest"}); }
+    else if(e.key==="Enter"){ e.preventDefault(); const a=pop.querySelector(".cbx-opt.active:not([hidden])")||vis()[0]; if(a) pick(a); }
+    else if(e.key==="Escape"){ e.preventDefault(); inp.value=savedLabel; inp.dataset.val=savedVal; close(); inp.blur(); }
+  });
+  allOpts().forEach(o=>o.addEventListener("mousedown",e=>{ e.preventDefault(); pick(o); }));
+  inp.addEventListener("blur",()=>{ setTimeout(()=>{ if(root.classList.contains("open")){ inp.value=savedLabel; inp.dataset.val=savedVal; close(); } },140); });
+}
 function compareView(){
   const pool=D.players.filter(p=>p.stats&&p.stats.gp>0).slice();
   if(!state.cmpA||!state.cmpB){ const byp=pool.slice().sort((a,b)=>(b.stats.ppg||0)-(a.stats.ppg||0)); if(!state.cmpA) state.cmpA=(byp[0]||{}).id; if(!state.cmpB) state.cmpB=(byp[1]||{}).id; }
   const sorted=pool.slice().sort((a,b)=>a.name.localeCompare(b.name));
-  const sel=(id,cur)=>'<select id="'+id+'">'+sorted.map(p=>'<option value="'+p.id+'"'+(p.id===cur?" selected":"")+'>'+chEsc(p.name)+' ('+chEsc(teamById(p.teamId).code)+')</option>').join('')+'</select>';
+  const cOpts=comboOpts(sorted);
+  const sel=(id,cur)=>comboHTML(id,cOpts,cur,"Search player\u2026",false);
   const A=D.players.find(p=>p.id===state.cmpA), B=D.players.find(p=>p.id===state.cmpB);
   const cA="#C5824E", cB="#4F86C6"; let body='';
   if(A&&B&&A!==B){
@@ -1510,16 +1583,15 @@ function renderView(){
       const d=$("#lbDir"); if(d) d.onclick=()=>{ state.lbDir=state.lbDir==="asc"?"desc":"asc"; render(); };
       board.querySelectorAll(".lbrow").forEach(r=>{ r.onclick=()=>openPlayer(r.dataset.id); });
     } else if(state.chartMode==="compare"){
-      const a=$("#cmpA"), b=$("#cmpB");
-      if(a) a.onchange=()=>{ state.cmpA=a.value; render(); };
-      if(b) b.onchange=()=>{ state.cmpB=b.value; render(); };
+      wireCombo("cmpA",v=>{ if(v){ state.cmpA=v; render(); } });
+      wireCombo("cmpB",v=>{ if(v){ state.cmpB=v; render(); } });
     } else if(state.chartMode==="lineups"){
       const g=$("#lvGrp"); if(g) g.onchange=()=>{ state.chartGroup=g.value; render(); };
       board.querySelectorAll(".lvtable tr.clk").forEach(r=>{ r.onclick=()=>openPlayer(r.dataset.id); });
     } else if(state.chartMode==="hist"){
       const s=$("#hStat"); if(s) s.onchange=()=>{ state.histStat=s.value; render(); };
       const g=$("#hGrp"); if(g) g.onchange=()=>{ state.chartGroup=g.value; render(); };
-      const pl=$("#hPlayer"); if(pl) pl.onchange=()=>{ state.histPlayer=pl.value||null; render(); };
+      wireCombo("hPlayer",v=>{ state.histPlayer=v||null; render(); });
     }
     return;
   }
@@ -1979,6 +2051,7 @@ if($("#bbBtn")) $("#bbBtn").onclick = ()=>{
   if(activeId) closeDrawer(); else render();
 };
 if($("#posBtn")) $("#posBtn").onclick = ()=>{ state.posRel=!state.posRel; if(activeId) openPlayer(activeId); render(); };
+if($("#themeBtn")) $("#themeBtn").onclick = ()=>{ const dark=document.documentElement.getAttribute("data-theme")==="dark"; applyTheme(dark?"light":"dark"); if(activeId) openPlayer(activeId); render(); };
 
 /* ---------- toast ---------- */
 let toastTimer=null;
