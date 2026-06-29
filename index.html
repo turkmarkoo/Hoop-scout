@@ -439,11 +439,14 @@ a.logopp:hover{text-decoration:underline}
   @page{margin:0}
 }
 .op{font-family:var(--body);color:#1c1f24;background:#fff;max-width:760px;margin:0 auto;padding:6px}
-.op-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #C5824E;padding-bottom:10px;margin-bottom:14px;gap:16px}
+.op-head{display:flex;align-items:center;gap:14px;border-bottom:2px solid #C5824E;padding-bottom:10px;margin-bottom:14px}
+.op-id{min-width:0}
+.op-photo{position:relative;width:58px;height:58px;flex:none;border-radius:10px;border:1px solid #e0d8c8;background:#ECE7DC;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:20px;color:#B0A487;overflow:hidden}
+.op-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center}
 .op-name{font-family:var(--disp);font-size:26px;font-weight:800;line-height:1}
 .op-num{color:#A96A38;font-size:18px}
 .op-sub{font-size:12.5px;color:#555;margin-top:5px}
-.op-brand{font-family:var(--disp);font-weight:800;color:#C5824E;text-align:right;font-size:15px;line-height:1.2;white-space:nowrap}
+.op-brand{font-family:var(--disp);font-weight:800;color:#C5824E;text-align:right;font-size:15px;line-height:1.2;white-space:nowrap;margin-left:auto;align-self:flex-start}
 .op-brand span{display:block;font-family:var(--body);font-weight:600;color:#888;font-size:10.5px;margin-top:2px}
 .op-stats{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:6px}
 .op-kv{background:#F6F4EE;border:1px solid #ece6da;border-radius:8px;padding:7px 4px;text-align:center}
@@ -1016,14 +1019,28 @@ function toggleWatch(id){
   updateWatchCount();
   if(state.view==="board") render();
 }
+function printSheet(){
+  const sheet=$("#printsheet"); if(!sheet) return;
+  document.body.classList.add("printing");
+  const done=()=>{ document.body.classList.remove("printing"); window.removeEventListener("afterprint",done); };
+  window.addEventListener("afterprint",done);
+  const imgs=Array.from(sheet.querySelectorAll("img")).filter(im=>!im.complete);
+  let fired=false; const go=()=>{ if(fired) return; fired=true; setTimeout(()=>window.print(),60); };
+  if(!imgs.length){ go(); return; }
+  let left=imgs.length;
+  imgs.forEach(im=>{ const hcb=()=>{ im.removeEventListener("load",hcb); im.removeEventListener("error",hcb); if(--left<=0) go(); }; im.addEventListener("load",hcb); im.addEventListener("error",hcb); });
+  setTimeout(go,2500);
+}
 function exportOnePager(id){
   const p=D.players.find(x=>x.id===id); if(!p) return;
   const sheet=$("#printsheet"); if(!sheet) return;
   sheet.innerHTML=onePagerHTML(p);
-  document.body.classList.add("printing");
-  const done=()=>{ document.body.classList.remove("printing"); window.removeEventListener("afterprint",done); };
-  window.addEventListener("afterprint",done);
-  setTimeout(()=>window.print(),80);
+  printSheet();
+}
+function opPhoto(p){
+  const parts=(p.name||"").trim().split(/\s+/).filter(Boolean);
+  const ini=(((parts[0]||"")[0]||"")+((parts.length>1?parts[parts.length-1]:"")[0]||"")).toUpperCase();
+  return '<div class="op-photo">'+chEsc(ini)+(p.pid?'<img src="'+IMG(p.pid)+'" alt="" onerror="this.remove()">':'')+'</div>';
 }
 function onePagerHTML(p){
   const s=p.stats||{}, t=teamById(p.teamId), n=noteFor(p.id);
@@ -1047,7 +1064,7 @@ function onePagerHTML(p){
   const today=new Date().toLocaleDateString();
   const proj=(n.proj&&n.proj.trim())?'<div class="op-proj"><span class="op-projk">Projection</span>'+chEsc(n.proj)+'</div>':'';
   return '<div class="op">'
-    +'<div class="op-head"><div><div class="op-name">'+chEsc(p.name)+(p.number!=null?' <span class="op-num">#'+p.number+'</span>':'')+'</div>'
+    +'<div class="op-head">'+opPhoto(p)+'<div class="op-id"><div class="op-name">'+chEsc(p.name)+(p.number!=null?' <span class="op-num">#'+p.number+'</span>':'')+'</div>'
     +'<div class="op-sub">'+chEsc(t.name)+' \u00b7 '+(p.pos||"\u2013")+' \u00b7 '+(p.height?(p.height/100).toFixed(2)+" m":"\u2013")+(p.birthYear?" \u00b7 b. "+p.birthYear:"")+(p.club?' \u00b7 '+chEsc(p.club):"")+'</div></div>'
     +'<div class="op-brand">MT Scouting<span>'+chEsc(ev)+'</span></div></div>'
     +proj
@@ -1376,10 +1393,7 @@ function exportWatchlist(){
   if(!players.length){ toast("Your watchlist is empty \u2014 bookmark some players first."); return; }
   const sheet=$("#printsheet"); if(!sheet) return;
   sheet.innerHTML=players.map(p=>onePagerHTML(p)).join('');
-  document.body.classList.add("printing");
-  const done=()=>{ document.body.classList.remove("printing"); window.removeEventListener("afterprint",done); };
-  window.addEventListener("afterprint",done);
-  setTimeout(()=>window.print(),120);
+  printSheet();
 }
 
 /* ---------- big board (draggable, synced ranking) ---------- */
@@ -1406,10 +1420,7 @@ function exportBigBoard(){
   if(!players.length){ toast("Your big board is empty \u2014 bookmark some players first."); return; }
   const sheet=$("#printsheet"); if(!sheet) return;
   sheet.innerHTML=players.map(p=>onePagerHTML(p)).join("");
-  document.body.classList.add("printing");
-  const done=()=>{ document.body.classList.remove("printing"); window.removeEventListener("afterprint",done); };
-  window.addEventListener("afterprint",done);
-  setTimeout(()=>window.print(),120);
+  printSheet();
 }
 function bigBoardView(){
   const ids=bigBoardIds();
