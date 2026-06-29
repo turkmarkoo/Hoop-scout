@@ -497,6 +497,28 @@ a.logopp:hover{text-decoration:underline}
 .barpane.bp-hide{display:none}
 .barkey .mk{width:2px;height:11px;background:var(--text);opacity:.5;display:inline-block}
 .barkey .sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+.bbhead{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.bbcount{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.bbhead .btn{margin-left:auto}
+.bblist{display:flex;flex-direction:column;gap:8px}
+.bbrow{display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px;box-shadow:var(--shadow);cursor:pointer;transition:border-color .12s,box-shadow .12s}
+.bbrow:hover{border-color:#DCD4C5}
+.bbrow.bbdragging{opacity:.45}
+.bbrow.bbover{border-color:var(--clay);box-shadow:0 0 0 2px rgba(197,130,78,.2)}
+.bbrk{font-family:var(--disp);font-weight:800;font-size:22px;color:var(--clay);min-width:28px;text-align:center;flex:none}
+.bbgrip{color:var(--muted-2);cursor:grab;font-size:13px;letter-spacing:-3px;user-select:none;flex:none}
+.bbav{width:38px;height:38px;border-radius:9px;object-fit:cover;object-position:top center;background:var(--panel-3);border:1px solid var(--line);flex:none}
+.bbmain{flex:1;min-width:0}
+.bbnm{font-family:var(--disp);font-weight:600;font-size:17px;color:var(--text);display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;line-height:1.15}
+.bbtm{font-family:var(--mono);font-size:11px;color:var(--muted);font-weight:400}
+.bbstat{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bbstars{color:var(--clay-deep);font-family:var(--body);letter-spacing:1px}
+.bbmove{display:flex;flex-direction:column;gap:3px;flex:none}
+.bbbtn{width:26px;height:18px;line-height:1;border:1px solid var(--line);background:var(--panel-2);color:var(--muted);border-radius:6px;font-size:8px;padding:0;display:flex;align-items:center;justify-content:center}
+.bbbtn:hover{border-color:var(--clay);color:var(--clay-deep)}
+.bbrm{width:28px;height:28px;border:1px solid var(--line);background:var(--panel);color:var(--muted-2);border-radius:8px;font-size:12px;padding:0;flex:none}
+.bbrm:hover{border-color:var(--warn);color:var(--warn)}
+@media (max-width:560px){ .bbstat{white-space:normal} .bbav{display:none} }
 
 </style>
 </head>
@@ -522,6 +544,9 @@ a.logopp:hover{text-decoration:underline}
         </button>
         <button class="btn" id="watchBtn" title="Your watchlist & note-based filters">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>Watchlist<span class="wl-count" id="wlCount" hidden></span>
+        </button>
+        <button class="btn" id="posBtn" title="Rank players and badges within their own position (guards vs guards, etc.) instead of against the whole field">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="3.2"/><path d="M5.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M3 11h3M18 11h3"/></svg><span id="posLabel">By field</span>
         </button>
         <button class="btn authbtn" id="authBtn" title="Sign in to sync your notes across devices">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6"/></svg><span id="authLabel">Sign in</span>
@@ -652,17 +677,24 @@ const PLAYER_RANK_DEFS=[
   ["usg",(p)=>metric(p,"usg"),1,(p)=>metric(p,"usg")!==-Infinity],
   ["ftr",(p,s)=>(s.fga>0)?s.fta/s.fga:null,1,(p,s)=>(s.fga||0)*(s.gp||0)>=10]
 ];
-let _playerRankCache=null;
+let _playerRankCache=null, _playerRankPosCache=null;
 function playerRanks(){
-  if(_playerRankCache) return _playerRankCache;
+  if(state.posRel){ if(_playerRankPosCache) return _playerRankPosCache; }
+  else if(_playerRankCache) return _playerRankCache;
   const qual=D.players.filter(p=>p.stats&&p.stats.gp>0);
   const out={}; qual.forEach(p=>out[p.id]={});
   PLAYER_RANK_DEFS.forEach(def=>{ const key=def[0],vf=def[1],dir=def[2],qf=def[3];
-    const arr=qual.filter(p=>{ const s=p.stats; if(!qf(p,s)) return false; const v=vf(p,s); return v!=null&&isFinite(v); })
-      .map(p=>({p,v:vf(p,p.stats)})).sort((a,b)=> dir>0 ? b.v-a.v : a.v-b.v);
-    arr.forEach((x,i)=>{ out[x.p.id][key]={rank:i+1,n:arr.length}; });
+    let groups;
+    if(state.posRel){ groups={}; qual.forEach(p=>{ const g=posOf(p); (groups[g]=groups[g]||[]).push(p); }); }
+    else groups={all:qual};
+    Object.keys(groups).forEach(gk=>{
+      const arr=groups[gk].filter(p=>{ const s=p.stats; if(!qf(p,s)) return false; const v=vf(p,s); return v!=null&&isFinite(v); })
+        .map(p=>({p,v:vf(p,p.stats)})).sort((a,b)=> dir>0 ? b.v-a.v : a.v-b.v);
+      arr.forEach((x,i)=>{ out[x.p.id][key]={rank:i+1,n:arr.length}; });
+    });
   });
-  _playerRankCache=out; return out;
+  if(state.posRel) _playerRankPosCache=out; else _playerRankCache=out;
+  return out;
 }
 function rankBadge(rank,n){ if(rank==null||!n) return '';
   let cls='', P=null;
@@ -763,7 +795,7 @@ function deburr(s){
 function goHome(){ state.team=null; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); }
 
 
-let state = { team:null, query:"", filter:null, view:"board", statsTab:"basic", sortKey:"ppg", sortDir:"desc", chartX:"usg", chartY:"ts", chartColor:"pos", chartGroup:"all", chartMode:"scatter", lbStat:"ppg", lbN:15, lbDir:"desc", cmpA:null, cmpB:null, histStat:"ppg", histPlayer:null };
+let state = { team:null, query:"", filter:null, view:"board", statsTab:"basic", sortKey:"ppg", sortDir:"desc", chartX:"usg", chartY:"ts", chartColor:"pos", chartGroup:"all", chartMode:"scatter", lbStat:"ppg", lbN:15, lbDir:"desc", cmpA:null, cmpB:null, histStat:"ppg", histPlayer:null, posRel:false };
 
 /* ---------- tournament averages & percentiles ---------- */
 const QUALIFIED = (D.players||[]).filter(p=>p.stats && p.stats.gp>0);
@@ -773,8 +805,19 @@ const LEAGUE = {};
   const n = vals.length;
   LEAGUE[k] = { vals, n, mean: n?vals.reduce((a,b)=>a+b,0)/n:0, max: n?vals[n-1]:0 };
 });
-function percentile(key,v){
-  const L=LEAGUE[key]; if(!L||!L.n||v==null||isNaN(v)) return null;
+const POS_KEYS=["G","F","C"];
+function posOf(p){ return (p&&p.pos?String(p.pos).charAt(0).toUpperCase():"")||"?"; }
+function posName(pos){ return {G:"guards",F:"forwards",C:"centers"}[pos]||"players"; }
+const LEAGUE_POS={};
+POS_KEYS.forEach(pos=>{ LEAGUE_POS[pos]={};
+  ["ppg","rpg","apg","spg","bpg","mpg"].forEach(k=>{
+    const vals=QUALIFIED.filter(p=>posOf(p)===pos).map(p=>p.stats[k]).filter(v=>v!=null&&!isNaN(v)).sort((a,b)=>a-b);
+    const n=vals.length; LEAGUE_POS[pos][k]={vals,n,mean:n?vals.reduce((a,b)=>a+b,0)/n:0,max:n?vals[n-1]:0};
+  });
+});
+function leagueFor(key,pos){ return (state.posRel&&pos&&LEAGUE_POS[pos]&&LEAGUE_POS[pos][key]&&LEAGUE_POS[pos][key].n>=5)?LEAGUE_POS[pos][key]:LEAGUE[key]; }
+function percentile(key,v,pos){
+  const L=leagueFor(key,pos); if(!L||!L.n||v==null||isNaN(v)) return null;
   let below=0, equal=0;
   for(const x of L.vals){ if(x<v) below++; else if(x===v) equal++; }
   return Math.round((below + equal/2) / L.n * 100);
@@ -851,7 +894,7 @@ function filterTitle(f){
 const SCOUT_FILTERS=[["watch","Watchlist"],["r4","\u2605 4+"],["r3","\u2605 3+"],["tagged","Tagged"],["untagged","Flagged, untagged"],["notes","Has notes"],["unseen","Not seen yet"]];
 function isScoutFilter(f){ return !!(f && SCOUT_FILTERS.some(s=>s[0]===f.type)); }
 function scoutBar(active){ let html='<div class="scoutbar">'+SCOUT_FILTERS.map(s=>'<button class="scoutchip'+(s[0]===active?" on":"")+'" data-ft="'+s[0]+'" data-lb="'+chEsc(s[1])+'">'+s[1]+'</button>').join('')+'</div>';
-  if(active==="watch"&&watchCount()>0) html+='<div class="wlexport"><button class="btn" id="wlExport"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:5px"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>Export watchlist as PDF</button></div>';
+  if(active==="watch"&&watchCount()>0) html+='<div class="wlexport"><button class="btn" id="bbOpen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:5px"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Rank on big board</button> <button class="btn" id="wlExport"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:5px"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>Export watchlist as PDF</button></div>';
   return html; }
 function scoutEmptyMsg(type){
   if(type==="watch") return "Open any player and tap the bookmark to add them to your watchlist.";
@@ -1229,6 +1272,65 @@ function exportWatchlist(){
   setTimeout(()=>window.print(),120);
 }
 
+/* ---------- big board (draggable, synced ranking) ---------- */
+let _bbDrag=null;
+function boardOrder(){ const b=NOTES["__board"]; return (b&&Array.isArray(b.order))?b.order.slice():[]; }
+function setBoardOrder(order){ NOTES["__board"]={order:order.slice(),updated:Date.now()}; saveNotes(NOTES); pushCloud(); }
+function bigBoardIds(){
+  const watch=Object.keys(NOTES).filter(id=>id!=="__board"&&NOTES[id]&&NOTES[id].watch&&D.players.some(p=>p.id===id));
+  const set=new Set(watch); const ord=boardOrder().filter(id=>set.has(id));
+  watch.forEach(id=>{ if(!ord.includes(id)) ord.push(id); });
+  return ord;
+}
+function moveBoard(id,dir){ const ord=bigBoardIds(); const i=ord.indexOf(id), j=i+dir; if(i<0||j<0||j>=ord.length) return; const t=ord[i]; ord[i]=ord[j]; ord[j]=t; setBoardOrder(ord); render(); }
+function reorderBoard(from,to){ const ord=bigBoardIds(); const fi=ord.indexOf(from), ti=ord.indexOf(to); if(fi<0||ti<0) return; const x=ord.splice(fi,1)[0]; ord.splice(ti,0,x); setBoardOrder(ord); render(); }
+function exportBigBoard(){
+  const ids=bigBoardIds(); const players=ids.map(id=>D.players.find(p=>p.id===id)).filter(Boolean);
+  if(!players.length){ toast("Your big board is empty \u2014 bookmark some players first."); return; }
+  const sheet=$("#printsheet"); if(!sheet) return;
+  sheet.innerHTML=players.map(p=>onePagerHTML(p)).join("");
+  document.body.classList.add("printing");
+  const done=()=>{ document.body.classList.remove("printing"); window.removeEventListener("afterprint",done); };
+  window.addEventListener("afterprint",done);
+  setTimeout(()=>window.print(),120);
+}
+function bigBoardView(){
+  const ids=bigBoardIds();
+  if(!ids.length) return '<div class="empty"><div class="big">Your big board is empty</div>Bookmark players with the ribbon icon to add them here, then drag to rank your targets.</div>';
+  const rows=ids.map((id,i)=>{ const p=D.players.find(x=>x.id===id); if(!p) return ""; const n=noteFor(id); const s=p.stats||{}; const t=teamById(p.teamId);
+    const stars=n.rating?'<b class="bbstars">'+"\u2605".repeat(n.rating)+'</b>':'';
+    const tags=(n.tags&&n.tags.length)?' \u00b7 '+chEsc(n.tags.slice(0,3).join(", ")):'';
+    return '<div class="bbrow" draggable="true" data-id="'+id+'">'
+      +'<span class="bbrk">'+(i+1)+'</span>'
+      +'<span class="bbgrip" title="Drag to reorder">\u2807\u2807</span>'
+      +avatarHTML(p,"bbav")
+      +'<span class="bbmain"><span class="bbnm">'+chEsc(p.name)+'<span class="bbtm">'+chEsc(t.code)+' \u00b7 '+(p.pos||"\u2013")+'</span></span>'
+      +'<span class="bbstat">'+fmt(s.ppg)+' pts \u00b7 '+fmt(s.rpg)+' reb \u00b7 '+fmt(s.apg)+' ast'+(stars?' \u00b7 '+stars:'')+tags+'</span></span>'
+      +'<span class="bbmove"><button class="bbbtn" data-mv="up" title="Move up" aria-label="Move up">\u25b2</button><button class="bbbtn" data-mv="down" title="Move down" aria-label="Move down">\u25bc</button></span>'
+      +'<button class="bbrm" title="Remove from board" aria-label="Remove">\u2715</button>'
+      +'</div>';
+  }).join("");
+  return '<div class="bbhead"><div class="bbcount">'+ids.length+' player'+(ids.length!==1?'s':'')+' ranked</div>'
+    +'<button class="btn" id="bbExport"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:5px"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>Export board PDF</button></div>'
+    +'<div class="bblist" id="bbList">'+rows+'</div>'
+    +'<div class="muted-note" style="margin-top:14px">Drag a row (or use \u25b2\u25bc) to rank your targets. The order syncs to your account and sets the page order of the PDF export.</div>';
+}
+function wireBigBoard(board){
+  const ex=$("#bbExport"); if(ex) ex.onclick=exportBigBoard;
+  board.querySelectorAll(".bbrow").forEach(row=>{
+    const id=row.dataset.id;
+    row.addEventListener("click",e=>{ if(e.target.closest(".bbbtn")||e.target.closest(".bbrm")||e.target.closest(".bbgrip")) return; openPlayer(id); });
+    const up=row.querySelector('[data-mv="up"]'); if(up) up.onclick=e=>{ e.stopPropagation(); moveBoard(id,-1); };
+    const dn=row.querySelector('[data-mv="down"]'); if(dn) dn.onclick=e=>{ e.stopPropagation(); moveBoard(id,1); };
+    const rm=row.querySelector(".bbrm"); if(rm) rm.onclick=e=>{ e.stopPropagation(); toggleWatch(id); render(); };
+    row.addEventListener("dragstart",e=>{ _bbDrag=id; row.classList.add("bbdragging"); try{ e.dataTransfer.effectAllowed="move"; e.dataTransfer.setData("text/plain",id); }catch(_){} });
+    row.addEventListener("dragend",()=>{ _bbDrag=null; board.querySelectorAll(".bbrow").forEach(r=>r.classList.remove("bbover","bbdragging")); });
+    row.addEventListener("dragover",e=>{ e.preventDefault(); if(_bbDrag&&_bbDrag!==id) row.classList.add("bbover"); });
+    row.addEventListener("dragleave",()=>row.classList.remove("bbover"));
+    row.addEventListener("drop",e=>{ e.preventDefault(); row.classList.remove("bbover"); if(_bbDrag&&_bbDrag!==id) reorderBoard(_bbDrag,id); });
+  });
+}
+
 function scatterView(){
   const opts=sel=>CHART_STATS.map(s=>'<option value="'+s[0]+'"'+(s[0]===sel?" selected":"")+'>'+s[1]+'</option>').join('');
   const colOpts=[["pos","Position"],["group","Group"],["team","Team"]].map(c=>'<option value="'+c[0]+'"'+(c[0]===state.chartColor?" selected":"")+'>'+c[1]+'</option>').join('');
@@ -1276,15 +1378,15 @@ function leaderboardList(){
 }
 const RAX=["Scoring","Efficiency","Playmaking","Rebounding","Defense","Usage"];
 function radarPctls(p){
-  const s=p.stats||{};
+  const s=p.stats||{}; const pos=posOf(p);
   const ts=metric(p,"ts"), usg=metric(p,"usg");
   return [
-    {pct:percentile("ppg",s.ppg), disp:fmt(s.ppg)},
-    {pct:pctOf(LEAGUE_ADV.ts,ts), disp:(ts===-Infinity?"\u2013":pct(ts))},
-    {pct:percentile("apg",s.apg), disp:fmt(s.apg)},
-    {pct:percentile("rpg",s.rpg), disp:fmt(s.rpg)},
-    {pct:pctOf(LEAGUE_ADV.stk,metric(p,"stk")), disp:fmt(metric(p,"stk"))},
-    {pct:(usg===-Infinity?null:pctOf(LEAGUE_ADV.usg,usg)), disp:(usg===-Infinity?"\u2013":usg.toFixed(1))}
+    {pct:percentile("ppg",s.ppg,pos), disp:fmt(s.ppg)},
+    {pct:pctOf(leagueAdvFor("ts",pos),ts), disp:(ts===-Infinity?"\u2013":pct(ts))},
+    {pct:percentile("apg",s.apg,pos), disp:fmt(s.apg)},
+    {pct:percentile("rpg",s.rpg,pos), disp:fmt(s.rpg)},
+    {pct:pctOf(leagueAdvFor("stk",pos),metric(p,"stk")), disp:fmt(metric(p,"stk"))},
+    {pct:(usg===-Infinity?null:pctOf(leagueAdvFor("usg",pos),usg)), disp:(usg===-Infinity?"\u2013":usg.toFixed(1))}
   ];
 }
 function rPoint(cx,cy,R,frac,i){ const a=(-90+i*60)*Math.PI/180; return [cx+R*frac*Math.cos(a), cy+R*frac*Math.sin(a)]; }
@@ -1324,7 +1426,7 @@ function compareView(){
       +'<div class="rleg"><span class="rl"><span class="sw" style="background:'+cA+'"></span>'+chEsc(A.name)+'</span><span class="rl"><span class="sw" style="background:'+cB+'"></span>'+chEsc(B.name)+'</span></div>'
       +compareTable(A,B,cA,cB)
       +compareSplits(A,B,cA,cB)
-      +'<div class="chartnote">Radar axes are percentiles vs. all qualified players; dashed ring = league average. Highlighted column = the better value in each row.</div>';
+      +'<div class="chartnote">Radar axes are percentiles '+(state.posRel?'within each player\u2019s position':'vs. all qualified players')+'; dashed ring = league average. Highlighted column = the better value in each row.</div>';
   } else body='<div class="muted-note" style="padding:18px 4px">Pick two different players to compare.</div>';
   return '<div class="cmpsel"><label class="chf">Player A '+sel("cmpA",state.cmpA)+'</label><label class="chf">Player B '+sel("cmpB",state.cmpB)+'</label></div>'+body;
 }
@@ -1362,10 +1464,11 @@ function statsView(){
   return toggle + `<div class="statswrap"><table class="statstable"><thead>${head}</thead><tbody>${body}</tbody></table></div>` + note;
 }
 
-function render(){
+function renderView(){
   renderGroups();
   const sBtn=$("#statsBtn"); if(sBtn) sBtn.classList.toggle("on", state.view==="stats");
   const cBtn=$("#chartsBtn"); if(cBtn) cBtn.classList.toggle("on", state.view==="charts");
+  const pBtn=$("#posBtn"); if(pBtn){ pBtn.classList.toggle("on", state.posRel); const pl=$("#posLabel"); if(pl) pl.textContent = state.posRel?"By position":"By field"; }
   const wB=$("#watchBtn"); if(wB) wB.classList.toggle("on", isScoutFilter(state.filter));
   updateWatchCount();
   const board = $("#board"); board.innerHTML="";
@@ -1434,6 +1537,15 @@ function render(){
     return;
   }
 
+  if(state.view==="bigboard"){
+    $("#secTitle").textContent="Big board";
+    const ids=bigBoardIds(); const cEl=$("#secCount"); cEl.hidden=false; cEl.textContent=ids.length+" player"+(ids.length!==1?"s":"");
+    $("#secMeta").innerHTML = 'Your ranked targets \u00b7 <a href="#" onclick="filterBy(\'watch\',\'1\',\'Watchlist\');return false">list view</a>';
+    board.innerHTML = bigBoardView();
+    wireBigBoard(board);
+    return;
+  }
+
   let list, title, count, meta="";
 
   if(state.query){
@@ -1474,7 +1586,7 @@ function render(){
     if(isScoutFilter(state.filter)){
       board.innerHTML = scoutBar(state.filter.type) + `<div class="empty"><div class="big">Nothing here yet</div>${scoutEmptyMsg(state.filter.type)}</div>`;
       board.querySelectorAll(".scoutchip").forEach(c=> c.onclick=()=> filterBy(c.dataset.ft,"1",c.dataset.lb));
-      { const we=$("#wlExport"); if(we) we.onclick=exportWatchlist; }
+      { const we=$("#wlExport"); if(we) we.onclick=exportWatchlist; const bo=$("#bbOpen"); if(bo) bo.onclick=()=>{ state.view="bigboard"; state.team=null; render(); }; }
       return;
     }
     board.innerHTML = `<div class="empty"><div class="big">No players yet</div>${state.query?"Nothing matches your search.":`Roster not loaded for this team. Run <code>scraper.js</code> on the FIBA roster page and add the players to <code>players.js</code>.`}</div>`;
@@ -1485,8 +1597,9 @@ function render(){
   const grid = document.createElement("div"); grid.className="grid";
   list.forEach(p=> grid.appendChild(playerCard(p)));
   board.appendChild(grid);
-  if(isScoutFilter(state.filter)){ board.querySelectorAll(".scoutchip").forEach(c=> c.onclick=()=> filterBy(c.dataset.ft,"1",c.dataset.lb)); const we=$("#wlExport"); if(we) we.onclick=exportWatchlist; }
+  if(isScoutFilter(state.filter)){ board.querySelectorAll(".scoutchip").forEach(c=> c.onclick=()=> filterBy(c.dataset.ft,"1",c.dataset.lb)); const we=$("#wlExport"); if(we) we.onclick=exportWatchlist; const bo=$("#bbOpen"); if(bo) bo.onclick=()=>{ state.view="bigboard"; state.team=null; render(); }; }
 }
+function render(){ renderView(); writeHash(); }
 
 /* ---------- drawer ---------- */
 let activeId=null, dirtyTimer=null;
@@ -1506,9 +1619,15 @@ ADV.forEach(([lab,key])=>{
   const n=vals.length;
   LEAGUE_ADV[key]={vals,n,mean:n?vals.reduce((a,b)=>a+b,0)/n:0};
 });
+const LEAGUE_ADV_POS={};
+POS_KEYS.forEach(pos=>{ LEAGUE_ADV_POS[pos]={};
+  ADV.forEach(([lab,key])=>{ const vals=QUALIFIED.filter(p=>posOf(p)===pos).map(p=>metric(p,key)).filter(v=>v!=null&&isFinite(v)).sort((a,b)=>a-b); const n=vals.length; LEAGUE_ADV_POS[pos][key]={vals,n,mean:n?vals.reduce((a,b)=>a+b,0)/n:0}; });
+});
+function leagueAdvFor(key,pos){ return (state.posRel&&pos&&LEAGUE_ADV_POS[pos]&&LEAGUE_ADV_POS[pos][key]&&LEAGUE_ADV_POS[pos][key].n>=5)?LEAGUE_ADV_POS[pos][key]:LEAGUE_ADV[key]; }
 function advBars(p){
+  const pos=posOf(p);
   const rows = ADV.map(([lab,key,vfmt])=>{
-    let v=metric(p,key); const L=LEAGUE_ADV[key];
+    let v=metric(p,key); const L=leagueAdvFor(key,pos);
     let pl, disp;
     if(v===Infinity){ pl=100; disp=vfmt(v); }
     else if(v==null || v===-Infinity || isNaN(v)){ pl=null; disp="\u2013"; v=null; }
@@ -1518,7 +1637,7 @@ function advBars(p){
     const col = pl==null?"var(--muted-2)":pctlColor(pl);
     return `<div class="bar2">
       <span class="lab">${lab}</span>
-      <span class="track2"><span class="fill2" style="width:${w}%"></span><span class="avgmark" style="left:${avgPos!=null?avgPos:50}%" title="Tournament avg: ${(L&&L.n)?vfmt(L.mean):'\u2013'}"></span></span>
+      <span class="track2"><span class="fill2" style="width:${w}%"></span><span class="avgmark" style="left:${avgPos!=null?avgPos:50}%" title="${state.posRel?posName(pos)+' avg':'Tournament avg'}: ${(L&&L.n)?vfmt(L.mean):'\u2013'}"></span></span>
       <span class="val2">${disp}</span>
       <span class="pctl" style="background:${col}" title="${pl!=null?ordinal(pl)+' percentile at the event':'not enough data'}">${pl!=null?pl:"\u2013"}</span>
     </div>`;
@@ -1529,17 +1648,18 @@ function advBars(p){
   </div>`;
 }
 
-function statBars(s){
+function statBars(p){
+  const s=p.stats||{}; const pos=posOf(p);
   const defs=[["PTS","ppg"],["REB","rpg"],["AST","apg"],["STL","spg"],["BLK","bpg"]];
   const rows = defs.map(([lab,key])=>{
-    const v=s[key]; const L=LEAGUE[key]||{mean:0,max:0};
-    const pl = (v==null||isNaN(v)) ? null : percentile(key,v);
+    const v=s[key]; const L=leagueFor(key,pos)||{mean:0,max:0};
+    const pl = (v==null||isNaN(v)) ? null : percentile(key,v,pos);
     const w = pl==null ? 0 : pl;                       // bar fills to the percentile (100 = full)
-    const avgPos = percentile(key, L.mean);            // marker sits where the tournament avg ranks
+    const avgPos = percentile(key, L.mean, pos);       // marker sits where the avg ranks
     const col = pl==null ? "var(--muted-2)" : pctlColor(pl);
     return `<div class="bar2">
       <span class="lab">${lab}</span>
-      <span class="track2"><span class="fill2" style="width:${w}%"></span><span class="avgmark" style="left:${avgPos!=null?avgPos:50}%" title="Tournament avg: ${fmt(L.mean)}"></span></span>
+      <span class="track2"><span class="fill2" style="width:${w}%"></span><span class="avgmark" style="left:${avgPos!=null?avgPos:50}%" title="${state.posRel?posName(pos)+' avg':'Tournament avg'}: ${fmt(L.mean)}"></span></span>
       <span class="val2">${fmt(v)}</span>
       <span class="pctl" style="background:${col}" title="${pl!=null?ordinal(pl)+" percentile at the event":"no data"}">${pl!=null?pl:"–"}</span>
     </div>`;
@@ -1666,14 +1786,14 @@ function openPlayer(id){
           <button class="subtab on" data-bt="basic">Per game</button>
           <button class="subtab" data-bt="adv">Advanced</button>
         </div>
-        <div class="barpane" data-bp="basic">${statBars(s)}</div>
+        <div class="barpane" data-bp="basic">${statBars(p)}</div>
         <div class="barpane bp-hide" data-bp="adv">${advBars(p)}</div>
       </div>
 
       <div class="dr-sec">
         <h4>Profile radar</h4>
         <div class="radarwrap">${(()=>{const rp=radarPctls(p);return radarSVG([{pcts:rp.map(x=>x.pct),color:"#C5824E",disps:rp.map(x=>x.disp)}]);})()}</div>
-        <div class="radarnote">Each axis is a percentile vs. all qualified players at the event — further out is better. Dashed ring = league average (50th pct).</div>
+        <div class="radarnote">Each axis is a percentile vs. ${state.posRel?("other "+posName(posOf(p))+" at the event"):"all qualified players at the event"} — further out is better. Dashed ring = league average (50th pct).</div>
       </div>
 
       <div class="dr-sec">
@@ -1734,6 +1854,7 @@ function openPlayer(id){
       const cur=noteFor(id).tags||[]; if(!cur.includes(v)){ setNote(id,{tags:[...cur,v]}); renderTags(); } tagsIn.value=""; }
   });
   updateCharInfo();
+  writeHash();
 }
 
 function paintStars(){
@@ -1840,17 +1961,58 @@ if($("#watchBtn")) $("#watchBtn").onclick = ()=>{
   if(state.filter && state.filter.type==="watch"){ clearFilter(); }
   else { filterBy("watch","1","Watchlist"); }
 };
+if($("#posBtn")) $("#posBtn").onclick = ()=>{ state.posRel=!state.posRel; if(activeId) openPlayer(activeId); render(); };
 
 /* ---------- toast ---------- */
 let toastTimer=null;
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on");
   clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("on"),2200); }
 
+/* ---------- shareable deep links (hash routing) ---------- */
+function currentHash(){
+  if(activeId) return "#p/"+activeId;
+  if(state.view==="stats") return "#stats";
+  if(state.view==="charts") return "#charts";
+  if(state.view==="bigboard") return "#bigboard";
+  if(state.filter && state.filter.type==="watch") return "#watchlist";
+  if(state.team) return "#t/"+state.team;
+  return "";
+}
+function writeHash(){
+  const target=currentHash(), cur=location.hash||"";
+  if(cur===target) return;
+  if(target){ location.hash=target; }
+  else { try{ history.replaceState(null,"",location.pathname+location.search); }catch(_){ location.hash=""; } }
+}
+function closeDrawerSilent(){
+  if(activeId && $("#noteArea")) setNote(activeId,{text:$("#noteArea").value});
+  const d=$("#drawer"); if(d){ d.classList.remove("on"); d.setAttribute("aria-hidden","true"); }
+  const sc=$("#scrim"); if(sc) sc.classList.remove("on");
+  activeId=null;
+}
+function routeTo(h){
+  h=h||"";
+  const pm=h.match(/^#p\/(.+)$/);
+  if(pm){ const id=pm[1]; if(D.players.some(p=>p.id===id)){ if(!activeId) render(); openPlayer(id); return; } }
+  if(activeId) closeDrawerSilent();
+  state.query=""; const sb=$("#search"); if(sb) sb.value="";
+  const tm=h.match(/^#t\/(.+)$/);
+  if(h==="#stats"){ state.view="stats"; state.team=null; state.filter=null; }
+  else if(h==="#charts"){ state.view="charts"; state.team=null; state.filter=null; }
+  else if(h==="#bigboard"){ state.view="bigboard"; state.team=null; state.filter=null; }
+  else if(h==="#watchlist"){ state.view="board"; state.team=null; state.filter={type:"watch",value:"1",label:"Watchlist"}; }
+  else if(tm && D.teams.some(t=>t.id===tm[1])){ state.view="board"; state.team=tm[1]; state.filter=null; }
+  else { state.view="board"; state.team=null; state.filter=null; }
+  render();
+}
+function applyHash(){ const h=location.hash||""; if(h===currentHash()) return; routeTo(h); }
+
 /* ---------- boot ----------
    Snapshot model: MT Scouting renders the rosters, averages, photos, standings
    and results that ship in players.js. Nothing is fetched from FIBA at runtime
    — the data refreshes only when players.js is updated. */
-render();
+window.addEventListener("hashchange", applyHash);
+if(location.hash){ routeTo(location.hash); } else { render(); }
 
 </script>
 <!-- ============================================================================
