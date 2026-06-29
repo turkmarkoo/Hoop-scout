@@ -435,6 +435,28 @@ a.logopp:hover{text-decoration:underline}
 .op-tag{background:#F2E4D4;color:#A96A38;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600}
 .op-notes{font-size:12.5px;line-height:1.55;color:#333;margin-top:8px}
 .op-foot{margin-top:18px;font-size:10px;color:#aaa;text-align:center}
+.qfbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:18px}
+.qfbar .qfl{font-family:var(--disp);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-right:2px}
+.recpill{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--muted);background:var(--panel-3);border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.tprofile{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px}
+.tprofile .tp{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:8px;padding:8px 6px;text-align:center}
+.tprofile .tp .v{font-family:var(--disp);font-weight:800;font-size:16px}
+.tprofile .tp .k{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-top:2px}
+.lutable{margin-top:4px}
+.lurow2{display:flex;align-items:center;gap:10px;padding:6px 2px;border-bottom:1px solid var(--line-soft);font-size:13px}
+.lurow2:last-child{border-bottom:0}
+.lurow2 .lp{flex:1;min-width:0;font-weight:500}
+.lurow2 .lm{color:var(--muted);font-family:var(--mono);font-size:11px}
+.lvh{font-family:var(--disp);font-weight:700;font-size:14px;margin:20px 0 3px;color:var(--text)}
+.lvsub{font-size:11px;color:var(--muted-2);margin-bottom:7px;line-height:1.45}
+.lvtable{width:100%;border-collapse:collapse}
+.lvtable th{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);text-align:right;padding:6px 8px;border-bottom:1px solid var(--line)}
+.lvtable th:first-child{text-align:left}
+.lvtable td{padding:7px 8px;border-bottom:1px solid var(--line-soft);font-size:13px;text-align:right;font-variant-numeric:tabular-nums}
+.lvtable td:first-child{text-align:left}
+.lvtable tr.clk{cursor:pointer}
+.lvtable tr.clk:hover{background:var(--panel-2)}
+.tmcode{color:var(--muted);font-family:var(--mono);font-size:11px;margin-left:7px}
 .barswitch{margin:18px 0 0}
 .barpane .bars{margin-top:10px}
 .barpane.bp-hide{display:none}
@@ -552,11 +574,62 @@ function teamGames(teamId){
 function teamPanel(teamId){
   const t=teamById(teamId);
   return `<div class="teampanel">
+    ${teamProfile(teamId)}
     <div class="panelcard"><h5>Group ${t.group} standings</h5>${standings(t.group,teamId)||'<p class="muted-note">No standings yet.</p>'}</div>
-    <div class="panelcard"><h5>${t.name} · results</h5>${teamGames(teamId)}</div>
+    ${teamLineups(teamId)}
+    <div class="panelcard"><h5>${t.name} \u00b7 results</h5>${teamGames(teamId)}</div>
   </div>`;
 }
-function neutralGameCard(g){
+function teamProfile(teamId){
+  const t=teamById(teamId); const G=(t.record&&(t.record.w+t.record.l))||0;
+  if(!G||!t.record) return '';
+  let a={fgm:0,fga:0,tpm:0,tpa:0,fta:0,ast:0,tov:0,pts:0};
+  D.players.filter(p=>p.teamId===teamId&&p.stats&&p.stats.gp).forEach(p=>{ const s=p.stats,g=s.gp;
+    a.fgm+=(s.fgm||0)*g; a.fga+=(s.fga||0)*g; a.tpm+=(s.tpm||0)*g; a.tpa+=(s.tpa||0)*g; a.fta+=(s.fta||0)*g; a.ast+=(s.apg||0)*g; a.tov+=(s.tpg||0)*g; a.pts+=(s.ppg||0)*g; });
+  const efg=a.fga?(a.fgm+0.5*a.tpm)/a.fga:null, ts=(a.fga||a.fta)?a.pts/(2*(a.fga+0.44*a.fta)):null;
+  const tr=a.fga?a.tpa/a.fga:null, ftr=a.fga?a.fta/a.fga:null, astto=a.tov?a.ast/a.tov:null;
+  const pf=t.record.pf/G, pa=(t.record.pf-t.record.diff)/G, nd=t.record.diff/G;
+  const ndc=nd>0?'#5E9E5E':nd<0?'#C6755B':'var(--muted)';
+  const cell=(v,k)=>'<div class="tp"><div class="v">'+v+'</div><div class="k">'+k+'</div></div>';
+  const pc=v=>v==null?'\u2013':Math.round(v*100)+'%';
+  return '<div class="panelcard"><h5>'+chEsc(t.name)+' \u00b7 team profile <span class="recpill">'+t.record.w+'\u2013'+t.record.l+'</span></h5><div class="tprofile">'
+    +cell(pf.toFixed(1),"PPG for")+cell(pa.toFixed(1),"PPG vs")+cell('<span style="color:'+ndc+'">'+(nd>0?'+':'')+nd.toFixed(1)+'</span>',"Net / gm")+cell(pc(efg),"eFG%")
+    +cell(pc(ts),"TS%")+cell(pc(tr),"3PA rate")+cell(pc(ftr),"FT rate")+cell(astto==null?'\u2013':astto.toFixed(2),"AST / TO")
+    +'</div></div>';
+}
+function teamLineups(teamId){
+  let rows=(PA.lu||[]).map(e=>{ const ids=e[0].split("-"); return {e,pa:pidPlayer(ids[0]),pb:pidPlayer(ids[1])}; })
+    .filter(x=>x.pa&&x.pb&&x.pa.teamId===teamId&&x.pb.teamId===teamId&&x.e[2]>=180);
+  rows.forEach(x=>x.net=(x.e[3]-x.e[4])/x.e[2]*2400); rows.sort((a,b)=>b.net-a.net); rows=rows.slice(0,6);
+  if(!rows.length) return '';
+  return '<div class="panelcard"><h5>Best two-man combos</h5><div class="lutable">'
+    +rows.map(x=>'<div class="lurow2"><span class="lp">'+chEsc(lastName(x.pa.name))+' + '+chEsc(lastName(x.pb.name))+'</span><span class="lm">'+(x.e[2]/60).toFixed(0)+"'"+'</span><span class="ln">'+netSpan(x.net)+' /40</span></div>').join('')
+    +'</div><div class="caveat">From 1\u20132 games of play-by-play \u2014 small samples, read directionally.</div></div>';
+}
+function onOffLeaders(group){
+  let arr=D.players.filter(p=>p.stats&&p.stats.gp).map(p=>({p,oo:onOffVal(p)})).filter(x=>x.oo&&x.oo.diff!=null);
+  if(group&&group!=="all") arr=arr.filter(x=>teamById(x.p.teamId).group===group);
+  arr.sort((a,b)=>b.oo.diff-a.oo.diff); return arr;
+}
+function lineupCombos(group,minSec){
+  let rows=(PA.lu||[]).map(e=>{ const ids=e[0].split("-"); return {e,pa:pidPlayer(ids[0]),pb:pidPlayer(ids[1])}; })
+    .filter(x=>x.pa&&x.pb&&x.pa.teamId===x.pb.teamId&&x.e[2]>=minSec);
+  if(group&&group!=="all") rows=rows.filter(x=>teamById(x.pa.teamId).group===group);
+  rows.forEach(x=>x.net=(x.e[3]-x.e[4])/x.e[2]*2400); rows.sort((a,b)=>b.net-a.net); return rows;
+}
+function lineupView(){
+  const grpOpts=["all","A","B","C","D"].map(gp=>'<option value="'+gp+'"'+(gp===state.chartGroup?" selected":"")+'>'+(gp==="all"?"All groups":"Group "+gp)+'</option>').join('');
+  const oo=onOffLeaders(state.chartGroup).slice(0,12);
+  const combos=lineupCombos(state.chartGroup,300).slice(0,15);
+  const ooRows = oo.length? oo.map(x=>'<tr class="clk" data-id="'+x.p.id+'"><td>'+chEsc(x.p.name)+'<span class="tmcode">'+chEsc(teamById(x.p.teamId).code)+'</span></td><td>'+netSpan(x.oo.onNet)+'</td><td>'+(x.oo.offNet==null?'\u2013':netSpan(x.oo.offNet))+'</td><td>'+netSpan(x.oo.diff)+'</td><td>'+x.oo.onMin.toFixed(0)+"'"+'</td></tr>').join('') : '<tr><td colspan="5" class="muted-note" style="text-align:left">No on/off data for this filter yet.</td></tr>';
+  const cmRows = combos.length? combos.map(x=>'<tr><td>'+chEsc(lastName(x.pa.name))+' + '+chEsc(lastName(x.pb.name))+'<span class="tmcode">'+chEsc(teamById(x.pa.teamId).code)+'</span></td><td>'+(x.e[2]/60).toFixed(0)+"'"+'</td><td>'+x.e[3]+'\u2013'+x.e[4]+'</td><td>'+netSpan(x.net)+'</td></tr>').join('') : '<tr><td colspan="4" class="muted-note" style="text-align:left">No combo data for this filter yet.</td></tr>';
+  return '<div class="chartctrls"><label class="chf">Show<select id="lvGrp">'+grpOpts+'</select></label></div>'
+    +'<div class="lvh">On/off impact leaders</div><div class="lvsub">Team net rating per 40 with the player on court vs. off. Click a player to open them.</div>'
+    +'<table class="lvtable"><thead><tr><th>Player</th><th>On /40</th><th>Off /40</th><th>Swing</th><th>On min</th></tr></thead><tbody>'+ooRows+'</tbody></table>'
+    +'<div class="lvh">Best two-man combos</div><div class="lvsub">Highest net rating per 40 among pairs sharing \u2265300s of court time.</div>'
+    +'<table class="lvtable"><thead><tr><th>Pair</th><th>Min</th><th>PF\u2013PA</th><th>Net /40</th></tr></thead><tbody>'+cmRows+'</tbody></table>'
+    +'<div class="chartnote">On/off and lineup data come from the 1\u20132 games of play-by-play parsed so far \u2014 directional, not settled.</div>';
+}function neutralGameCard(g){
   const A=codeToTeam(g.a),B=codeToTeam(g.b);
   let badge;
   if(g.status==='final') badge=`<span class="sc">${g.sa}–${g.sb}</span> <span class="gst final">Final</span>`;
@@ -577,8 +650,16 @@ function homeView(){
   const blocks=Object.keys(byDate).sort().map(d=>
     `<div class="day-block"><div class="day-label">${fmtDate(d)}</div><div class="home-results">${byDate[d].map(neutralGameCard).join("")}</div></div>`).join("");
   return `<div class="home-note">${homeNote()}</div>
+    <div class="qfbar"><span class="qfl">Quick filters</span>
+      <button class="chip-btn" onclick="filterBy('young','1','');return false">Young for level · 2010+</button>
+      <button class="chip-btn" onclick="filterBy('birthYear','2010','');return false">Born 2010</button>
+      <button class="chip-btn" onclick="filterBy('birthYear','2011','');return false">Born 2011</button>
+      <button class="chip-btn" onclick="filterBy('pos','G','Guards');return false">Guards</button>
+      <button class="chip-btn" onclick="filterBy('pos','F','Forwards');return false">Forwards</button>
+      <button class="chip-btn" onclick="filterBy('pos','C','Centers');return false">Centers</button>
+    </div>
     ${blocks}
-    <p class="muted-note" style="margin-top:16px">Pick any of the 16 teams above for its roster, per-player event averages, photos and your scouting notes.</p>`;
+    <p class="muted-note" style="margin-top:16px">Pick any of the 16 teams above for its roster, team profile, best lineups, per-player averages and your scouting notes.</p>`;
 }
 function goHome(){ state.team=null; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); }
 
@@ -649,6 +730,7 @@ function matchesFilter(p,f){
   if(f.type==="group") return teamById(p.teamId).group===f.value;
   if(f.type==="pos")   return (p.pos||"")===f.value;
   if(f.type==="birthYear") return String(p.birthYear)===f.value;
+  if(f.type==="young") return (p.birthYear||0)>=2010;
   if(f.type==="club")  return (p.club||"")===f.value;
   if(f.type==="watch"){ const nn=NOTES[p.id]; return !!(nn&&nn.watch); }
   if(f.type==="r4"){ const nn=NOTES[p.id]; return !!(nn&&nn.rating>=4); }
@@ -663,6 +745,7 @@ function filterTitle(f){
   if(f.type==="pos") return {G:"Guards",F:"Forwards",C:"Centers"}[f.value]||f.value;
   if(f.type==="group") return "Group "+f.value;
   if(f.type==="birthYear") return "Born "+f.value;
+  if(f.type==="young") return "Young for the level \u00b7 born 2010+";
   const sf=SCOUT_FILTERS.find(s=>s[0]===f.type); if(sf) return sf[1];
   return f.label || f.value;
 }
@@ -926,11 +1009,12 @@ function scatterSVG(){
   return '<svg class="scatter" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scatter plot">'+g+'</svg>';
 }
 function chartsView(){
-  const modes=[["scatter","Scatter"],["board","Leaderboards"],["compare","Compare"]];
+  const modes=[["scatter","Scatter"],["board","Leaderboards"],["compare","Compare"],["lineups","Lineups"]];
   const tabs='<div class="statsubtabs chartmodes">'+modes.map(m=>'<button class="subtab'+(state.chartMode===m[0]?" on":"")+'" data-cm="'+m[0]+'">'+m[1]+'</button>').join('')+'</div>';
   let body;
   if(state.chartMode==="board") body=leaderboardView();
   else if(state.chartMode==="compare") body=compareView();
+  else if(state.chartMode==="lineups") body=lineupView();
   else body=scatterView();
   return '<div class="chartwrap">'+tabs+body+'<div class="ctip" id="ctip" hidden></div></div>';
 }
@@ -1074,6 +1158,7 @@ function render(){
     const cEl=$("#secCount"); cEl.hidden=true;
     $("#secMeta").innerHTML = state.chartMode==="board" ? "Leaderboards - rank every player by any stat"
       : state.chartMode==="compare" ? "Head-to-head - overlay two players"
+      : state.chartMode==="lineups" ? "Lineups & on/off - pairings and team impact"
       : "Scatter explorer - pick any two stats to compare every player";
     board.innerHTML = chartsView();
     board.querySelectorAll(".chartmodes .subtab").forEach(b=>{ b.onclick=()=>{ state.chartMode=b.dataset.cm; render(); }; });
@@ -1096,6 +1181,9 @@ function render(){
       const a=$("#cmpA"), b=$("#cmpB");
       if(a) a.onchange=()=>{ state.cmpA=a.value; render(); };
       if(b) b.onchange=()=>{ state.cmpB=b.value; render(); };
+    } else if(state.chartMode==="lineups"){
+      const g=$("#lvGrp"); if(g) g.onchange=()=>{ state.chartGroup=g.value; render(); };
+      board.querySelectorAll(".lvtable tr.clk").forEach(r=>{ r.onclick=()=>openPlayer(r.dataset.id); });
     }
     return;
   }
