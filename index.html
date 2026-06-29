@@ -459,6 +459,12 @@ a.logopp:hover{text-decoration:underline}
 .lvtable tr.clk{cursor:pointer}
 .lvtable tr.clk:hover{background:var(--panel-2)}
 .tmcode{color:var(--muted);font-family:var(--mono);font-size:11px;margin-left:7px}
+.rkb{display:inline-block;margin-top:4px;font-family:var(--mono);font-size:9px;font-weight:600;color:var(--muted);background:var(--panel-3);border-radius:5px;padding:1px 5px;line-height:1.5;letter-spacing:-.02em}
+.rkb.top{background:#DCEBD4;color:#3E7A3E}
+.rkb.bot{background:#F3DAD0;color:#B0563A}
+.statline .s .rkb{margin-top:5px}
+.tpnote{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:11px;font-size:10.5px;color:var(--muted-2)}
+.tpnote .rkb{margin-top:0;cursor:default}
 .histsvg .hbar{fill:#CBAB8C;transition:fill .1s}
 .histsvg .hbar.on{fill:var(--clay)}
 .histsvg .hmean{stroke:var(--muted-2);stroke-width:1.4;stroke-dasharray:5 4}
@@ -604,24 +610,56 @@ function teamPanel(teamId){
     <div class="panelcard"><h5>${t.name} \u00b7 results</h5>${teamGames(teamId)}</div>
   </div>`;
 }
-function teamProfile(teamId){
-  const t=teamById(teamId); const G=(t.record&&(t.record.w+t.record.l))||0;
-  if(!G||!t.record) return '';
+/* ---------- tournament rankings ---------- */
+function teamStatVals(t){
+  const G=(t.record&&(t.record.w+t.record.l))||0; if(!G||!t.record) return null;
   let a={fgm:0,fga:0,tpm:0,tpa:0,fta:0,ast:0,tov:0,pts:0};
-  D.players.filter(p=>p.teamId===teamId&&p.stats&&p.stats.gp).forEach(p=>{ const s=p.stats,g=s.gp;
+  D.players.filter(p=>p.teamId===t.id&&p.stats&&p.stats.gp).forEach(p=>{ const s=p.stats,g=s.gp;
     a.fgm+=(s.fgm||0)*g; a.fga+=(s.fga||0)*g; a.tpm+=(s.tpm||0)*g; a.tpa+=(s.tpa||0)*g; a.fta+=(s.fta||0)*g; a.ast+=(s.apg||0)*g; a.tov+=(s.tpg||0)*g; a.pts+=(s.ppg||0)*g; });
-  const efg=a.fga?(a.fgm+0.5*a.tpm)/a.fga:null, ts=(a.fga||a.fta)?a.pts/(2*(a.fga+0.44*a.fta)):null;
-  const tr=a.fga?a.tpa/a.fga:null, ftr=a.fga?a.fta/a.fga:null, astto=a.tov?a.ast/a.tov:null;
-  const pf=t.record.pf/G, pa=(t.record.pf-t.record.diff)/G, nd=t.record.diff/G;
-  const ndc=nd>0?'#5E9E5E':nd<0?'#C6755B':'var(--muted)';
-  const cell=(v,k)=>'<div class="tp"><div class="v">'+v+'</div><div class="k">'+k+'</div></div>';
-  const pc=v=>v==null?'\u2013':Math.round(v*100)+'%';
-  return '<div class="panelcard"><h5>'+chEsc(t.name)+' \u00b7 team profile <span class="recpill">'+t.record.w+'\u2013'+t.record.l+'</span></h5><div class="tprofile">'
-    +cell(pf.toFixed(1),"PPG for")+cell(pa.toFixed(1),"PPG vs")+cell('<span style="color:'+ndc+'">'+(nd>0?'+':'')+nd.toFixed(1)+'</span>',"Net / gm")+cell(pc(efg),"eFG%")
-    +cell(pc(ts),"TS%")+cell(pc(tr),"3PA rate")+cell(pc(ftr),"FT rate")+cell(astto==null?'\u2013':astto.toFixed(2),"AST / TO")
-    +'</div></div>';
+  return { pf:t.record.pf/G, pa:(t.record.pf-t.record.diff)/G, nd:t.record.diff/G,
+    efg:a.fga?(a.fgm+0.5*a.tpm)/a.fga:null, ts:(a.fga||a.fta)?a.pts/(2*(a.fga+0.44*a.fta)):null,
+    tr:a.fga?a.tpa/a.fga:null, ftr:a.fga?a.fta/a.fga:null, astto:a.tov?a.ast/a.tov:null };
 }
-function teamLineups(teamId){
+const TEAM_RANK_DIR={pf:1,pa:-1,nd:1,efg:1,ts:1,tr:1,ftr:1,astto:1};
+let _teamRankCache=null;
+function teamRanks(){
+  if(_teamRankCache) return _teamRankCache;
+  const teams=(D.teams||[]).map(t=>({id:t.id,v:teamStatVals(t)})).filter(x=>x.v);
+  const out={}; teams.forEach(x=>out[x.id]={});
+  Object.keys(TEAM_RANK_DIR).forEach(key=>{ const dir=TEAM_RANK_DIR[key];
+    const arr=teams.filter(x=>x.v[key]!=null).slice().sort((a,b)=> dir>0 ? b.v[key]-a.v[key] : a.v[key]-b.v[key]);
+    arr.forEach((x,i)=>{ out[x.id][key]={rank:i+1,n:arr.length}; }); });
+  _teamRankCache=out; return out;
+}
+let _playerRankCache=null;
+function playerRanks(){
+  if(_playerRankCache) return _playerRankCache;
+  const keys=["ppg","rpg","apg"];
+  const qual=D.players.filter(p=>p.stats&&p.stats.gp>0);
+  const out={}; qual.forEach(p=>out[p.id]={});
+  keys.forEach(k=>{ const arr=qual.filter(p=>p.stats[k]!=null).slice().sort((a,b)=>b.stats[k]-a.stats[k]);
+    arr.forEach((p,i)=>{ out[p.id][k]={rank:i+1,n:arr.length}; }); });
+  _playerRankCache=out; return out;
+}
+function rankBadge(rank,n){ if(rank==null||!n) return ''; let cls=''; if(rank<=3) cls=' top'; else if(rank>n-3) cls=' bot'; return '<span class="rkb'+cls+'" title="Ranked '+ordinal(rank)+' of '+n+' at the event">'+ordinal(rank)+'/'+n+'</span>'; }
+
+function teamProfile(teamId){
+  const t=teamById(teamId); const v=teamStatVals(t); if(!v) return '';
+  const ranks=teamRanks()[teamId]||{};
+  const ndc=v.nd>0?'#5E9E5E':v.nd<0?'#C6755B':'var(--muted)';
+  const pc=x=>x==null?'\u2013':Math.round(x*100)+'%';
+  const cell=(disp,k,rk)=>'<div class="tp"><div class="v">'+disp+'</div><div class="k">'+k+'</div>'+(ranks[rk]?rankBadge(ranks[rk].rank,ranks[rk].n):'')+'</div>';
+  return '<div class="panelcard"><h5>'+chEsc(t.name)+' \u00b7 team profile <span class="recpill">'+t.record.w+'\u2013'+t.record.l+'</span></h5><div class="tprofile">'
+    +cell(v.pf.toFixed(1),"PPG for","pf")
+    +cell(v.pa.toFixed(1),"PPG vs","pa")
+    +cell('<span style="color:'+ndc+'">'+(v.nd>0?'+':'')+v.nd.toFixed(1)+'</span>',"Net / gm","nd")
+    +cell(pc(v.efg),"eFG%","efg")
+    +cell(pc(v.ts),"TS%","ts")
+    +cell(pc(v.tr),"3PA rate","tr")
+    +cell(pc(v.ftr),"FT rate","ftr")
+    +cell(v.astto==null?'\u2013':v.astto.toFixed(2),"AST / TO","astto")
+    +'</div><div class="tpnote">Rank vs. all 16 teams \u00b7 <span class="rkb top">top 3</span> <span class="rkb bot">bottom 3</span></div></div>';
+}function teamLineups(teamId){
   let rows=(PA.lu||[]).map(e=>{ const ps=e[0].split("-").map(pidPlayer); return {e,ps}; })
     .filter(x=>x.ps.every(p=>p&&p.teamId===teamId)&&x.e[2]>=180);
   rows.forEach(x=>x.net=(x.e[3]-x.e[4])/x.e[2]*2400); rows.sort((a,b)=>b.net-a.net); rows=rows.slice(0,6);
@@ -861,6 +899,8 @@ function playerCard(p){
   const n = noteFor(p.id);
   const s = p.stats||{};
   const w = !!n.watch;
+  const pr = (s&&s.gp)? (playerRanks()[p.id]||{}) : {};
+  const RKB = o=> o? rankBadge(o.rank,o.n) : '';
   const card = document.createElement("button");
   card.className="card"; card.onclick=()=>openPlayer(p.id);
   const badges = [];
@@ -880,9 +920,9 @@ function playerCard(p){
       </div>
     </div>
     <div class="statline">
-      <div class="s"><div class="v">${fmt(s.ppg)}</div><div class="k">PPG</div></div>
-      <div class="s"><div class="v">${fmt(s.rpg)}</div><div class="k">RPG</div></div>
-      <div class="s"><div class="v">${fmt(s.apg)}</div><div class="k">APG</div></div>
+      <div class="s"><div class="v">${fmt(s.ppg)}</div><div class="k">PPG</div>${RKB(pr.ppg)}</div>
+      <div class="s"><div class="v">${fmt(s.rpg)}</div><div class="k">RPG</div>${RKB(pr.rpg)}</div>
+      <div class="s"><div class="v">${fmt(s.apg)}</div><div class="k">APG</div>${RKB(pr.apg)}</div>
       <div class="s"><div class="v">${s.gp??0}</div><div class="k">GP</div></div>
     </div>`;
   const wt=card.querySelector(".watchtoggle"); if(wt) wt.addEventListener("click",e=>{ e.stopPropagation(); toggleWatch(p.id); });
