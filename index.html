@@ -460,9 +460,12 @@ a.logopp:hover{text-decoration:underline}
 .lvtable tr.clk:hover{background:var(--panel-2)}
 .tmcode{color:var(--muted);font-family:var(--mono);font-size:11px;margin-left:7px}
 .rkb{display:inline-block;margin-top:4px;font-family:var(--mono);font-size:9px;font-weight:600;color:var(--muted);background:var(--panel-3);border-radius:5px;padding:1px 5px;line-height:1.5;letter-spacing:-.02em}
-.rkb.top{background:#DCEBD4;color:#3E7A3E}
-.rkb.bot{background:#F3DAD0;color:#B0563A}
+.rkb.t1{background:#D8EBCF;color:#3C7A3C}
+.rkb.t2{background:#FBF1C9;color:#927714}
+.rkb.b2{background:#F7DEBE;color:#B5651D}
+.rkb.b1{background:#F2CFC9;color:#B5302A}
 .statline .s .rkb{margin-top:5px}
+.avg .a .rkb{margin-top:5px}
 .tpnote{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:11px;font-size:10.5px;color:var(--muted-2)}
 .tpnote .rkb{margin-top:0;cursor:default}
 .histsvg .hbar{fill:#CBAB8C;transition:fill .1s}
@@ -631,17 +634,40 @@ function teamRanks(){
     arr.forEach((x,i)=>{ out[x.id][key]={rank:i+1,n:arr.length}; }); });
   _teamRankCache=out; return out;
 }
+const PLAYER_RANK_DEFS=[
+  ["ppg",(p,s)=>s.ppg,1,()=>true],
+  ["rpg",(p,s)=>s.rpg,1,()=>true],
+  ["apg",(p,s)=>s.apg,1,()=>true],
+  ["spg",(p,s)=>s.spg,1,()=>true],
+  ["bpg",(p,s)=>s.bpg,1,()=>true],
+  ["mpg",(p,s)=>s.mpg,1,()=>true],
+  ["tpg",(p,s)=>s.tpg,-1,()=>true],
+  ["fgPct",(p,s)=>s.fgPct,1,(p,s)=>(s.fga||0)*(s.gp||0)>=10],
+  ["tpPct",(p,s)=>s.tpPct,1,(p,s)=>(s.tpa||0)*(s.gp||0)>=5],
+  ["ftPct",(p,s)=>s.ftPct,1,(p,s)=>(s.fta||0)*(s.gp||0)>=5],
+  ["ts",(p)=>metric(p,"ts"),1,(p)=>metric(p,"ts")!==-Infinity],
+  ["efg",(p)=>metric(p,"efg"),1,(p)=>metric(p,"efg")!==-Infinity],
+  ["usg",(p)=>metric(p,"usg"),1,(p)=>metric(p,"usg")!==-Infinity],
+  ["ftr",(p,s)=>(s.fga>0)?s.fta/s.fga:null,1,(p,s)=>(s.fga||0)*(s.gp||0)>=10]
+];
 let _playerRankCache=null;
 function playerRanks(){
   if(_playerRankCache) return _playerRankCache;
-  const keys=["ppg","rpg","apg"];
   const qual=D.players.filter(p=>p.stats&&p.stats.gp>0);
   const out={}; qual.forEach(p=>out[p.id]={});
-  keys.forEach(k=>{ const arr=qual.filter(p=>p.stats[k]!=null).slice().sort((a,b)=>b.stats[k]-a.stats[k]);
-    arr.forEach((p,i)=>{ out[p.id][k]={rank:i+1,n:arr.length}; }); });
+  PLAYER_RANK_DEFS.forEach(def=>{ const key=def[0],vf=def[1],dir=def[2],qf=def[3];
+    const arr=qual.filter(p=>{ const s=p.stats; if(!qf(p,s)) return false; const v=vf(p,s); return v!=null&&isFinite(v); })
+      .map(p=>({p,v:vf(p,p.stats)})).sort((a,b)=> dir>0 ? b.v-a.v : a.v-b.v);
+    arr.forEach((x,i)=>{ out[x.p.id][key]={rank:i+1,n:arr.length}; });
+  });
   _playerRankCache=out; return out;
 }
-function rankBadge(rank,n){ if(rank==null||!n) return ''; let cls=''; if(rank<=3) cls=' top'; else if(rank>n-3) cls=' bot'; return '<span class="rkb'+cls+'" title="Ranked '+ordinal(rank)+' of '+n+' at the event">'+ordinal(rank)+'/'+n+'</span>'; }
+function rankBadge(rank,n){ if(rank==null||!n) return '';
+  let cls='', P=null;
+  if(n>1){ P=(n-rank)/(n-1)*100;
+    if(P>=97) cls=' t1'; else if(P>=90) cls=' t2'; else if(P<3) cls=' b1'; else if(P<=10) cls=' b2'; }
+  const ttl='Ranked '+ordinal(rank)+' of '+n+(P!=null?' \u00b7 '+ordinal(Math.round(P))+' percentile':'');
+  return '<span class="rkb'+cls+'" title="'+ttl+'">'+ordinal(rank)+'/'+n+'</span>'; }
 
 function teamProfile(teamId){
   const t=teamById(teamId); const v=teamStatVals(t); if(!v) return '';
@@ -658,7 +684,7 @@ function teamProfile(teamId){
     +cell(pc(v.tr),"3PA rate","tr")
     +cell(pc(v.ftr),"FT rate","ftr")
     +cell(v.astto==null?'\u2013':v.astto.toFixed(2),"AST / TO","astto")
-    +'</div><div class="tpnote">Rank vs. all 16 teams \u00b7 <span class="rkb top">top 3</span> <span class="rkb bot">bottom 3</span></div></div>';
+    +'</div><div class="tpnote">Rank vs. all 16 teams \u00b7 <span class="rkb t1">top 3%</span> <span class="rkb t2">top 10%</span> <span class="rkb b2">bot 10%</span> <span class="rkb b1">bot 3%</span></div></div>';
 }function teamLineups(teamId){
   let rows=(PA.lu||[]).map(e=>{ const ps=e[0].split("-").map(pidPlayer); return {e,ps}; })
     .filter(x=>x.ps.every(p=>p&&p.teamId===teamId)&&x.e[2]>=180);
@@ -1554,6 +1580,7 @@ function openPlayer(id){
   const t = teamById(p.teamId); const s=p.stats||{}; const n=noteFor(id);
   const _ts=metric(p,'ts'),_efg=metric(p,'efg'),_uv=usgVal(p);
   const advTs=_ts===-Infinity?'–':pct(_ts), advEfg=_efg===-Infinity?'–':pct(_efg), advUsg=_uv==null?'–':_uv.toFixed(1), advFtr=(s.fga>0)?(s.fta/s.fga).toFixed(2):'–';
+  const PRk=(s&&s.gp)?(playerRanks()[p.id]||{}):{}; const RKB=o=>o?rankBadge(o.rank,o.n):'';
   const dr = $("#drawer");
   dr.innerHTML = `
     <div class="dr-head">
@@ -1583,24 +1610,24 @@ function openPlayer(id){
       <div class="dr-sec">
         <h4>Event averages · ${s.gp??0} GP</h4>
         <div class="avg">
-          <div class="a"><div class="v">${fmt(s.ppg)}</div><div class="k">PTS</div></div>
-          <div class="a"><div class="v">${fmt(s.rpg)}</div><div class="k">REB</div></div>
-          <div class="a"><div class="v">${fmt(s.apg)}</div><div class="k">AST</div></div>
-          <div class="a"><div class="v">${fmt(s.spg)}</div><div class="k">STL</div></div>
-          <div class="a"><div class="v">${fmt(s.bpg)}</div><div class="k">BLK</div></div>
-          <div class="a"><div class="v">${fmt(s.mpg)}</div><div class="k">MIN</div></div>
+          <div class="a"><div class="v">${fmt(s.ppg)}</div><div class="k">PTS</div>${RKB(PRk.ppg)}</div>
+          <div class="a"><div class="v">${fmt(s.rpg)}</div><div class="k">REB</div>${RKB(PRk.rpg)}</div>
+          <div class="a"><div class="v">${fmt(s.apg)}</div><div class="k">AST</div>${RKB(PRk.apg)}</div>
+          <div class="a"><div class="v">${fmt(s.spg)}</div><div class="k">STL</div>${RKB(PRk.spg)}</div>
+          <div class="a"><div class="v">${fmt(s.bpg)}</div><div class="k">BLK</div>${RKB(PRk.bpg)}</div>
+          <div class="a"><div class="v">${fmt(s.mpg)}</div><div class="k">MIN</div>${RKB(PRk.mpg)}</div>
         </div>
         <div class="shoot">
-          <div class="a"><div class="v">${pct(s.fgPct)}</div><div class="k">FG%</div></div>
-          <div class="a"><div class="v">${pct(s.tpPct)}</div><div class="k">3P%</div></div>
-          <div class="a"><div class="v">${pct(s.ftPct)}</div><div class="k">FT%</div></div>
-          <div class="a"><div class="v">${fmt(s.tpg)}</div><div class="k">TOV</div></div>
+          <div class="a"><div class="v">${pct(s.fgPct)}</div><div class="k">FG%</div>${RKB(PRk.fgPct)}</div>
+          <div class="a"><div class="v">${pct(s.tpPct)}</div><div class="k">3P%</div>${RKB(PRk.tpPct)}</div>
+          <div class="a"><div class="v">${pct(s.ftPct)}</div><div class="k">FT%</div>${RKB(PRk.ftPct)}</div>
+          <div class="a"><div class="v">${fmt(s.tpg)}</div><div class="k">TOV</div>${RKB(PRk.tpg)}</div>
         </div>
         <div class="shoot">
-          <div class="a"><div class="v">${advTs}</div><div class="k">TS%</div></div>
-          <div class="a"><div class="v">${advEfg}</div><div class="k">eFG%</div></div>
-          <div class="a"><div class="v">${advUsg}</div><div class="k">USG%</div></div>
-          <div class="a"><div class="v">${advFtr}</div><div class="k">FTr</div></div>
+          <div class="a"><div class="v">${advTs}</div><div class="k">TS%</div>${RKB(PRk.ts)}</div>
+          <div class="a"><div class="v">${advEfg}</div><div class="k">eFG%</div>${RKB(PRk.efg)}</div>
+          <div class="a"><div class="v">${advUsg}</div><div class="k">USG%</div>${RKB(PRk.usg)}</div>
+          <div class="a"><div class="v">${advFtr}</div><div class="k">FTr</div>${RKB(PRk.ftr)}</div>
         </div>
         <div class="statsubtabs barswitch">
           <button class="subtab on" data-bt="basic">Per game</button>
