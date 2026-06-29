@@ -555,6 +555,30 @@ a.logopp:hover{text-decoration:underline}
 .cbx-opt.active,.cbx-opt:hover{background:var(--panel-3)}
 .cbx-opt.sel{color:var(--clay-deep);font-weight:600}
 .cbx-opt[hidden]{display:none}
+.notegrid{display:flex;flex-direction:column}
+.nlab{font-family:var(--disp);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--clay-deep);margin:11px 0 5px}
+.note-area.na-s{min-height:74px;margin-bottom:0;background-image:none}
+.roles{margin:0 0 12px;border:1px solid var(--parch-line);border-radius:10px;background:rgba(255,255,255,.35);overflow:hidden}
+html[data-theme="dark"] .roles{background:rgba(255,255,255,.04)}
+.roleshd{width:100%;text-align:left;background:none;border:0;font-family:var(--disp);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-note);padding:9px 11px;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.rolesarrow{transition:transform .15s;font-size:10px;color:var(--muted)}
+.roles.open .rolesarrow{transform:rotate(180deg)}
+.rolesbody{display:none;padding:0 11px 9px}
+.roles.open .rolesbody{display:block}
+.rolegrp{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px solid var(--parch-line)}
+.rolelab{flex:none;width:60px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding-top:6px}
+.rolewrap{display:flex;flex-wrap:wrap;gap:5px}
+.rolechip{font-family:var(--body);font-size:11.5px;color:var(--ink-note);background:rgba(255,255,255,.55);border:1px solid var(--parch-line);border-radius:7px;padding:3px 9px;cursor:pointer;transition:.12s}
+html[data-theme="dark"] .rolechip{background:rgba(255,255,255,.05);color:var(--text)}
+.rolechip:hover{border-color:var(--clay)}
+.rolechip.on{background:var(--clay);border-color:var(--clay);color:#fff}
+html[data-theme="dark"] .tags-in,html[data-theme="dark"] .note-area{background:rgba(255,255,255,.04);color:var(--ink-note)}
+html[data-theme="dark"] .note-area{background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(255,255,255,.06) 28px)}
+html[data-theme="dark"] .tags-in:focus,html[data-theme="dark"] .note-area:focus{background-color:rgba(255,255,255,.07)}
+html[data-theme="dark"] .tg{color:#E3C7A0}
+.op-nrow{margin-top:7px}
+.op-nk{font-family:var(--disp);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#999;display:block;margin-bottom:1px}
+.op-nv{font-size:12px;line-height:1.5;color:#333}
 
 </style>
 <script>(function(){try{var t=localStorage.getItem("hoopscout:theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
@@ -628,17 +652,18 @@ const NOTE_KEY = "hoopscout:notes:v1";
 const $ = (s,r=document)=>r.querySelector(s);
 
 /* ---------- notes store ---------- */
-function loadNotes(){ try{return JSON.parse(localStorage.getItem(NOTE_KEY))||{}}catch{return{}} }
+function migrateNote(n){ if(n && n.text && n.text.trim() && !n.nAth && !n.nOff && !n.nDef){ n.nOff=n.text; delete n.text; } return n; }
+function loadNotes(){ try{ const o=JSON.parse(localStorage.getItem(NOTE_KEY))||{}; for(const id in o){ if(id!=="__board") migrateNote(o[id]); } return o; }catch{return{}} }
 function saveNotes(n){ try{localStorage.setItem(NOTE_KEY,JSON.stringify(n))}catch{toast("Couldn't save — storage blocked")} }
 let NOTES = loadNotes();
 let cloudUser=null;
-function noteFor(id){ return NOTES[id] || {text:"",rating:0,tags:[]} }
+function noteFor(id){ return NOTES[id] || {rating:0,tags:[],nAth:"",nOff:"",nDef:""} }
 
 /* ---------- helpers ---------- */
 const teamById = id => D.teams.find(t=>t.id===id) || {name:"?",code:"?"};
 const fmt = (v,d=1)=> (v==null||isNaN(v)) ? "–" : Number(v).toFixed(d);
 const pct = v => (v==null||isNaN(v)) ? "–" : (Number(v)*100).toFixed(1)+"%";
-function hasContent(n){ return !!(n && (n.text?.trim() || n.rating>0 || (n.tags&&n.tags.length))) }
+function hasContent(n){ return !!(n && ((n.nAth&&n.nAth.trim()) || (n.nOff&&n.nOff.trim()) || (n.nDef&&n.nDef.trim()) || (n.text&&n.text.trim()) || n.rating>0 || (n.tags&&n.tags.length))) }
 
 /* ---------- images / games / standings ---------- */
 const IMG = pid => pid ? `https://assets.fiba.basketball/image/upload/c_fill,g_face,w_200,h_200/q_auto/f_auto/.headshot--person_${pid}--competition_208545` : "";
@@ -906,7 +931,7 @@ function filterBy(type,value,label){
   if(type==="team"){ state.team=value; state.filter=null; }
   else { state.team=null; state.filter={type,value:String(value),label}; }
   if(activeId){
-    if($("#noteArea")) setNote(activeId,{text:$("#noteArea").value});
+    flushNotes();
     $("#drawer").classList.remove("on"); $("#drawer").setAttribute("aria-hidden","true");
     $("#scrim").classList.remove("on"); activeId=null;
   }
@@ -980,7 +1005,9 @@ function onePagerHTML(p){
   const stat=kv("PPG",fmt(s.ppg))+kv("RPG",fmt(s.rpg))+kv("APG",fmt(s.apg))+kv("SPG",fmt(s.spg))+kv("BPG",fmt(s.bpg))+kv("MIN",fmt(s.mpg))
     +kv("FG%",pct(s.fgPct))+kv("3P%",pct(s.tpPct))+kv("FT%",pct(s.ftPct))+kv("TS%",ts===-Infinity?"\u2013":pct(ts))+kv("USG%",usg===-Infinity?"\u2013":usg.toFixed(1))+kv("GP",s.gp==null?0:s.gp);
   const tags=(n.tags&&n.tags.length)?'<div class="op-tags">'+n.tags.map(x=>'<span class="op-tag">'+chEsc(x)+'</span>').join('')+'</div>':'';
-  const notes=(n.text&&n.text.trim())?'<div class="op-notes">'+chEsc(n.text).split("\n").join("<br>")+'</div>':'<div class="op-notes op-empty">No written notes.</div>';
+  const nsec=(lab,val)=>(val&&val.trim())?'<div class="op-nrow"><span class="op-nk">'+lab+'</span><span class="op-nv">'+chEsc(val).split("\n").join("<br>")+'</span></div>':'';
+  const nparts=[nsec("Athleticism",n.nAth),nsec("Offense",n.nOff),nsec("Defense",n.nDef)].filter(Boolean);
+  const notes=nparts.length?'<div class="op-notes">'+nparts.join("")+'</div>':'<div class="op-notes op-empty">No written notes.</div>';
   const ev=(D.event&&(D.event.short||D.event.name))||"";
   const today=new Date().toLocaleDateString();
   return '<div class="op">'
@@ -1904,9 +1931,17 @@ function openPlayer(id){
           </div>
           <button class="clr" id="clrRate">clear</button>
         </div>
-        <input class="tags-in" id="tagsIn" placeholder="Add a tag and press Enter (e.g. lefty, rim-runner, motor)">
+        <input class="tags-in" id="tagsIn" placeholder="Add your own tag and press Enter (e.g. lefty, high motor, late bloomer)">
         <div class="taglist" id="tagList"></div>
-        <textarea class="note-area" id="noteArea" placeholder="What did you see? Frame, athleticism, shot mechanics, decision-making, motor, matchup, projection…">${n.text||""}</textarea>
+        ${rolesHTML(id)}
+        <div class="notegrid">
+          <label class="nlab" for="nAth">Athleticism</label>
+          <textarea class="note-area na-s" id="nAth" placeholder="Frame & length, vertical pop, first step, lateral quickness, speed in transition, motor & conditioning…">${chEsc(n.nAth||"")}</textarea>
+          <label class="nlab" for="nOff">Offense</label>
+          <textarea class="note-area na-s" id="nOff" placeholder="Shooting (mechanics, range, off the dribble), finishing at the rim, ball-handling vs pressure, passing & reads, shot selection…">${chEsc(n.nOff||"")}</textarea>
+          <label class="nlab" for="nDef">Defense</label>
+          <textarea class="note-area na-s" id="nDef" placeholder="On-ball pressure, screen navigation, help & rotations, rebounding, hands & steals, rim protection, effort…">${chEsc(n.nDef||"")}</textarea>
+        </div>
         <div class="note-foot">
           <span class="saved" id="savedFlag"><span class="d"></span><span id="savedTxt">Saved</span></span>
           <span id="charInfo"></span>
@@ -1925,8 +1960,9 @@ function openPlayer(id){
   dr.classList.add("on"); dr.setAttribute("aria-hidden","false");
 
   renderTags();
-  const area = $("#noteArea");
-  area.addEventListener("input", ()=>{ markDirty(); scheduleSave(); });
+  ["nAth","nOff","nDef"].forEach(fid=>{ const ta=$("#"+fid); if(ta) ta.addEventListener("input", ()=>{ markDirty(); scheduleSave(); }); });
+  { const rh=$("#rolesHd"); if(rh) rh.onclick=()=>{ _rolesOpen=!_rolesOpen; const r=$("#roles"); if(r) r.classList.toggle("open",_rolesOpen); }; }
+  dr.querySelectorAll(".rolechip").forEach(ch=>{ ch.onclick=()=>{ const t=ch.dataset.tag; const cur=noteFor(id).tags||[]; const next=cur.includes(t)?cur.filter(x=>x!==t):[...cur,t]; setNote(id,{tags:next}); renderTags(); }; });
   $("#stars").querySelectorAll(".star").forEach(btn=>{
     btn.onclick = ()=>{ const v=+btn.dataset.v; const cur=noteFor(id).rating; setNote(id,{rating: cur===v?0:v}); paintStars(); };
   });
@@ -1945,37 +1981,53 @@ function paintStars(){
   $("#stars").querySelectorAll(".star").forEach(b=> b.classList.toggle("on", +b.dataset.v<=r));
   render(); // refresh card badge
 }
+let _rolesOpen=true;
+const ROLE_TAGS=[
+  ["Guards",["Floor General","Lead Guard","Scoring PG","Combo Guard","Crafty Guard","Backcourt Allrounder","Sniper","Microwave Scorer","Slasher"]],
+  ["Wings",["Swingman","Wing","3&D Wing","Two-Way Wing","Connector","Spot-up Shooter"]],
+  ["Forwards",["Point Forward","Combo Forward","Stretch Four","Inside & Outside PF","Face-up Four"]],
+  ["Bigs",["Stretch Five","Hybrid Big","Traditional Big","Playmaking Big","Undersized Big","Roll Man","Lob Threat","Energy Big"]],
+  ["Defense",["Defensive Stopper","Rim Protector","Switch Defender","Point-of-Attack Defender","Versatile Defender"]]
+];
+function rolesHTML(id){
+  const cur=new Set(noteFor(id).tags||[]);
+  const groups=ROLE_TAGS.map(g=>'<div class="rolegrp"><span class="rolelab">'+g[0]+'</span><span class="rolewrap">'+g[1].map(t=>'<button type="button" class="rolechip'+(cur.has(t)?" on":"")+'" data-tag="'+chEsc(t)+'">'+chEsc(t)+'</button>').join('')+'</span></div>').join('');
+  return '<div class="roles'+(_rolesOpen?" open":"")+'" id="roles"><button type="button" class="roleshd" id="rolesHd">Suggested roles<span class="rolesarrow">\u25be</span></button><div class="rolesbody">'+groups+'</div></div>';
+}
 function renderTags(){
   const list=$("#tagList"); const tags=noteFor(activeId).tags||[];
   list.innerHTML = tags.map((t,i)=>`<span class="tg" data-i="${i}">${t} ✕</span>`).join("");
   list.querySelectorAll(".tg").forEach(el=> el.onclick=()=>{
     const tags=noteFor(activeId).tags.slice(); tags.splice(+el.dataset.i,1); setNote(activeId,{tags}); renderTags();
   });
+  const cur=new Set(noteFor(activeId).tags||[]);
+  document.querySelectorAll(".rolechip").forEach(ch=>ch.classList.toggle("on",cur.has(ch.dataset.tag)));
 }
 function updateCharInfo(){
-  const t = $("#noteArea")?.value||""; const ci=$("#charInfo");
-  if(ci) ci.textContent = t.trim()? t.trim().split(/\s+/).length+" words" : "";
+  const t = [($("#nAth")?.value||""),($("#nOff")?.value||""),($("#nDef")?.value||"")].join(" ").trim(); const ci=$("#charInfo");
+  if(ci) ci.textContent = t ? t.split(/\s+/).length+" words" : "";
 }
 
 function setNote(id, patch){
   const cur = noteFor(id);
-  NOTES[id] = {text:"", rating:0, tags:[], ...cur, ...patch, updated:Date.now()};
+  NOTES[id] = {rating:0, tags:[], nAth:"", nOff:"", nDef:"", ...cur, ...patch, updated:Date.now()};
   saveNotes(NOTES);
   pushCloud();
 }
 function markDirty(){ const f=$("#savedFlag"); if(f){ f.classList.add("dirty"); $("#savedTxt").textContent="Saving…"; } updateCharInfo(); }
 let saveTimer=null;
+function flushNotes(){ if(!activeId) return; const a=$("#nAth"); if(!a) return; setNote(activeId,{nAth:a.value, nOff:($("#nOff")?.value||""), nDef:($("#nDef")?.value||"")}); }
 function scheduleSave(){
   clearTimeout(saveTimer);
   saveTimer=setTimeout(()=>{
-    setNote(activeId,{text:$("#noteArea").value});
+    flushNotes();
     const f=$("#savedFlag"); if(f){ f.classList.remove("dirty"); $("#savedTxt").textContent="Saved"; }
     render();
   },450);
 }
 function closeDrawer(){
   // flush any pending text
-  if(activeId && $("#noteArea")) setNote(activeId,{text:$("#noteArea").value});
+  flushNotes();
   $("#drawer").classList.remove("on"); $("#drawer").setAttribute("aria-hidden","true");
   $("#scrim").classList.remove("on"); activeId=null; render();
 }
@@ -1987,11 +2039,12 @@ function pushCloud(){ if(window.CloudSync && window.CloudSync.enabled && cloudUs
 function applyRemoteNotes(cloud){
   if(!cloud) return; let changed=false;
   for(const id in cloud){ const c=cloud[id]; if(!c) continue; const l=NOTES[id];
-    if(!l || (c.updated||0) > (l.updated||0)){ NOTES[id]=c; changed=true; } }
+    if(!l || (c.updated||0) > (l.updated||0)){ NOTES[id]=migrateNote(c); changed=true; } }
   if(changed){ saveNotes(NOTES);
-    if(activeId){ const ta=$("#noteArea"); if(ta){ if(document.activeElement!==ta) ta.value=noteFor(activeId).text||"";
+    if(activeId){
+      ["nAth","nOff","nDef"].forEach(fid=>{ const ta=$("#"+fid); if(ta && document.activeElement!==ta) ta.value=noteFor(activeId)[fid]||""; });
       if($("#stars")&&typeof paintStars==="function") paintStars();
-      if($("#tagList")&&typeof renderTags==="function") renderTags(); } }
+      if($("#tagList")&&typeof renderTags==="function") renderTags(); }
     render(); }
 }
 function updateAuthUI(user){
@@ -2075,7 +2128,7 @@ function writeHash(){
   else { try{ history.replaceState(null,"",location.pathname+location.search); }catch(_){ location.hash=""; } }
 }
 function closeDrawerSilent(){
-  if(activeId && $("#noteArea")) setNote(activeId,{text:$("#noteArea").value});
+  flushNotes();
   const d=$("#drawer"); if(d){ d.classList.remove("on"); d.setAttribute("aria-hidden","true"); }
   const sc=$("#scrim"); if(sc) sc.classList.remove("on");
   activeId=null;
