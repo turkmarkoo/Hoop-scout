@@ -559,6 +559,28 @@ a.logopp:hover{text-decoration:underline}
 .cbx-opt[hidden]{display:none}
 .notegrid{display:flex;flex-direction:column}
 .nlab{font-family:var(--disp);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--clay-deep);margin:11px 0 5px}
+.proj-in{width:100%;font-family:var(--disp);font-weight:600;font-size:15px;color:var(--ink-note);background:rgba(255,255,255,.7);border:1px solid var(--parch-line);border-left:3px solid var(--clay);border-radius:9px;padding:9px 12px;margin:2px 0 12px;outline:none}
+.proj-in::placeholder{color:#A8946A;font-weight:500;font-size:13px}
+.proj-in:focus{border-color:var(--clay-deep);background:#fff}
+html[data-theme="dark"] .proj-in{background:rgba(255,255,255,.04);color:var(--ink-note)}
+html[data-theme="dark"] .proj-in:focus{background:rgba(255,255,255,.07)}
+.nfield{margin-top:12px}
+.nhead{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.nhead .nlab{margin:0;flex:none}
+.nctx{font-family:var(--mono);font-size:10.5px;letter-spacing:0;text-transform:none;flex:1;min-width:0}
+.micbtn{flex:none;width:26px;height:24px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--parch-line);background:rgba(255,255,255,.6);color:var(--muted);border-radius:7px;cursor:pointer;padding:0;transition:.12s}
+.micbtn:hover{border-color:var(--clay);color:var(--clay-deep)}
+.micbtn.on{background:var(--clay);border-color:var(--clay);color:#fff;animation:micpulse 1.2s ease-in-out infinite}
+@keyframes micpulse{0%,100%{box-shadow:0 0 0 0 rgba(197,130,78,.5)}50%{box-shadow:0 0 0 4px rgba(197,130,78,0)}}
+html[data-theme="dark"] .micbtn{background:rgba(255,255,255,.05)}
+.quickrow{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.qchip{font-family:var(--body);font-size:11px;color:var(--muted);background:rgba(255,255,255,.5);border:1px solid var(--parch-line);border-radius:6px;padding:2px 8px;cursor:pointer;transition:.1s}
+.qchip:hover{border-color:var(--clay);color:var(--clay-deep)}
+.qchip.on{background:var(--clay-soft);border-color:var(--clay);color:var(--clay-deep);font-weight:600}
+html[data-theme="dark"] .qchip{background:rgba(255,255,255,.04)}
+.dictarow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.dictahint{font-size:10.5px;color:var(--muted-2)}
+.micstatus{font-size:10.5px;color:var(--clay-deep);font-family:var(--mono);font-style:italic;white-space:nowrap}
 .note-area.na-s{min-height:74px;margin-bottom:0;background-image:none}
 .roles{margin:0 0 12px;border:1px solid var(--parch-line);border-radius:10px;background:rgba(255,255,255,.35);overflow:hidden}
 html[data-theme="dark"] .roles{background:rgba(255,255,255,.04)}
@@ -581,6 +603,9 @@ html[data-theme="dark"] .tg{color:#E3C7A0}
 .op-nrow{margin-top:7px}
 .op-nk{font-family:var(--disp);font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#999;display:block;margin-bottom:1px}
 .op-nv{font-size:12px;line-height:1.5;color:#333}
+.op-proj{border-left:3px solid #C5824E;background:#FBF6EE;border-radius:6px;padding:8px 12px;margin:0 0 14px;font-size:13.5px;font-weight:600;color:#3a3326;line-height:1.4}
+.op-projk{display:inline-block;font-family:var(--disp);font-weight:800;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#C5824E;margin-right:8px;vertical-align:1px}
+.op-nq{display:block;font-size:11px;color:#A96A38;font-weight:600;margin:1px 0 2px}
 
 </style>
 <script>(function(){try{var t=localStorage.getItem("hoopscout:theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
@@ -659,13 +684,13 @@ function loadNotes(){ try{ const o=JSON.parse(localStorage.getItem(NOTE_KEY))||{
 function saveNotes(n){ try{localStorage.setItem(NOTE_KEY,JSON.stringify(n))}catch{toast("Couldn't save — storage blocked")} }
 let NOTES = loadNotes();
 let cloudUser=null;
-function noteFor(id){ return NOTES[id] || {rating:0,tags:[],nAth:"",nOff:"",nDef:""} }
+function noteFor(id){ return NOTES[id] || {rating:0,tags:[],nAth:"",nOff:"",nDef:"",proj:"",qAth:[],qOff:[],qDef:[]} }
 
 /* ---------- helpers ---------- */
 const teamById = id => D.teams.find(t=>t.id===id) || {name:"?",code:"?"};
 const fmt = (v,d=1)=> (v==null||isNaN(v)) ? "–" : Number(v).toFixed(d);
 const pct = v => (v==null||isNaN(v)) ? "–" : (Number(v)*100).toFixed(1)+"%";
-function hasContent(n){ return !!(n && ((n.nAth&&n.nAth.trim()) || (n.nOff&&n.nOff.trim()) || (n.nDef&&n.nDef.trim()) || (n.text&&n.text.trim()) || n.rating>0 || (n.tags&&n.tags.length))) }
+function hasContent(n){ return !!(n && ((n.nAth&&n.nAth.trim()) || (n.nOff&&n.nOff.trim()) || (n.nDef&&n.nDef.trim()) || (n.proj&&n.proj.trim()) || (n.text&&n.text.trim()) || n.rating>0 || (n.tags&&n.tags.length) || (n.qAth&&n.qAth.length) || (n.qOff&&n.qOff.length) || (n.qDef&&n.qDef.length))) }
 
 /* ---------- images / games / standings ---------- */
 const IMG = pid => pid ? `https://assets.fiba.basketball/image/upload/c_fill,g_face,w_200,h_200/q_auto/f_auto/.headshot--person_${pid}--competition_208545` : "";
@@ -1015,15 +1040,17 @@ function onePagerHTML(p){
   const stat=kv("PPG",fmt(s.ppg),"ppg")+kv("RPG",fmt(s.rpg),"rpg")+kv("APG",fmt(s.apg),"apg")+kv("SPG",fmt(s.spg),"spg")+kv("BPG",fmt(s.bpg),"bpg")+kv("MIN",fmt(s.mpg),"mpg")
     +kv("FG%",pct(s.fgPct),"fgPct")+kv("3P%",pct(s.tpPct),"tpPct")+kv("FT%",pct(s.ftPct),"ftPct")+kv("TS%",ts===-Infinity?"\u2013":pct(ts),"ts")+kv("USG%",usg===-Infinity?"\u2013":usg.toFixed(1),"usg")+kv("GP",s.gp==null?0:s.gp);
   const tags=(n.tags&&n.tags.length)?'<div class="op-tags">'+n.tags.map(x=>'<span class="op-tag">'+chEsc(x)+'</span>').join('')+'</div>':'';
-  const nsec=(lab,val)=>(val&&val.trim())?'<div class="op-nrow"><span class="op-nk">'+lab+'</span><span class="op-nv">'+chEsc(val).split("\n").join("<br>")+'</span></div>':'';
-  const nparts=[nsec("Athleticism",n.nAth),nsec("Offense",n.nOff),nsec("Defense",n.nDef)].filter(Boolean);
+  const nsec=(lab,val,quick)=>{ const q=(quick&&quick.length)?'<span class="op-nq">'+quick.map(chEsc).join(" \u00b7 ")+'</span>':''; const v=(val&&val.trim())?'<span class="op-nv">'+chEsc(val).split("\n").join("<br>")+'</span>':''; if(!q&&!v) return ''; return '<div class="op-nrow"><span class="op-nk">'+lab+'</span>'+q+(q&&v?'<br>':'')+v+'</div>'; };
+  const nparts=[nsec("Athleticism",n.nAth,n.qAth),nsec("Offense",n.nOff,n.qOff),nsec("Defense",n.nDef,n.qDef)].filter(Boolean);
   const notes=nparts.length?'<div class="op-notes">'+nparts.join("")+'</div>':'<div class="op-notes op-empty">No written notes.</div>';
   const ev=(D.event&&(D.event.short||D.event.name))||"";
   const today=new Date().toLocaleDateString();
+  const proj=(n.proj&&n.proj.trim())?'<div class="op-proj"><span class="op-projk">Projection</span>'+chEsc(n.proj)+'</div>':'';
   return '<div class="op">'
     +'<div class="op-head"><div><div class="op-name">'+chEsc(p.name)+(p.number!=null?' <span class="op-num">#'+p.number+'</span>':'')+'</div>'
     +'<div class="op-sub">'+chEsc(t.name)+' \u00b7 '+(p.pos||"\u2013")+' \u00b7 '+(p.height?(p.height/100).toFixed(2)+" m":"\u2013")+(p.birthYear?" \u00b7 b. "+p.birthYear:"")+(p.club?' \u00b7 '+chEsc(p.club):"")+'</div></div>'
     +'<div class="op-brand">MT Scouting<span>'+chEsc(ev)+'</span></div></div>'
+    +proj
     +'<div class="op-stats">'+stat+'</div>'
     +'<div class="op-statnote">Under each stat: rank and percentile vs. all qualified players at the event</div>'
     +'<div class="op-cols"><div class="op-col"><div class="op-h">Profile radar</div>'+radar+'</div>'
@@ -1933,6 +1960,7 @@ function openPlayer(id){
       <div class="notes">
         <h4>Scout notes</h4>
         ${cloudUser?`<div class="synchint on" id="syncHint"><span class="dot"></span>Synced to ${cloudUser.email||"your account"}</div>`:`<div class="synchint" id="syncHint"><span class="dot"></span>Saved on this device · sign in to sync across devices</div>`}
+        <input class="proj-in" id="projIn" autocapitalize="sentences" spellcheck="true" placeholder="Projection — your one-line verdict (role + ceiling / floor)" value="${chEsc(n.proj||"")}">
         <div class="rate">
           <span class="lbl">Talent</span>
           <div class="stars" id="stars">
@@ -1946,12 +1974,22 @@ function openPlayer(id){
         <div class="taglist" id="tagList"></div>
         ${rolesHTML(id)}
         <div class="notegrid">
-          <label class="nlab" for="nAth">Athleticism</label>
-          <textarea class="note-area na-s" id="nAth" placeholder="Frame & length, vertical pop, first step, lateral quickness, speed in transition, motor & conditioning…">${chEsc(n.nAth||"")}</textarea>
-          <label class="nlab" for="nOff">Offense</label>
-          <textarea class="note-area na-s" id="nOff" placeholder="Shooting (mechanics, range, off the dribble), finishing at the rim, ball-handling vs pressure, passing & reads, shot selection…">${chEsc(n.nOff||"")}</textarea>
-          <label class="nlab" for="nDef">Defense</label>
-          <textarea class="note-area na-s" id="nDef" placeholder="On-ball pressure, screen navigation, help & rotations, rebounding, hands & steals, rim protection, effort…">${chEsc(n.nDef||"")}</textarea>
+          <div class="nfield">
+            <div class="nhead"><span class="nlab">Athleticism</span><span class="nctx">${noteCtx(p,NOTE_CTX.nAth)}</span>${micBtn("nAth")}</div>
+            ${quickHTML(id,"qAth")}
+            <textarea class="note-area na-s" id="nAth" autocapitalize="sentences" autocorrect="on" spellcheck="true" placeholder="Frame & length, vertical pop, first step, lateral quickness, motor & conditioning…">${chEsc(n.nAth||"")}</textarea>
+          </div>
+          <div class="nfield">
+            <div class="nhead"><span class="nlab">Offense</span><span class="nctx">${noteCtx(p,NOTE_CTX.nOff)}</span>${micBtn("nOff")}</div>
+            ${quickHTML(id,"qOff")}
+            <textarea class="note-area na-s" id="nOff" autocapitalize="sentences" autocorrect="on" spellcheck="true" placeholder="Shooting, finishing at the rim, handle vs pressure, passing & reads, shot selection…">${chEsc(n.nOff||"")}</textarea>
+          </div>
+          <div class="nfield">
+            <div class="nhead"><span class="nlab">Defense</span><span class="nctx">${noteCtx(p,NOTE_CTX.nDef)}</span>${micBtn("nDef")}</div>
+            ${quickHTML(id,"qDef")}
+            <textarea class="note-area na-s" id="nDef" autocapitalize="sentences" autocorrect="on" spellcheck="true" placeholder="On-ball pressure, screen nav, help & rotations, rebounding, hands & steals, rim protection…">${chEsc(n.nDef||"")}</textarea>
+          </div>
+          <div class="dictarow"><span class="dictahint">${micSupported()?"Tap a mic to dictate, or use your keyboard's mic on mobile":"Tap your keyboard's mic to dictate into any field"}</span><span id="micStatus" class="micstatus"></span></div>
         </div>
         <div class="note-foot">
           <span class="saved" id="savedFlag"><span class="d"></span><span id="savedTxt">Saved</span></span>
@@ -1972,6 +2010,9 @@ function openPlayer(id){
 
   renderTags();
   ["nAth","nOff","nDef"].forEach(fid=>{ const ta=$("#"+fid); if(ta) ta.addEventListener("input", ()=>{ markDirty(); scheduleSave(); }); });
+  { const pj=$("#projIn"); if(pj) pj.addEventListener("input", ()=>{ markDirty(); scheduleSave(); }); }
+  dr.querySelectorAll(".quickrow").forEach(row=>{ const qk=row.dataset.qf; row.querySelectorAll(".qchip").forEach(ch=>{ ch.onclick=()=>{ const t=ch.dataset.q; const cur=noteFor(id)[qk]||[]; const next=cur.includes(t)?cur.filter(x=>x!==t):[...cur,t]; setNote(id,{[qk]:next}); ch.classList.toggle("on"); }; }); });
+  dr.querySelectorAll(".micbtn").forEach(b=>{ b.onclick=()=>toggleMic(b.dataset.mic); });
   { const rh=$("#rolesHd"); if(rh) rh.onclick=()=>{ _rolesOpen=!_rolesOpen; const r=$("#roles"); if(r) r.classList.toggle("open",_rolesOpen); }; }
   dr.querySelectorAll(".rolechip").forEach(ch=>{ ch.onclick=()=>{ const t=ch.dataset.tag; const cur=noteFor(id).tags||[]; const next=cur.includes(t)?cur.filter(x=>x!==t):[...cur,t]; setNote(id,{tags:next}); renderTags(); }; });
   $("#stars").querySelectorAll(".star").forEach(btn=>{
@@ -1991,6 +2032,45 @@ function paintStars(){
   const r = noteFor(activeId).rating;
   $("#stars").querySelectorAll(".star").forEach(b=> b.classList.toggle("on", +b.dataset.v<=r));
   render(); // refresh card badge
+}
+let _rec=null, _recField=null;
+const QUICK_TAGS={
+  qAth:["Explosive","Fluid hips","Quick first step","Plays above rim","Long","Strong frame","Quick-twitch","High motor","Heavy feet","Tight hips","Average length","Needs strength"],
+  qOff:["Deep range","Quick release","Tight handle","Shot creator","Crafty finisher","Good footwork","High-IQ passer","Off-ball mover","Streaky","Tunnel vision","Loose handle","Forces shots"],
+  qDef:["On-ball stopper","Great hands","Screen nav+","Active help","Rebounds position","Rim protector","Switchable","Ball watcher","Foul-prone","Slow rotations","Gambles","Gets screened"]
+};
+const NOTE_CTX={
+  nAth:[["REB","rpg"],["BLK","bpg"],["STL","spg"]],
+  nOff:[["PTS","ppg"],["AST","apg"],["TS%","ts"],["USG","usg"],["3P%","tpPct"]],
+  nDef:[["STL","spg"],["BLK","bpg"],["REB","rpg"]]
+};
+const MIC_SVG='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>';
+function micSupported(){ return !!(window.SpeechRecognition||window.webkitSpeechRecognition); }
+function micBtn(fid){ return micSupported()?'<button type="button" class="micbtn" data-mic="'+fid+'" title="Dictate with your microphone" aria-label="Dictate into this field">'+MIC_SVG+'</button>':''; }
+function toggleMic(fid){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR) return;
+  if(_rec && _recField===fid){ try{_rec.stop();}catch(_){} return; }
+  if(_rec){ try{_rec.stop();}catch(_){} }
+  const ta=$("#"+fid); if(!ta) return;
+  const rec=new SR(); _rec=rec; _recField=fid;
+  rec.lang=navigator.language||"en-US"; rec.interimResults=true; rec.continuous=true;
+  const mark=(on)=>{ const b=document.querySelector('.micbtn[data-mic="'+fid+'"]'); if(b) b.classList.toggle("on",on); const st=$("#micStatus"); if(st) st.textContent=on?"Listening\u2026":""; };
+  rec.onresult=e=>{ let fin=""; for(let i=e.resultIndex;i<e.results.length;i++){ const r=e.results[i]; if(r.isFinal) fin+=r[0].transcript; }
+    if(fin){ ta.value=(ta.value.replace(/\s*$/,"")+" "+fin.trim()).replace(/^\s+/,""); markDirty(); scheduleSave(); }
+    const inter=Array.from(e.results).slice(e.resultIndex).filter(r=>!r.isFinal).map(r=>r[0].transcript).join(""); const st=$("#micStatus"); if(st) st.textContent=inter?("\u2026 "+inter):"Listening\u2026";
+  };
+  rec.onerror=(ev)=>{ mark(false); _rec=null; _recField=null; if(ev&&ev.error&&ev.error!=="no-speech"&&ev.error!=="aborted") toast("Voice input isn’t available in this browser — tap your keyboard’s mic to dictate."); };
+  rec.onend=()=>{ mark(false); if(_recField===fid){ _rec=null; _recField=null; } };
+  try{ rec.start(); ta.focus(); mark(true); }catch(_){ _rec=null; _recField=null; }
+}
+function noteCtx(p, arr){
+  const rk=playerRanks()[p.id]||{};
+  const parts=arr.map(d=>{ const r=rk[d[1]]; if(!r||!r.n) return null; const P=r.n>1?Math.round((r.n-r.rank)/(r.n-1)*100):100; return '<span style="color:'+rankColor(r.rank,r.n)+'">'+d[0]+' '+ordinal(P)+'</span>'; }).filter(Boolean);
+  return parts.length?parts.join(' \u00b7 '):'';
+}
+function quickHTML(id,qkey){
+  const cur=new Set(noteFor(id)[qkey]||[]); const opts=QUICK_TAGS[qkey]||[];
+  return '<div class="quickrow" data-qf="'+qkey+'">'+opts.map(t=>'<button type="button" class="qchip'+(cur.has(t)?" on":"")+'" data-q="'+chEsc(t)+'">'+chEsc(t)+'</button>').join('')+'</div>';
 }
 let _rolesOpen=true;
 const ROLE_TAGS=[
@@ -2027,7 +2107,7 @@ function setNote(id, patch){
 }
 function markDirty(){ const f=$("#savedFlag"); if(f){ f.classList.add("dirty"); $("#savedTxt").textContent="Saving…"; } updateCharInfo(); }
 let saveTimer=null;
-function flushNotes(){ if(!activeId) return; const a=$("#nAth"); if(!a) return; setNote(activeId,{nAth:a.value, nOff:($("#nOff")?.value||""), nDef:($("#nDef")?.value||"")}); }
+function flushNotes(){ if(!activeId) return; const a=$("#nAth"); if(!a) return; setNote(activeId,{nAth:a.value, nOff:($("#nOff")?.value||""), nDef:($("#nDef")?.value||""), proj:($("#projIn")?.value||"")}); }
 function scheduleSave(){
   clearTimeout(saveTimer);
   saveTimer=setTimeout(()=>{
