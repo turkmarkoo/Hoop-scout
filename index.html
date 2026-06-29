@@ -895,6 +895,10 @@ function percentile(key,v,pos){
   return Math.round((below + equal/2) / L.n * 100);
 }
 const pctlColor = p => p>=67 ? "#5E9E5E" : p>=34 ? "#C99A3C" : "#C6755B";
+// Matches the player-card rank badges (.rkb tiers): green / yellow / neutral / orange / red.
+function rankColor(rank,n){ if(rank==null||!n||n<=1) return "#747C88";
+  const P=(n-rank)/(n-1)*100;
+  if(P>=97) return "#3C7A3C"; if(P>=90) return "#927714"; if(P<3) return "#B5302A"; if(P<=10) return "#B5651D"; return "#747C88"; }
 function ordinal(n){ const s=["th","st","nd","rd"], v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); }
 
 /* ---------- play-by-play advanced: usage + shot diet ---------- */
@@ -1006,7 +1010,7 @@ function onePagerHTML(p){
   const _pr=state.posRel; state.posRel=false; const RK=playerRanks()[p.id]||{}; state.posRel=_pr;
   const krPct=rk=> (rk&&rk.n>1)?Math.round((rk.n-rk.rank)/(rk.n-1)*100):(rk?100:null);
   const kv=(k,v,rkey)=>{ const rk=rkey?RK[rkey]:null; const P=krPct(rk);
-    const sub = rk ? '<div class="op-kr" style="color:'+pctlColor(P)+'">#'+rk.rank+'/'+rk.n+' \u00b7 '+ordinal(P)+'</div>' : '<div class="op-kr op-kr-e">\u00a0</div>';
+    const sub = rk ? '<div class="op-kr" style="color:'+rankColor(rk.rank,rk.n)+'">#'+rk.rank+'/'+rk.n+' \u00b7 '+ordinal(P)+'</div>' : '<div class="op-kr op-kr-e">\u00a0</div>';
     return '<div class="op-kv"><div class="op-v">'+v+'</div><div class="op-k">'+k+'</div>'+sub+'</div>'; };
   const stat=kv("PPG",fmt(s.ppg),"ppg")+kv("RPG",fmt(s.rpg),"rpg")+kv("APG",fmt(s.apg),"apg")+kv("SPG",fmt(s.spg),"spg")+kv("BPG",fmt(s.bpg),"bpg")+kv("MIN",fmt(s.mpg),"mpg")
     +kv("FG%",pct(s.fgPct),"fgPct")+kv("3P%",pct(s.tpPct),"tpPct")+kv("FT%",pct(s.ftPct),"ftPct")+kv("TS%",ts===-Infinity?"\u2013":pct(ts),"ts")+kv("USG%",usg===-Infinity?"\u2013":usg.toFixed(1),"usg")+kv("GP",s.gp==null?0:s.gp);
