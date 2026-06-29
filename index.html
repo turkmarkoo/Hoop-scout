@@ -364,6 +364,8 @@ a.logopp:hover{text-decoration:underline}
 .radar{width:100%;max-width:380px;height:auto}
 .radar .rgrid{fill:none;stroke:var(--line-soft);stroke-width:1}
 .radar .rspoke{stroke:var(--line-soft);stroke-width:1}
+.radar .ravg{fill:none;stroke:var(--muted);stroke-width:2;stroke-dasharray:5 4}
+.radar .ravgt{fill:var(--muted);font-family:var(--body);font-size:10px}
 .radar .rlab{fill:var(--muted);font-family:var(--disp);font-size:12.5px;font-weight:600}
 .radar .rpoly{stroke-width:2;stroke-linejoin:round}
 .radarnote{text-align:center;font-size:11px;color:var(--muted-2);margin-top:2px}
@@ -749,6 +751,15 @@ function homeView(){
     ${blocks}
     <p class="muted-note" style="margin-top:16px">Pick any of the 16 teams above for its roster, team profile, best lineups, per-player averages and your scouting notes.</p>`;
 }
+function deburr(s){
+  return String(s||"")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/\u0111/g,"d").replace(/\u0110/g,"d")
+    .replace(/\u00f8/g,"o").replace(/\u00d8/g,"o")
+    .replace(/\u0142/g,"l").replace(/\u0141/g,"l")
+    .replace(/\u00df/g,"ss").replace(/\u00e6/g,"ae").replace(/\u00c6/g,"ae").replace(/\u0153/g,"oe").replace(/\u0152/g,"oe")
+    .toLowerCase().trim();
+}
 function goHome(){ state.team=null; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); }
 
 
@@ -1006,8 +1017,11 @@ function pbpBlock(p){
 }
 const STAT_COLS = {
   basic: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["ppg","PTS","Points per game"],["rpg","REB","Rebounds per game"],["apg","AST","Assists per game"],["spg","STL","Steals per game"],["bpg","BLK","Blocks per game"],["tpg","TO","Turnovers per game"],["fgPct","FG%","Field-goal %"],["tpPct","3P%","Three-point %"],["ftPct","FT%","Free-throw %"]],
+  totals: [["pos","POS","Position"],["gp","GP","Games played"],["tmin","MIN","Total minutes played"],["tpts","PTS","Total points"],["treb","REB","Total rebounds"],["tast","AST","Total assists"],["tstl","STL","Total steals"],["tblk","BLK","Total blocks"],["tto","TO","Total turnovers"],["tfg","FG","Total field goals \u2014 made\u2013attempted"],["t3p","3P","Total threes \u2014 made\u2013attempted"],["tft","FT","Total free throws \u2014 made\u2013attempted"]],
   advanced: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["ts","TS%","True Shooting %: PTS / (2·(FGA + 0.44·FTA)) — scoring efficiency across 2s, 3s and FTs. Shown for ≥6 FGA."],["efg","eFG%","Effective FG %: (FGM + 0.5·3PM) / FGA — credits the extra point on threes. Shown for ≥6 FGA."],["p36","P36","Points per 36 minutes (rate-normalised)"],["r36","R36","Rebounds per 36 minutes"],["a36","A36","Assists per 36 minutes"],["astto","A/TO","Assists per turnover — playmaking control"],["stk","STK","Stocks: steals + blocks per game"],["prod","PROD","Box production: PTS+REB+AST+STL+BLK − TO"],["usg","USG%","Usage rate — share of team possessions a player uses (FGA + 0.44·FTA + TOV), minute-adjusted. Needs ≥20 total minutes."],["rimrate","RIM%","Shot diet — share of a player's field-goal attempts taken at the rim, from play-by-play. Needs ≥8 FGA."],["threerate","3PA%","Shot diet — share of field-goal attempts that are threes, from play-by-play. Needs ≥8 FGA."],["astpct","AST%","Assisted field-goal rate — share of a player's made field goals that came off a teammate's pass (from play-by-play). Needs ≥5 makes."],["onoff","ON/OFF","On/off net rating per 40 — team net rating with the player on court minus off court. Small single-tournament samples; read with caution. Needs ≥10 on-court minutes."]]
 };
+function totByLog(p,k){ const g=p.gamelog||[]; if(g.length){ let s=0; for(const x of g) s+=(x[k]||0); return s; }
+  const M={min:"mpg",pts:"ppg",reb:"rpg",ast:"apg",stl:"spg",blk:"bpg",to:"tpg"}; const s=p.stats||{}; return Math.round((s[M[k]]||0)*(s.gp||0)); }
 function tsDen(s){ return 2*((s.fga||0)+0.44*(s.fta||0)); }
 function tsQual(s){ return (s.fga||0)*(s.gp||0) >= 6; }  // require a real shot sample
 function metric(p,key){
@@ -1027,6 +1041,16 @@ function metric(p,key){
     case "astpct": { const r=PA.P&&PA.P[p.pid]; return (r&&r[1]>=5)? Math.min(100,r[0]/r[1]*100) : -Infinity; }
     case "onoff": { const o=onOffVal(p); return (o&&o.diff!=null)? o.diff : -Infinity; }
     case "onnet": { const o=onOffVal(p); return o? o.onNet : -Infinity; }
+    case "tmin": return totByLog(p,"min");
+    case "tpts": return totByLog(p,"pts");
+    case "treb": return totByLog(p,"reb");
+    case "tast": return totByLog(p,"ast");
+    case "tstl": return totByLog(p,"stl");
+    case "tblk": return totByLog(p,"blk");
+    case "tto":  return totByLog(p,"to");
+    case "tfg":  return Math.round((s.fgm||0)*(s.gp||0));
+    case "t3p":  return Math.round((s.tpm||0)*(s.gp||0));
+    case "tft":  return Math.round((s.ftm||0)*(s.gp||0));
     default: return (s[key]!=null ? s[key] : -Infinity);
   }
 }
@@ -1043,6 +1067,10 @@ function statCell(p,key){
   if(key==="tpPct") return s.tpa ? `<span title="${s.tpm}/${s.tpa} 3PT per game">${pct(s.tpPct)}</span>` : pct(s.tpPct);
   if(key==="ftPct") return s.fta ? `<span title="${s.ftm}/${s.fta} FT per game">${pct(s.ftPct)}</span>` : pct(s.ftPct);
   if(key==="astto"){ const v=metric(p,"astto"); return isFinite(v) ? v.toFixed(2) : (s.apg>0?"∞":"–"); }
+  if(key==="tmin"||key==="tpts"||key==="treb"||key==="tast"||key==="tstl"||key==="tblk"||key==="tto") return String(metric(p,key));
+  if(key==="tfg"){ const m=Math.round((s.fgm||0)*(s.gp||0)),a=Math.round((s.fga||0)*(s.gp||0)); return a?`<span title="${pct(s.fgPct)} on ${a} attempts">${m}\u2013${a}</span>`:"0\u20130"; }
+  if(key==="t3p"){ const m=Math.round((s.tpm||0)*(s.gp||0)),a=Math.round((s.tpa||0)*(s.gp||0)); return a?`<span title="${pct(s.tpPct)} on ${a} attempts">${m}\u2013${a}</span>`:"0\u20130"; }
+  if(key==="tft"){ const m=Math.round((s.ftm||0)*(s.gp||0)),a=Math.round((s.fta||0)*(s.gp||0)); return a?`<span title="${pct(s.ftPct)} on ${a} attempts">${m}\u2013${a}</span>`:"0\u20130"; }
   return fmt(metric(p,key));
 }
 function sortedPlayers(){
@@ -1262,14 +1290,16 @@ function radarPctls(p){
 function rPoint(cx,cy,R,frac,i){ const a=(-90+i*60)*Math.PI/180; return [cx+R*frac*Math.cos(a), cy+R*frac*Math.sin(a)]; }
 function radarSVG(entries){
   const W=360,H=320,cx=180,cy=150,R=100; let g='';
-  [0.25,0.5,0.75,1].forEach(fr=>{ const pts=[]; for(let i=0;i<6;i++){ const q=rPoint(cx,cy,R,fr,i); pts.push(q[0].toFixed(1)+','+q[1].toFixed(1)); } g+='<polygon class="rgrid" points="'+pts.join(' ')+'"/>'; });
+  [0.25,0.75,1].forEach(fr=>{ const pts=[]; for(let i=0;i<6;i++){ const q=rPoint(cx,cy,R,fr,i); pts.push(q[0].toFixed(1)+','+q[1].toFixed(1)); } g+='<polygon class="rgrid" points="'+pts.join(' ')+'"/>'; });
   for(let i=0;i<6;i++){ const q=rPoint(cx,cy,R,1,i); g+='<line class="rspoke" x1="'+cx+'" y1="'+cy+'" x2="'+q[0].toFixed(1)+'" y2="'+q[1].toFixed(1)+'"/>'; }
+  { const ap=[]; for(let i=0;i<6;i++){ const q=rPoint(cx,cy,R,0.5,i); ap.push(q[0].toFixed(1)+','+q[1].toFixed(1)); } g+='<polygon class="ravg" points="'+ap.join(' ')+'"/>'; }
   for(let i=0;i<6;i++){ const q=rPoint(cx,cy,R+20,1,i); const ax=Math.abs(q[0]-cx)<6?"middle":(q[0]>cx?"start":"end"); g+='<text class="rlab" x="'+q[0].toFixed(1)+'" y="'+(q[1]+4).toFixed(1)+'" text-anchor="'+ax+'">'+RAX[i]+'</text>'; }
   entries.forEach(e=>{ const pts=[]; for(let i=0;i<6;i++){ const v=(e.pcts[i]==null?0:e.pcts[i])/100; const q=rPoint(cx,cy,R,v,i); pts.push(q[0].toFixed(1)+','+q[1].toFixed(1)); }
     g+='<polygon class="rpoly" points="'+pts.join(' ')+'" style="fill:'+e.color+'2e;stroke:'+e.color+'"/>';
     for(let i=0;i<6;i++){ const v=(e.pcts[i]==null?0:e.pcts[i])/100; const q=rPoint(cx,cy,R,v,i);
       let title=''; if(e.disps){ const lab=(e.pcts[i]==null?'n/a':e.pcts[i]+'th pct'); title='<title>'+RAX[i]+': '+lab+(e.disps[i]&&e.disps[i]!=='\u2013'?' ('+e.disps[i]+')':'')+'</title>'; }
       g+='<circle class="rdot" r="3.2" cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" fill="'+e.color+'">'+title+'</circle>'; } });
+  g+='<g class="ravgleg"><line class="ravg" x1="120" y1="305" x2="144" y2="305"/><text class="ravgt" x="150" y="308.5">League average</text></g>';
   return '<svg class="radar" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Radar chart">'+g+'</svg>';
 }
 const CMP_ROWS=[["PTS","ppg",1],["REB","rpg",1],["AST","apg",1],["STL","spg",1],["BLK","bpg",1],["TO","tpg",0],["MIN","mpg",1],["FG%","fgPct",1],["3P%","tpPct",1],["FT%","ftPct",1],["TS%","ts",1],["USG%","usg",1],["A/TO","astto",1],["PROD","prod",1]];
@@ -1294,17 +1324,18 @@ function compareView(){
       +'<div class="rleg"><span class="rl"><span class="sw" style="background:'+cA+'"></span>'+chEsc(A.name)+'</span><span class="rl"><span class="sw" style="background:'+cB+'"></span>'+chEsc(B.name)+'</span></div>'
       +compareTable(A,B,cA,cB)
       +compareSplits(A,B,cA,cB)
-      +'<div class="chartnote">Radar axes are percentiles vs. all qualified players. Highlighted column = the better value in each row.</div>';
+      +'<div class="chartnote">Radar axes are percentiles vs. all qualified players; dashed ring = league average. Highlighted column = the better value in each row.</div>';
   } else body='<div class="muted-note" style="padding:18px 4px">Pick two different players to compare.</div>';
   return '<div class="cmpsel"><label class="chf">Player A '+sel("cmpA",state.cmpA)+'</label><label class="chf">Player B '+sel("cmpB",state.cmpB)+'</label></div>'+body;
 }
 function statsView(){
-  const tab = state.statsTab==="advanced" ? "advanced" : "basic";
+  const tab = STAT_COLS[state.statsTab] ? state.statsTab : "basic";
   const cols = STAT_COLS[tab];
   const list = sortedPlayers();
   const ar=k=> state.sortKey===k ? `<span class="sortar">${state.sortDir==="asc"?"▲":"▼"}</span>` : "";
   const toggle = `<div class="statsubtabs">
     <button class="subtab${tab==="basic"?" on":""}" data-tab="basic">Per game</button>
+    <button class="subtab${tab==="totals"?" on":""}" data-tab="totals">Totals</button>
     <button class="subtab${tab==="advanced"?" on":""}" data-tab="advanced">Advanced</button>
   </div>`;
   const head=`<tr>
@@ -1323,7 +1354,9 @@ function statsView(){
       ${cells}
     </tr>`;
   }).join("");
-  const note = tab==="advanced"
+  const note = tab==="totals"
+    ? `<p class="muted-note adv-note">Cumulative totals across every game a player has played at the event. <b>PTS/REB/AST/STL/BLK/TO/MIN</b> are summed game by game; <b>FG/3P/FT</b> show total makes\u2013attempts (hover a cell for the percentage). Tap any column to sort.</p>`
+    : tab==="advanced"
     ? `<p class="muted-note adv-note"><b>TS%</b> true shooting = PTS / (2·(FGA + 0.44·FTA)) · <b>eFG%</b> = (FGM + 0.5·3PM) / FGA · <b>P36 / R36 / A36</b> per-36-minute rates · <b>A/TO</b> assists per turnover · <b>STK</b> steals + blocks · <b>PROD</b> = PTS+REB+AST+STL+BLK − TO. TS%/eFG% are shown for players with at least 6 field-goal attempts; per-game rates extrapolate from games played so far. Hover a FG%/3P%/FT% cell on the Per game tab to see makes/attempts.</p>`
     : "";
   return toggle + `<div class="statswrap"><table class="statstable"><thead>${head}</thead><tbody>${body}</tbody></table></div>` + note;
@@ -1385,8 +1418,8 @@ function render(){
     board.querySelectorAll(".subtab").forEach(sub=>{
       sub.onclick = ()=>{ const tb=sub.dataset.tab; if(tb===state.statsTab) return;
         state.statsTab=tb;
-        const shared=["name","team","pos","gp","mpg"];
-        if(!shared.includes(state.sortKey)){ state.sortKey = tb==="advanced"?"prod":"ppg"; state.sortDir="desc"; }
+        const colKeys=STAT_COLS[tb].map(c=>c[0]).concat(["name","team"]);
+        if(!colKeys.includes(state.sortKey)){ state.sortKey = tb==="advanced"?"prod":tb==="totals"?"tpts":"ppg"; state.sortDir="desc"; }
         render();
       };
     });
@@ -1404,8 +1437,8 @@ function render(){
   let list, title, count, meta="";
 
   if(state.query){
-    const q = state.query.toLowerCase();
-    list = D.players.filter(p=> p.name.toLowerCase().includes(q) || String(p.number)===q || teamById(p.teamId).name.toLowerCase().includes(q));
+    const q = deburr(state.query);
+    list = D.players.filter(p=> deburr(p.name).includes(q) || String(p.number)===q || deburr(teamById(p.teamId).name).includes(q));
     title = "Search"; count = list.length;
     meta = `“${state.query}” · ${list.length} player${list.length!==1?"s":""}`;
   } else if(state.team){
@@ -1640,7 +1673,7 @@ function openPlayer(id){
       <div class="dr-sec">
         <h4>Profile radar</h4>
         <div class="radarwrap">${(()=>{const rp=radarPctls(p);return radarSVG([{pcts:rp.map(x=>x.pct),color:"#C5824E",disps:rp.map(x=>x.disp)}]);})()}</div>
-        <div class="radarnote">Each axis is a percentile vs. all qualified players at the event — further out is better.</div>
+        <div class="radarnote">Each axis is a percentile vs. all qualified players at the event — further out is better. Dashed ring = league average (50th pct).</div>
       </div>
 
       <div class="dr-sec">
