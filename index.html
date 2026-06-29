@@ -388,6 +388,53 @@ a.logopp:hover{text-decoration:underline}
 .cmptbl .lbl{color:var(--muted);text-align:center;width:78px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
 .cmptbl td.v{text-align:center;font-size:14px;font-variant-numeric:tabular-nums;color:var(--text)}
 .cmptbl td.win{color:var(--clay-deep);font-weight:700;background:var(--clay-soft)}
+.card{position:relative}
+.watchtoggle{position:absolute;top:9px;right:9px;width:27px;height:27px;display:flex;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;color:var(--muted-2);transition:.12s;z-index:3}
+.watchtoggle:hover{background:var(--clay-soft);color:var(--clay-deep)}
+.watchtoggle.on{color:var(--clay-deep)}
+.wl-count{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;padding:0 4px;margin-left:6px;border-radius:9px;background:var(--clay);color:#fff;font-family:var(--mono);font-size:10.5px;font-weight:600}
+.scoutbar{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.scoutchip{font-family:var(--disp);font-size:12.5px;font-weight:600;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 12px;cursor:pointer;transition:.12s}
+.scoutchip:hover{border-color:var(--clay);color:var(--clay-deep)}
+.scoutchip.on{background:var(--clay);border-color:var(--clay);color:#fff}
+.dr-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.dr-act{display:inline-flex;align-items:center;gap:6px;font-family:var(--disp);font-size:12.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:7px 13px;cursor:pointer;transition:.12s}
+.dr-act:hover{border-color:var(--clay);color:var(--clay-deep);background:var(--clay-soft)}
+.dr-act.on{border-color:var(--clay);color:var(--clay-deep);background:var(--clay-soft)}
+.dr-act svg{width:15px;height:15px}
+#printsheet{display:none}
+@media print{
+  body.printing > *{display:none !important}
+  body.printing #printsheet{display:block !important}
+  @page{margin:12mm}
+}
+.op{font-family:var(--body);color:#1c1f24;max-width:760px;margin:0 auto;padding:6px}
+.op-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #C5824E;padding-bottom:10px;margin-bottom:14px;gap:16px}
+.op-name{font-family:var(--disp);font-size:26px;font-weight:800;line-height:1}
+.op-num{color:#A96A38;font-size:18px}
+.op-sub{font-size:12.5px;color:#555;margin-top:5px}
+.op-brand{font-family:var(--disp);font-weight:800;color:#C5824E;text-align:right;font-size:15px;line-height:1.2;white-space:nowrap}
+.op-brand span{display:block;font-family:var(--body);font-weight:600;color:#888;font-size:10.5px;margin-top:2px}
+.op-stats{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px}
+.op-kv{background:#F6F4EE;border:1px solid #ece6da;border-radius:8px;padding:7px 4px;text-align:center}
+.op-kv .op-v{font-family:var(--disp);font-weight:800;font-size:16px}
+.op-kv .op-k{font-size:9.5px;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.op-cols{display:flex;gap:18px;margin-bottom:14px;align-items:flex-start}
+.op-col{flex:1;min-width:0;text-align:center}
+.op-h{font-family:var(--disp);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#999;margin-bottom:6px;text-align:left}
+.op .radar{max-width:320px}
+.op .shotwrap{max-width:320px;margin:0 auto}
+.op .shotsvg{width:100%}
+.op .shotfoot{font-size:10px}
+.op-rate{border-top:1px solid #e8e2d6;padding-top:12px}
+.op-stars{font-size:18px;color:#d8cdba;letter-spacing:3px}
+.op-star.on{color:#C5824E}
+.op-rnum{font-family:var(--disp);font-size:13px;color:#333;margin-left:8px;letter-spacing:0}
+.op-empty{color:#aaa}
+.op-tags{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+.op-tag{background:#F2E4D4;color:#A96A38;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600}
+.op-notes{font-size:12.5px;line-height:1.55;color:#333;margin-top:8px}
+.op-foot{margin-top:18px;font-size:10px;color:#aaa;text-align:center}
 .barswitch{margin:18px 0 0}
 .barpane .bars{margin-top:10px}
 .barpane.bp-hide{display:none}
@@ -415,6 +462,9 @@ a.logopp:hover{text-decoration:underline}
         </button>
         <button class="btn" id="chartsBtn" title="Visual scatter charts of every player">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><circle cx="8" cy="15" r="1.7"/><circle cx="12" cy="9" r="1.7"/><circle cx="17" cy="12" r="1.7"/><circle cx="20" cy="5" r="1.7"/></svg>Charts
+        </button>
+        <button class="btn" id="watchBtn" title="Your watchlist & note-based filters">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>Watchlist<span class="wl-count" id="wlCount" hidden></span>
         </button>
         <button class="btn authbtn" id="authBtn" title="Sign in to sync your notes across devices">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6"/></svg><span id="authLabel">Sign in</span>
@@ -600,13 +650,76 @@ function matchesFilter(p,f){
   if(f.type==="pos")   return (p.pos||"")===f.value;
   if(f.type==="birthYear") return String(p.birthYear)===f.value;
   if(f.type==="club")  return (p.club||"")===f.value;
+  if(f.type==="watch"){ const nn=NOTES[p.id]; return !!(nn&&nn.watch); }
+  if(f.type==="r4"){ const nn=NOTES[p.id]; return !!(nn&&nn.rating>=4); }
+  if(f.type==="r3"){ const nn=NOTES[p.id]; return !!(nn&&nn.rating>=3); }
+  if(f.type==="tagged"){ const nn=NOTES[p.id]; return !!(nn&&nn.tags&&nn.tags.length); }
+  if(f.type==="untagged"){ const nn=NOTES[p.id]; return !!(nn&&(nn.watch||nn.rating>0||(nn.text&&nn.text.trim()))&&!(nn.tags&&nn.tags.length)); }
+  if(f.type==="notes"){ const nn=NOTES[p.id]; return !!(nn&&nn.text&&nn.text.trim()); }
+  if(f.type==="unseen"){ const nn=NOTES[p.id]; return !hasContent(nn) && !(nn&&nn.watch); }
   return false;
 }
 function filterTitle(f){
   if(f.type==="pos") return {G:"Guards",F:"Forwards",C:"Centers"}[f.value]||f.value;
   if(f.type==="group") return "Group "+f.value;
   if(f.type==="birthYear") return "Born "+f.value;
+  const sf=SCOUT_FILTERS.find(s=>s[0]===f.type); if(sf) return sf[1];
   return f.label || f.value;
+}
+const SCOUT_FILTERS=[["watch","Watchlist"],["r4","\u2605 4+"],["r3","\u2605 3+"],["tagged","Tagged"],["untagged","Flagged, untagged"],["notes","Has notes"],["unseen","Not seen yet"]];
+function isScoutFilter(f){ return !!(f && SCOUT_FILTERS.some(s=>s[0]===f.type)); }
+function scoutBar(active){ return '<div class="scoutbar">'+SCOUT_FILTERS.map(s=>'<button class="scoutchip'+(s[0]===active?" on":"")+'" data-ft="'+s[0]+'" data-lb="'+chEsc(s[1])+'">'+s[1]+'</button>').join('')+'</div>'; }
+function scoutEmptyMsg(type){
+  if(type==="watch") return "Open any player and tap the bookmark to add them to your watchlist.";
+  if(type==="r4") return "No players rated 4\u2605 or higher yet.";
+  if(type==="r3") return "No players rated 3\u2605 or higher yet.";
+  if(type==="tagged") return "You haven't tagged any players yet.";
+  if(type==="untagged") return "Every player you've flagged already has tags.";
+  if(type==="notes") return "No written notes yet.";
+  if(type==="unseen") return "You've reviewed everyone \u2014 no untouched players left.";
+  return "No players match this filter yet.";
+}
+function watchCount(){ let c=0; for(const id in NOTES){ if(NOTES[id]&&NOTES[id].watch) c++; } return c; }
+function updateWatchCount(){ const el=$("#wlCount"); if(!el) return; const c=watchCount(); if(c>0){ el.hidden=false; el.textContent=c; } else el.hidden=true; }
+function toggleWatch(id){
+  const cur=noteFor(id); const on=!cur.watch; setNote(id,{watch:on});
+  const dw=$("#drWatch");
+  if(dw && activeId===id){ dw.classList.toggle("on",on); const sp=dw.querySelector("span"); if(sp) sp.textContent=on?"On watchlist":"Watchlist"; const sv=dw.querySelector("svg"); if(sv) sv.setAttribute("fill", on?"currentColor":"none"); }
+  updateWatchCount();
+  if(state.view==="board") render();
+}
+function exportOnePager(id){
+  const p=D.players.find(x=>x.id===id); if(!p) return;
+  const sheet=$("#printsheet"); if(!sheet) return;
+  sheet.innerHTML=onePagerHTML(p);
+  document.body.classList.add("printing");
+  const done=()=>{ document.body.classList.remove("printing"); window.removeEventListener("afterprint",done); };
+  window.addEventListener("afterprint",done);
+  setTimeout(()=>window.print(),80);
+}
+function onePagerHTML(p){
+  const s=p.stats||{}, t=teamById(p.teamId), n=noteFor(p.id);
+  const rp=radarPctls(p);
+  const radar=radarSVG([{pcts:rp.map(x=>x.pct),color:"#C5824E",disps:rp.map(x=>x.disp)}]);
+  const shot=shotChartBlock(p);
+  const stars=[1,2,3,4,5].map(i=>'<span class="op-star'+(i<=(n.rating||0)?" on":"")+'">\u2605</span>').join('');
+  const ts=metric(p,"ts"), usg=metric(p,"usg");
+  const kv=(k,v)=>'<div class="op-kv"><div class="op-v">'+v+'</div><div class="op-k">'+k+'</div></div>';
+  const stat=kv("PPG",fmt(s.ppg))+kv("RPG",fmt(s.rpg))+kv("APG",fmt(s.apg))+kv("SPG",fmt(s.spg))+kv("BPG",fmt(s.bpg))+kv("MIN",fmt(s.mpg))
+    +kv("FG%",pct(s.fgPct))+kv("3P%",pct(s.tpPct))+kv("FT%",pct(s.ftPct))+kv("TS%",ts===-Infinity?"\u2013":pct(ts))+kv("USG%",usg===-Infinity?"\u2013":usg.toFixed(1))+kv("GP",s.gp==null?0:s.gp);
+  const tags=(n.tags&&n.tags.length)?'<div class="op-tags">'+n.tags.map(x=>'<span class="op-tag">'+chEsc(x)+'</span>').join('')+'</div>':'';
+  const notes=(n.text&&n.text.trim())?'<div class="op-notes">'+chEsc(n.text).split("\n").join("<br>")+'</div>':'<div class="op-notes op-empty">No written notes.</div>';
+  const ev=(D.event&&(D.event.short||D.event.name))||"";
+  const today=new Date().toLocaleDateString();
+  return '<div class="op">'
+    +'<div class="op-head"><div><div class="op-name">'+chEsc(p.name)+(p.number!=null?' <span class="op-num">#'+p.number+'</span>':'')+'</div>'
+    +'<div class="op-sub">'+chEsc(t.name)+' \u00b7 '+(p.pos||"\u2013")+' \u00b7 '+(p.height?(p.height/100).toFixed(2)+" m":"\u2013")+(p.birthYear?" \u00b7 b. "+p.birthYear:"")+(p.club?' \u00b7 '+chEsc(p.club):"")+'</div></div>'
+    +'<div class="op-brand">MT Scouting<span>'+chEsc(ev)+'</span></div></div>'
+    +'<div class="op-stats">'+stat+'</div>'
+    +'<div class="op-cols"><div class="op-col"><div class="op-h">Profile radar</div>'+radar+'</div>'
+    +'<div class="op-col"><div class="op-h">Shot zones</div>'+shot+'</div></div>'
+    +'<div class="op-rate"><div class="op-h">Scout assessment</div><div class="op-stars">'+stars+(n.rating?' <span class="op-rnum">'+n.rating+'/5</span>':' <span class="op-rnum op-empty">unrated</span>')+'</div>'+tags+notes+'</div>'
+    +'<div class="op-foot">Generated '+today+' \u00b7 MT Scouting</div></div>';
 }
 
 /* ---------- top meta ---------- */
@@ -638,6 +751,7 @@ function renderGroups(){
 function playerCard(p){
   const n = noteFor(p.id);
   const s = p.stats||{};
+  const w = !!n.watch;
   const card = document.createElement("button");
   card.className="card"; card.onclick=()=>openPlayer(p.id);
   const badges = [];
@@ -647,6 +761,7 @@ function playerCard(p){
   else if(n.text?.trim()||(n.tags&&n.tags.length)) badges.push(`<span class="notedot" title="Has notes"></span>`);
   card.innerHTML = `
     <div class="badges">${badges.join("")}</div>
+    <span class="watchtoggle ${w?'on':''}" role="button" aria-label="Toggle watchlist" title="${w?'On your watchlist':'Add to watchlist'}"><svg width="15" height="15" viewBox="0 0 24 24" fill="${w?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></span>
     <div class="card-top">
       ${avatarHTML(p,'avatar')}
       <div class="num">${p.number!=null?p.number:'<span class="tbd">#</span>'}</div>
@@ -661,6 +776,7 @@ function playerCard(p){
       <div class="s"><div class="v">${fmt(s.apg)}</div><div class="k">APG</div></div>
       <div class="s"><div class="v">${s.gp??0}</div><div class="k">GP</div></div>
     </div>`;
+  const wt=card.querySelector(".watchtoggle"); if(wt) wt.addEventListener("click",e=>{ e.stopPropagation(); toggleWatch(p.id); });
   return card;
 }
 
@@ -949,6 +1065,8 @@ function render(){
   renderGroups();
   const sBtn=$("#statsBtn"); if(sBtn) sBtn.classList.toggle("on", state.view==="stats");
   const cBtn=$("#chartsBtn"); if(cBtn) cBtn.classList.toggle("on", state.view==="charts");
+  const wB=$("#watchBtn"); if(wB) wB.classList.toggle("on", isScoutFilter(state.filter));
+  updateWatchCount();
   const board = $("#board"); board.innerHTML="";
 
   if(state.view==="charts"){
@@ -1021,8 +1139,12 @@ function render(){
     if(t.rosterType==="pool") meta += ` <span class="poolnote" title="This is the full training-camp pool (${t.count} players). The final 12 that dress for a game may be a subset.">full pool · ${t.count}</span>`;
   } else if(state.filter){
     const f=state.filter;
-    list = D.players.filter(p=>matchesFilter(p,f))
-      .sort((a,b)=>((b.stats?.ppg??-1)-(a.stats?.ppg??-1)) || a.name.localeCompare(b.name));
+    list = D.players.filter(p=>matchesFilter(p,f));
+    if(isScoutFilter(f)){
+      list.sort((a,b)=>{ const na=noteFor(a.id), nb=noteFor(b.id); return (nb.rating||0)-(na.rating||0) || ((b.stats?.ppg??-1)-(a.stats?.ppg??-1)) || a.name.localeCompare(b.name); });
+    } else {
+      list.sort((a,b)=>((b.stats?.ppg??-1)-(a.stats?.ppg??-1)) || a.name.localeCompare(b.name));
+    }
     title = filterTitle(f); count = list.length;
     meta = `<a href="#" onclick="clearFilter();return false">clear ✕</a>`;
   } else {
@@ -1039,13 +1161,20 @@ function render(){
     return;
   }
   if(list.length===0){
+    if(isScoutFilter(state.filter)){
+      board.innerHTML = scoutBar(state.filter.type) + `<div class="empty"><div class="big">Nothing here yet</div>${scoutEmptyMsg(state.filter.type)}</div>`;
+      board.querySelectorAll(".scoutchip").forEach(c=> c.onclick=()=> filterBy(c.dataset.ft,"1",c.dataset.lb));
+      return;
+    }
     board.innerHTML = `<div class="empty"><div class="big">No players yet</div>${state.query?"Nothing matches your search.":`Roster not loaded for this team. Run <code>scraper.js</code> on the FIBA roster page and add the players to <code>players.js</code>.`}</div>`;
     return;
   }
   if(state.team && !state.query){ board.insertAdjacentHTML('beforeend', teamPanel(state.team)); }
+  if(isScoutFilter(state.filter)){ board.insertAdjacentHTML('beforeend', scoutBar(state.filter.type)); }
   const grid = document.createElement("div"); grid.className="grid";
   list.forEach(p=> grid.appendChild(playerCard(p)));
   board.appendChild(grid);
+  if(isScoutFilter(state.filter)){ board.querySelectorAll(".scoutchip").forEach(c=> c.onclick=()=> filterBy(c.dataset.ft,"1",c.dataset.lb)); }
 }
 
 /* ---------- drawer ---------- */
@@ -1192,6 +1321,10 @@ function openPlayer(id){
         ${p.birthYear?`<button class="chip-btn" data-ft="birthYear" data-fv="${p.birthYear}">b. ${p.birthYear}</button>`:""}
         ${p.club?`<button class="chip-btn" data-ft="club" data-fv="${String(p.club).replace(/"/g,'&quot;')}">${p.club}</button>`:""}
       </div>
+      <div class="dr-actions">
+        <button class="dr-act ${n.watch?'on':''}" id="drWatch" title="Add to your watchlist"><svg viewBox="0 0 24 24" fill="${n.watch?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg><span>${n.watch?'On watchlist':'Watchlist'}</span></button>
+        <button class="dr-act" id="drExport" title="Open a printable one-page report"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>One-pager</button>
+      </div>
     </div>
 
     <div class="dr-scroll">
@@ -1268,6 +1401,7 @@ function openPlayer(id){
 
   // wire up
   $("#drClose").onclick = closeDrawer;
+  { const dw=$("#drWatch"); if(dw) dw.onclick=()=>toggleWatch(activeId); const de=$("#drExport"); if(de) de.onclick=()=>exportOnePager(activeId); }
   dr.querySelectorAll(".barswitch .subtab").forEach(b=>{ b.onclick=()=>{ const t=b.dataset.bt;
     dr.querySelectorAll(".barswitch .subtab").forEach(x=>x.classList.toggle("on", x===b));
     dr.querySelectorAll(".barpane").forEach(pane=>pane.classList.toggle("bp-hide", pane.dataset.bp!==t)); }; });
@@ -1390,6 +1524,10 @@ if($("#chartsBtn")) $("#chartsBtn").onclick = ()=>{
   const sb=$("#search"); if(sb) sb.value="";
   if(activeId) closeDrawer(); else render();
 };
+if($("#watchBtn")) $("#watchBtn").onclick = ()=>{
+  if(state.filter && state.filter.type==="watch"){ clearFilter(); }
+  else { filterBy("watch","1","Watchlist"); }
+};
 
 /* ---------- toast ---------- */
 let toastTimer=null;
@@ -1471,5 +1609,6 @@ render();
     window.dispatchEvent(new Event("cloud-ready"));
   }
 </script>
+<div id="printsheet" aria-hidden="true"></div>
 </body>
 </html>
