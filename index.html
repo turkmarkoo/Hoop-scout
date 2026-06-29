@@ -873,8 +873,8 @@ function shotChartBlock(p){
   if(!S||!S.geo) return `<p class="muted-note">Shot-location data isn't loaded.</p>`;
   const z = S.players ? S.players[String(p.pid)] : null;
   let att=0,mk=0; if(z) S.geo.zones.forEach(k=>{ const v=z[k]; if(v){att+=v[1];mk+=v[0];} });
-  if(!z||!att) return `<p class="muted-note">No play-by-play shot data yet for ${p.name}. Shot locations are parsed per game — so far only the Australia–Serbia game (Group D). This chart fills in as more games are scraped.</p>`;
-  const games=(S.meta&&S.meta.games)||1;
+  if(!z||!att) return `<p class="muted-note">No shot-location data for ${p.name} yet — no field-goal attempts recorded in the games parsed so far.</p>`;
+  const games=(p.stats&&p.stats.gp)||(S.meta&&S.meta.games)||1;
   return `<div class="shotwrap">${shotChartSVG(z,S.geo)}</div>
     <div class="shotfoot"><span>cold</span><span class="legramp"></span><span>hot · FG%</span><span class="shottot">${mk}/${att} FG · ${games} game${games>1?'s':''}</span></div>`;
 }
