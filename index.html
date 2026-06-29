@@ -445,10 +445,12 @@ a.logopp:hover{text-decoration:underline}
 .op-sub{font-size:12.5px;color:#555;margin-top:5px}
 .op-brand{font-family:var(--disp);font-weight:800;color:#C5824E;text-align:right;font-size:15px;line-height:1.2;white-space:nowrap}
 .op-brand span{display:block;font-family:var(--body);font-weight:600;color:#888;font-size:10.5px;margin-top:2px}
-.op-stats{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:16px}
+.op-stats{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:6px}
 .op-kv{background:#F6F4EE;border:1px solid #ece6da;border-radius:8px;padding:7px 4px;text-align:center}
 .op-kv .op-v{font-family:var(--disp);font-weight:800;font-size:16px}
 .op-kv .op-k{font-size:9.5px;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-top:2px}
+.op-kr{font-family:var(--mono);font-size:8px;line-height:1;margin-top:3px;white-space:nowrap;font-weight:600}
+.op-statnote{font-size:9px;color:#999;text-align:center;margin:0 0 16px;font-family:var(--body)}
 .op-cols{display:flex;gap:18px;margin-bottom:14px;align-items:flex-start}
 .op-col{flex:1;min-width:0;text-align:center}
 .op-h{font-family:var(--disp);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#999;margin-bottom:6px;text-align:left}
@@ -1001,9 +1003,13 @@ function onePagerHTML(p){
   const shot=shotChartBlock(p);
   const stars=[1,2,3,4,5].map(i=>'<span class="op-star'+(i<=(n.rating||0)?" on":"")+'">\u2605</span>').join('');
   const ts=metric(p,"ts"), usg=metric(p,"usg");
-  const kv=(k,v)=>'<div class="op-kv"><div class="op-v">'+v+'</div><div class="op-k">'+k+'</div></div>';
-  const stat=kv("PPG",fmt(s.ppg))+kv("RPG",fmt(s.rpg))+kv("APG",fmt(s.apg))+kv("SPG",fmt(s.spg))+kv("BPG",fmt(s.bpg))+kv("MIN",fmt(s.mpg))
-    +kv("FG%",pct(s.fgPct))+kv("3P%",pct(s.tpPct))+kv("FT%",pct(s.ftPct))+kv("TS%",ts===-Infinity?"\u2013":pct(ts))+kv("USG%",usg===-Infinity?"\u2013":usg.toFixed(1))+kv("GP",s.gp==null?0:s.gp);
+  const _pr=state.posRel; state.posRel=false; const RK=playerRanks()[p.id]||{}; state.posRel=_pr;
+  const krPct=rk=> (rk&&rk.n>1)?Math.round((rk.n-rk.rank)/(rk.n-1)*100):(rk?100:null);
+  const kv=(k,v,rkey)=>{ const rk=rkey?RK[rkey]:null; const P=krPct(rk);
+    const sub = rk ? '<div class="op-kr" style="color:'+pctlColor(P)+'">#'+rk.rank+'/'+rk.n+' \u00b7 '+ordinal(P)+'</div>' : '<div class="op-kr op-kr-e">\u00a0</div>';
+    return '<div class="op-kv"><div class="op-v">'+v+'</div><div class="op-k">'+k+'</div>'+sub+'</div>'; };
+  const stat=kv("PPG",fmt(s.ppg),"ppg")+kv("RPG",fmt(s.rpg),"rpg")+kv("APG",fmt(s.apg),"apg")+kv("SPG",fmt(s.spg),"spg")+kv("BPG",fmt(s.bpg),"bpg")+kv("MIN",fmt(s.mpg),"mpg")
+    +kv("FG%",pct(s.fgPct),"fgPct")+kv("3P%",pct(s.tpPct),"tpPct")+kv("FT%",pct(s.ftPct),"ftPct")+kv("TS%",ts===-Infinity?"\u2013":pct(ts),"ts")+kv("USG%",usg===-Infinity?"\u2013":usg.toFixed(1),"usg")+kv("GP",s.gp==null?0:s.gp);
   const tags=(n.tags&&n.tags.length)?'<div class="op-tags">'+n.tags.map(x=>'<span class="op-tag">'+chEsc(x)+'</span>').join('')+'</div>':'';
   const nsec=(lab,val)=>(val&&val.trim())?'<div class="op-nrow"><span class="op-nk">'+lab+'</span><span class="op-nv">'+chEsc(val).split("\n").join("<br>")+'</span></div>':'';
   const nparts=[nsec("Athleticism",n.nAth),nsec("Offense",n.nOff),nsec("Defense",n.nDef)].filter(Boolean);
@@ -1015,6 +1021,7 @@ function onePagerHTML(p){
     +'<div class="op-sub">'+chEsc(t.name)+' \u00b7 '+(p.pos||"\u2013")+' \u00b7 '+(p.height?(p.height/100).toFixed(2)+" m":"\u2013")+(p.birthYear?" \u00b7 b. "+p.birthYear:"")+(p.club?' \u00b7 '+chEsc(p.club):"")+'</div></div>'
     +'<div class="op-brand">MT Scouting<span>'+chEsc(ev)+'</span></div></div>'
     +'<div class="op-stats">'+stat+'</div>'
+    +'<div class="op-statnote">Under each stat: rank and percentile vs. all qualified players at the event</div>'
     +'<div class="op-cols"><div class="op-col"><div class="op-h">Profile radar</div>'+radar+'</div>'
     +'<div class="op-col"><div class="op-h">Shot zones</div>'+shot+'</div></div>'
     +'<div class="op-rate"><div class="op-h">Scout assessment</div><div class="op-stars">'+stars+(n.rating?' <span class="op-rnum">'+n.rating+'/5</span>':' <span class="op-rnum op-empty">unrated</span>')+'</div>'+tags+notes+'</div>'
