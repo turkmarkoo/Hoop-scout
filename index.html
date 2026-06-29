@@ -338,6 +338,9 @@ a.logopp:hover{text-decoration:underline}
 .bar2 .val2{font-family:var(--mono);font-size:12px;color:var(--text);text-align:right}
 .pctl{font-family:var(--mono);font-size:11px;font-weight:700;color:#fff;text-align:center;border-radius:6px;padding:2px 0;min-width:26px}
 .barkey{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:10px;color:var(--muted-2);flex-wrap:wrap}
+.barswitch{margin:18px 0 0}
+.barpane .bars{margin-top:10px}
+.barpane.bp-hide{display:none}
 .barkey .mk{width:2px;height:11px;background:var(--text);opacity:.5;display:inline-block}
 .barkey .sw{width:11px;height:11px;border-radius:3px;display:inline-block}
 
@@ -803,6 +806,44 @@ function render(){
 /* ---------- drawer ---------- */
 let activeId=null, dirtyTimer=null;
 
+/* advanced percentile bars (Basic/Advanced toggle in profile) */
+function pctOf(L,v){ if(!L||!L.n||v==null||!isFinite(v)) return null; let below=0,equal=0; for(const x of L.vals){ if(x<v)below++; else if(x===v)equal++; } return Math.round((below+equal/2)/L.n*100); }
+const ADV = [
+  ["TS%","ts",    v=>pct(v)],
+  ["USG%","usg",  v=>v.toFixed(1)],
+  ["A/TO","astto",v=> isFinite(v)?v.toFixed(2):"\u221e"],
+  ["P36","p36",   v=>fmt(v)],
+  ["STK","stk",   v=>fmt(v)]
+];
+const LEAGUE_ADV = {};
+ADV.forEach(([lab,key])=>{
+  const vals = QUALIFIED.map(p=>metric(p,key)).filter(v=>v!=null && isFinite(v)).sort((a,b)=>a-b);
+  const n=vals.length;
+  LEAGUE_ADV[key]={vals,n,mean:n?vals.reduce((a,b)=>a+b,0)/n:0};
+});
+function advBars(p){
+  const rows = ADV.map(([lab,key,vfmt])=>{
+    let v=metric(p,key); const L=LEAGUE_ADV[key];
+    let pl, disp;
+    if(v===Infinity){ pl=100; disp=vfmt(v); }
+    else if(v==null || v===-Infinity || isNaN(v)){ pl=null; disp="\u2013"; v=null; }
+    else { pl=pctOf(L,v); disp=vfmt(v); }
+    const w = pl==null?0:pl;
+    const avgPos = (L&&L.n)? pctOf(L,L.mean) : 50;
+    const col = pl==null?"var(--muted-2)":pctlColor(pl);
+    return `<div class="bar2">
+      <span class="lab">${lab}</span>
+      <span class="track2"><span class="fill2" style="width:${w}%"></span><span class="avgmark" style="left:${avgPos!=null?avgPos:50}%" title="Tournament avg: ${(L&&L.n)?vfmt(L.mean):'\u2013'}"></span></span>
+      <span class="val2">${disp}</span>
+      <span class="pctl" style="background:${col}" title="${pl!=null?ordinal(pl)+' percentile at the event':'not enough data'}">${pl!=null?pl:"\u2013"}</span>
+    </div>`;
+  }).join("");
+  return `<div class="bars">${rows}
+    <div class="barkey"><span class="mk"></span> tournament avg &nbsp;\u00b7&nbsp; percentile
+      <span class="sw" style="background:#C6755B"></span><span class="sw" style="background:#C99A3C"></span><span class="sw" style="background:#5E9E5E"></span> low\u2192high (100 = best)</div>
+  </div>`;
+}
+
 function statBars(s){
   const defs=[["PTS","ppg"],["REB","rpg"],["AST","apg"],["STL","spg"],["BLK","bpg"]];
   const rows = defs.map(([lab,key])=>{
@@ -931,7 +972,12 @@ function openPlayer(id){
           <div class="a"><div class="v">${advUsg}</div><div class="k">USG%</div></div>
           <div class="a"><div class="v">${advFtr}</div><div class="k">FTr</div></div>
         </div>
-        ${statBars(s)}
+        <div class="statsubtabs barswitch">
+          <button class="subtab on" data-bt="basic">Per game</button>
+          <button class="subtab" data-bt="adv">Advanced</button>
+        </div>
+        <div class="barpane" data-bp="basic">${statBars(s)}</div>
+        <div class="barpane bp-hide" data-bp="adv">${advBars(p)}</div>
       </div>
 
       <div class="dr-sec">
@@ -970,6 +1016,9 @@ function openPlayer(id){
 
   // wire up
   $("#drClose").onclick = closeDrawer;
+  dr.querySelectorAll(".barswitch .subtab").forEach(b=>{ b.onclick=()=>{ const t=b.dataset.bt;
+    dr.querySelectorAll(".barswitch .subtab").forEach(x=>x.classList.toggle("on", x===b));
+    dr.querySelectorAll(".barpane").forEach(pane=>pane.classList.toggle("bp-hide", pane.dataset.bp!==t)); }; });
   dr.querySelectorAll(".chip-btn").forEach(b=>{ b.onclick = ()=> filterBy(b.dataset.ft, b.dataset.fv, b.textContent.trim()); });
   $("#scrim").classList.add("on");
   dr.classList.add("on"); dr.setAttribute("aria-hidden","false");
