@@ -359,6 +359,35 @@ a.logopp:hover{text-decoration:underline}
 .chleg .sw{width:10px;height:10px;border-radius:50%}
 .chartnote{margin-top:10px;font-size:11px;color:var(--muted-2);line-height:1.5}
 .ctip{position:fixed;z-index:60;pointer-events:none;background:var(--text);color:#fff;font-size:11.5px;line-height:1.45;padding:6px 9px;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.18);max-width:210px}
+.chartmodes{margin-bottom:16px}
+.radarwrap{display:flex;justify-content:center;padding:4px 0 0}
+.radar{width:100%;max-width:380px;height:auto}
+.radar .rgrid{fill:none;stroke:var(--line-soft);stroke-width:1}
+.radar .rspoke{stroke:var(--line-soft);stroke-width:1}
+.radar .rlab{fill:var(--muted);font-family:var(--disp);font-size:12.5px;font-weight:600}
+.radar .rpoly{stroke-width:2;stroke-linejoin:round}
+.radarnote{text-align:center;font-size:11px;color:var(--muted-2);margin-top:2px}
+.rleg{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 18px;margin-top:6px}
+.rleg .rl{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text)}
+.rleg .sw{width:11px;height:11px;border-radius:3px}
+.lblist{display:flex;flex-direction:column;gap:2px}
+.lbrow{display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:11px;padding:6px 8px;border-radius:9px;cursor:pointer;transition:background .1s}
+.lbrow:hover{background:var(--panel-2)}
+.lbrk{font-family:var(--mono);font-size:11px;color:var(--muted-2);text-align:right}
+.lbmid{min-width:0}
+.lbnm{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lbnm .tm{color:var(--muted);font-size:11px;margin-left:6px;font-family:var(--mono)}
+.lbbar{display:block;height:7px;border-radius:4px;margin-top:5px;min-width:3px}
+.lbval{font-family:var(--disp);font-weight:700;font-size:14.5px;color:var(--text);min-width:50px;text-align:right;font-variant-numeric:tabular-nums}
+.lbdir{padding:7px 11px;font-size:12px}
+.cmpsel{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:6px}
+.cmpsel .chf{flex:1;min-width:150px}
+.cmptbl{width:100%;border-collapse:collapse;margin-top:12px}
+.cmptbl th,.cmptbl td{padding:7px 8px;border-bottom:1px solid var(--line-soft)}
+.cmptbl .nm{font-family:var(--disp);font-weight:700;font-size:14px;text-align:center}
+.cmptbl .lbl{color:var(--muted);text-align:center;width:78px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+.cmptbl td.v{text-align:center;font-size:14px;font-variant-numeric:tabular-nums;color:var(--text)}
+.cmptbl td.win{color:var(--clay-deep);font-weight:700;background:var(--clay-soft)}
 .barswitch{margin:18px 0 0}
 .barpane .bars{margin-top:10px}
 .barpane.bp-hide{display:none}
@@ -504,7 +533,7 @@ function homeView(){
 function goHome(){ state.team=null; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); }
 
 
-let state = { team:null, query:"", filter:null, view:"board", statsTab:"basic", sortKey:"ppg", sortDir:"desc", chartX:"usg", chartY:"ts", chartColor:"pos", chartGroup:"all" };
+let state = { team:null, query:"", filter:null, view:"board", statsTab:"basic", sortKey:"ppg", sortDir:"desc", chartX:"usg", chartY:"ts", chartColor:"pos", chartGroup:"all", chartMode:"scatter", lbStat:"ppg", lbN:15, lbDir:"desc", cmpA:null, cmpB:null };
 
 /* ---------- tournament averages & percentiles ---------- */
 const QUALIFIED = (D.players||[]).filter(p=>p.stats && p.stats.gp>0);
@@ -781,23 +810,110 @@ function scatterSVG(){
   return '<svg class="scatter" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scatter plot">'+g+'</svg>';
 }
 function chartsView(){
+  const modes=[["scatter","Scatter"],["board","Leaderboards"],["compare","Compare"]];
+  const tabs='<div class="statsubtabs chartmodes">'+modes.map(m=>'<button class="subtab'+(state.chartMode===m[0]?" on":"")+'" data-cm="'+m[0]+'">'+m[1]+'</button>').join('')+'</div>';
+  let body;
+  if(state.chartMode==="board") body=leaderboardView();
+  else if(state.chartMode==="compare") body=compareView();
+  else body=scatterView();
+  return '<div class="chartwrap">'+tabs+body+'<div class="ctip" id="ctip" hidden></div></div>';
+}
+function scatterView(){
   const opts=sel=>CHART_STATS.map(s=>'<option value="'+s[0]+'"'+(s[0]===sel?" selected":"")+'>'+s[1]+'</option>').join('');
   const colOpts=[["pos","Position"],["group","Group"],["team","Team"]].map(c=>'<option value="'+c[0]+'"'+(c[0]===state.chartColor?" selected":"")+'>'+c[1]+'</option>').join('');
   const grpOpts=["all","A","B","C","D"].map(gp=>'<option value="'+gp+'"'+(gp===state.chartGroup?" selected":"")+'>'+(gp==="all"?"All groups":"Group "+gp)+'</option>').join('');
-  return '<div class="chartwrap">'
-    +'<div class="chartctrls">'
+  return '<div class="chartctrls">'
       +'<label class="chf">Y axis<select id="chY">'+opts(state.chartY)+'</select></label>'
       +'<label class="chf">X axis<select id="chX">'+opts(state.chartX)+'</select></label>'
       +'<label class="chf">Colour<select id="chC">'+colOpts+'</select></label>'
       +'<label class="chf">Show<select id="chG">'+grpOpts+'</select></label>'
     +'</div>'
-    +scatterSVG()
-    +chLegend()
-    +'<div class="chartnote">Dashed lines mark the tournament average on each axis - click any dot to open that player. Only players with at least one game are shown.</div>'
-    +'<div class="ctip" id="ctip" hidden></div>'
-  +'</div>';
+    +scatterSVG()+chLegend()
+    +'<div class="chartnote">Dashed lines mark the tournament average on each axis - click any dot to open that player. Only players with at least one game are shown.</div>';
 }
-
+const chColorPos = p => POS_COL[(p.pos||"").charAt(0)]||"#A0A6B0";
+function posLegend(){ return '<div class="chleg" style="margin-top:14px"><span class="chl"><span class="sw" style="background:'+POS_COL.G+'"></span>Guards</span><span class="chl"><span class="sw" style="background:'+POS_COL.F+'"></span>Forwards</span><span class="chl"><span class="sw" style="background:'+POS_COL.C+'"></span>Centers</span></div>'; }
+function leaderboardView(){
+  const opts=sel=>CHART_STATS.map(s=>'<option value="'+s[0]+'"'+(s[0]===sel?" selected":"")+'>'+s[1]+'</option>').join('');
+  const grpOpts=["all","A","B","C","D"].map(gp=>'<option value="'+gp+'"'+(gp===state.chartGroup?" selected":"")+'>'+(gp==="all"?"All groups":"Group "+gp)+'</option>').join('');
+  const nOpts=[10,15,20,25].map(nn=>'<option value="'+nn+'"'+(nn===state.lbN?" selected":"")+'>Top '+nn+'</option>').join('');
+  const dirLab=state.lbDir==="asc"?"Low \u2192 High":"High \u2192 Low";
+  return '<div class="chartctrls">'
+    +'<label class="chf">Stat<select id="lbStat">'+opts(state.lbStat)+'</select></label>'
+    +'<label class="chf">Show<select id="lbGrp">'+grpOpts+'</select></label>'
+    +'<label class="chf">Count<select id="lbN">'+nOpts+'</select></label>'
+    +'<label class="chf">Order<button class="btn lbdir" id="lbDir">'+dirLab+'</button></label>'
+    +'</div>'+leaderboardList();
+}
+function leaderboardList(){
+  const stat=state.lbStat;
+  let base=D.players.filter(p=>p.stats&&p.stats.gp>0);
+  if(state.chartGroup!=="all") base=base.filter(p=>teamById(p.teamId).group===state.chartGroup);
+  let rows=base.map(p=>({p,v:chVal(p,stat)})).filter(d=>d.v!=null);
+  rows.sort((a,b)=> state.lbDir==="asc" ? a.v-b.v : b.v-a.v);
+  rows=rows.slice(0,state.lbN);
+  if(!rows.length) return '<div class="muted-note" style="padding:20px 4px">No qualified players for this stat and filter.</div>';
+  const maxv=Math.max.apply(null,rows.map(r=>Math.abs(r.v)))||1;
+  const out=rows.map((r,i)=>{ const t=teamById(r.p.teamId); const w=Math.max(3,Math.abs(r.v)/maxv*100);
+    return '<div class="lbrow" data-id="'+r.p.id+'">'
+      +'<span class="lbrk">'+(i+1)+'</span>'
+      +'<span class="lbmid"><span class="lbnm">'+chEsc(r.p.name)+'<span class="tm">'+chEsc(t.code)+'</span></span>'
+      +'<span class="lbbar" style="width:'+w.toFixed(1)+'%;background:'+chColorPos(r.p)+'"></span></span>'
+      +'<span class="lbval">'+chFmt(stat,r.v)+'</span></div>';
+  }).join('');
+  return '<div class="lblist">'+out+'</div>'+posLegend();
+}
+const RAX=["Scoring","Efficiency","Playmaking","Rebounding","Defense","Usage"];
+function radarPctls(p){
+  const s=p.stats||{};
+  const ts=metric(p,"ts"), usg=metric(p,"usg");
+  return [
+    {pct:percentile("ppg",s.ppg), disp:fmt(s.ppg)},
+    {pct:pctOf(LEAGUE_ADV.ts,ts), disp:(ts===-Infinity?"\u2013":pct(ts))},
+    {pct:percentile("apg",s.apg), disp:fmt(s.apg)},
+    {pct:percentile("rpg",s.rpg), disp:fmt(s.rpg)},
+    {pct:pctOf(LEAGUE_ADV.stk,metric(p,"stk")), disp:fmt(metric(p,"stk"))},
+    {pct:(usg===-Infinity?null:pctOf(LEAGUE_ADV.usg,usg)), disp:(usg===-Infinity?"\u2013":usg.toFixed(1))}
+  ];
+}
+function rPoint(cx,cy,R,frac,i){ const a=(-90+i*60)*Math.PI/180; return [cx+R*frac*Math.cos(a), cy+R*frac*Math.sin(a)]; }
+function radarSVG(entries){
+  const W=360,H=320,cx=180,cy=150,R=100; let g='';
+  [0.25,0.5,0.75,1].forEach(fr=>{ const pts=[]; for(let i=0;i<6;i++){ const q=rPoint(cx,cy,R,fr,i); pts.push(q[0].toFixed(1)+','+q[1].toFixed(1)); } g+='<polygon class="rgrid" points="'+pts.join(' ')+'"/>'; });
+  for(let i=0;i<6;i++){ const q=rPoint(cx,cy,R,1,i); g+='<line class="rspoke" x1="'+cx+'" y1="'+cy+'" x2="'+q[0].toFixed(1)+'" y2="'+q[1].toFixed(1)+'"/>'; }
+  for(let i=0;i<6;i++){ const q=rPoint(cx,cy,R+20,1,i); const ax=Math.abs(q[0]-cx)<6?"middle":(q[0]>cx?"start":"end"); g+='<text class="rlab" x="'+q[0].toFixed(1)+'" y="'+(q[1]+4).toFixed(1)+'" text-anchor="'+ax+'">'+RAX[i]+'</text>'; }
+  entries.forEach(e=>{ const pts=[]; for(let i=0;i<6;i++){ const v=(e.pcts[i]==null?0:e.pcts[i])/100; const q=rPoint(cx,cy,R,v,i); pts.push(q[0].toFixed(1)+','+q[1].toFixed(1)); }
+    g+='<polygon class="rpoly" points="'+pts.join(' ')+'" style="fill:'+e.color+'2e;stroke:'+e.color+'"/>';
+    for(let i=0;i<6;i++){ const v=(e.pcts[i]==null?0:e.pcts[i])/100; const q=rPoint(cx,cy,R,v,i);
+      let title=''; if(e.disps){ const lab=(e.pcts[i]==null?'n/a':e.pcts[i]+'th pct'); title='<title>'+RAX[i]+': '+lab+(e.disps[i]&&e.disps[i]!=='\u2013'?' ('+e.disps[i]+')':'')+'</title>'; }
+      g+='<circle class="rdot" r="3.2" cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" fill="'+e.color+'">'+title+'</circle>'; } });
+  return '<svg class="radar" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Radar chart">'+g+'</svg>';
+}
+const CMP_ROWS=[["PTS","ppg",1],["REB","rpg",1],["AST","apg",1],["STL","spg",1],["BLK","bpg",1],["TO","tpg",0],["MIN","mpg",1],["FG%","fgPct",1],["3P%","tpPct",1],["FT%","ftPct",1],["TS%","ts",1],["USG%","usg",1],["A/TO","astto",1],["PROD","prod",1]];
+function compareTable(A,B,cA,cB){
+  const rows=CMP_ROWS.map(r=>{ const lab=r[0],key=r[1],hi=r[2]; const va=chVal(A,key), vb=chVal(B,key);
+    let wa="",wb=""; if(va!=null&&vb!=null&&va!==vb){ const aw= hi? va>vb : va<vb; if(aw) wa="win"; else wb="win"; }
+    return '<tr><td class="v '+wa+'">'+(va==null?"\u2013":chFmt(key,va))+'</td><td class="lbl">'+lab+'</td><td class="v '+wb+'">'+(vb==null?"\u2013":chFmt(key,vb))+'</td></tr>';
+  }).join('');
+  return '<table class="cmptbl"><thead><tr><th class="nm" style="color:'+cA+'">'+chEsc(A.name)+'</th><th class="k"></th><th class="nm" style="color:'+cB+'">'+chEsc(B.name)+'</th></tr></thead><tbody>'+rows+'</tbody></table>';
+}
+function compareView(){
+  const pool=D.players.filter(p=>p.stats&&p.stats.gp>0).slice();
+  if(!state.cmpA||!state.cmpB){ const byp=pool.slice().sort((a,b)=>(b.stats.ppg||0)-(a.stats.ppg||0)); if(!state.cmpA) state.cmpA=(byp[0]||{}).id; if(!state.cmpB) state.cmpB=(byp[1]||{}).id; }
+  const sorted=pool.slice().sort((a,b)=>a.name.localeCompare(b.name));
+  const sel=(id,cur)=>'<select id="'+id+'">'+sorted.map(p=>'<option value="'+p.id+'"'+(p.id===cur?" selected":"")+'>'+chEsc(p.name)+' ('+chEsc(teamById(p.teamId).code)+')</option>').join('')+'</select>';
+  const A=D.players.find(p=>p.id===state.cmpA), B=D.players.find(p=>p.id===state.cmpB);
+  const cA="#C5824E", cB="#4F86C6"; let body='';
+  if(A&&B&&A!==B){
+    const ra=radarPctls(A), rb=radarPctls(B);
+    const ent=[{pcts:ra.map(x=>x.pct),color:cA,disps:ra.map(x=>x.disp)},{pcts:rb.map(x=>x.pct),color:cB,disps:rb.map(x=>x.disp)}];
+    body='<div class="radarwrap">'+radarSVG(ent)+'</div>'
+      +'<div class="rleg"><span class="rl"><span class="sw" style="background:'+cA+'"></span>'+chEsc(A.name)+'</span><span class="rl"><span class="sw" style="background:'+cB+'"></span>'+chEsc(B.name)+'</span></div>'
+      +compareTable(A,B,cA,cB)
+      +'<div class="chartnote">Radar axes are percentiles vs. all qualified players. Highlighted column = the better value in each row.</div>';
+  } else body='<div class="muted-note" style="padding:18px 4px">Pick two different players to compare.</div>';
+  return '<div class="cmpsel"><label class="chf">Player A '+sel("cmpA",state.cmpA)+'</label><label class="chf">Player B '+sel("cmpB",state.cmpB)+'</label></div>'+body;
+}
 function statsView(){
   const tab = state.statsTab==="advanced" ? "advanced" : "basic";
   const cols = STAT_COLS[tab];
@@ -838,17 +954,31 @@ function render(){
   if(state.view==="charts"){
     $("#secTitle").textContent = "Charts";
     const cEl=$("#secCount"); cEl.hidden=true;
-    $("#secMeta").innerHTML = "Scatter explorer - pick any two stats to compare every player";
+    $("#secMeta").innerHTML = state.chartMode==="board" ? "Leaderboards - rank every player by any stat"
+      : state.chartMode==="compare" ? "Head-to-head - overlay two players"
+      : "Scatter explorer - pick any two stats to compare every player";
     board.innerHTML = chartsView();
-    const bind=(id,prop)=>{ const el=$(id); if(el) el.onchange=()=>{ state[prop]=el.value; render(); }; };
-    bind("#chY","chartY"); bind("#chX","chartX"); bind("#chC","chartColor"); bind("#chG","chartGroup");
-    const tip=$("#ctip");
-    board.querySelectorAll(".cdot").forEach(c=>{
-      c.onclick=()=>openPlayer(c.dataset.id);
-      c.addEventListener("mouseenter",()=>{ if(tip){ tip.innerHTML="<b>"+c.dataset.nm+"</b><br>"+c.dataset.yl+": "+c.dataset.yv+" \u00b7 "+c.dataset.xl+": "+c.dataset.xv; tip.hidden=false; } c.setAttribute("r","7.5"); });
-      c.addEventListener("mousemove",e=>{ if(tip){ tip.style.left=(e.clientX+14)+"px"; tip.style.top=(e.clientY+14)+"px"; } });
-      c.addEventListener("mouseleave",()=>{ if(tip) tip.hidden=true; c.setAttribute("r","5"); });
-    });
+    board.querySelectorAll(".chartmodes .subtab").forEach(b=>{ b.onclick=()=>{ state.chartMode=b.dataset.cm; render(); }; });
+    if(state.chartMode==="scatter"){
+      const bind=(id,prop)=>{ const el=$(id); if(el) el.onchange=()=>{ state[prop]=el.value; render(); }; };
+      bind("#chY","chartY"); bind("#chX","chartX"); bind("#chC","chartColor"); bind("#chG","chartGroup");
+      const tip=$("#ctip");
+      board.querySelectorAll(".cdot").forEach(c=>{
+        c.onclick=()=>openPlayer(c.dataset.id);
+        c.addEventListener("mouseenter",()=>{ if(tip){ tip.innerHTML="<b>"+c.dataset.nm+"</b><br>"+c.dataset.yl+": "+c.dataset.yv+" \u00b7 "+c.dataset.xl+": "+c.dataset.xv; tip.hidden=false; } c.setAttribute("r","7.5"); });
+        c.addEventListener("mousemove",e=>{ if(tip){ tip.style.left=(e.clientX+14)+"px"; tip.style.top=(e.clientY+14)+"px"; } });
+        c.addEventListener("mouseleave",()=>{ if(tip) tip.hidden=true; c.setAttribute("r","5"); });
+      });
+    } else if(state.chartMode==="board"){
+      const bind=(id,prop,num)=>{ const el=$(id); if(el) el.onchange=()=>{ state[prop]=num?+el.value:el.value; render(); }; };
+      bind("#lbStat","lbStat"); bind("#lbGrp","chartGroup"); bind("#lbN","lbN",true);
+      const d=$("#lbDir"); if(d) d.onclick=()=>{ state.lbDir=state.lbDir==="asc"?"desc":"asc"; render(); };
+      board.querySelectorAll(".lbrow").forEach(r=>{ r.onclick=()=>openPlayer(r.dataset.id); });
+    } else if(state.chartMode==="compare"){
+      const a=$("#cmpA"), b=$("#cmpB");
+      if(a) a.onchange=()=>{ state.cmpA=a.value; render(); };
+      if(b) b.onchange=()=>{ state.cmpB=b.value; render(); };
+    }
     return;
   }
 
@@ -1093,6 +1223,12 @@ function openPlayer(id){
         </div>
         <div class="barpane" data-bp="basic">${statBars(s)}</div>
         <div class="barpane bp-hide" data-bp="adv">${advBars(p)}</div>
+      </div>
+
+      <div class="dr-sec">
+        <h4>Profile radar</h4>
+        <div class="radarwrap">${(()=>{const rp=radarPctls(p);return radarSVG([{pcts:rp.map(x=>x.pct),color:"#C5824E",disps:rp.map(x=>x.disp)}]);})()}</div>
+        <div class="radarnote">Each axis is a percentile vs. all qualified players at the event — further out is better.</div>
       </div>
 
       <div class="dr-sec">
