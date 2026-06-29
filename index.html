@@ -622,13 +622,13 @@ function teamProfile(teamId){
     +'</div></div>';
 }
 function teamLineups(teamId){
-  let rows=(PA.lu||[]).map(e=>{ const ids=e[0].split("-"); return {e,pa:pidPlayer(ids[0]),pb:pidPlayer(ids[1])}; })
-    .filter(x=>x.pa&&x.pb&&x.pa.teamId===teamId&&x.pb.teamId===teamId&&x.e[2]>=180);
+  let rows=(PA.lu||[]).map(e=>{ const ps=e[0].split("-").map(pidPlayer); return {e,ps}; })
+    .filter(x=>x.ps.every(p=>p&&p.teamId===teamId)&&x.e[2]>=180);
   rows.forEach(x=>x.net=(x.e[3]-x.e[4])/x.e[2]*2400); rows.sort((a,b)=>b.net-a.net); rows=rows.slice(0,6);
   if(!rows.length) return '';
-  return '<div class="panelcard"><h5>Best two-man combos</h5><div class="lutable">'
-    +rows.map(x=>'<div class="lurow2"><span class="lp">'+chEsc(lastName(x.pa.name))+' + '+chEsc(lastName(x.pb.name))+'</span><span class="lm">'+(x.e[2]/60).toFixed(0)+"'"+'</span><span class="ln">'+netSpan(x.net)+' /40</span></div>').join('')
-    +'</div><div class="caveat">From 1\u20132 games of play-by-play \u2014 small samples, read directionally.</div></div>';
+  return '<div class="panelcard"><h5>Best lineup combos</h5><div class="lutable">'
+    +rows.map(x=>'<div class="lurow2"><span class="lp">'+comboLabel(x.ps)+'</span><span class="lm">'+(x.e[2]/60).toFixed(0)+"'"+'</span><span class="ln">'+netSpan(x.net)+' /40</span></div>').join('')
+    +'</div><div class="caveat">2\u20133-player units sharing the floor, from 1\u20132 games of play-by-play \u2014 small samples, read directionally.</div></div>';
 }
 function onOffLeaders(group){
   let arr=D.players.filter(p=>p.stats&&p.stats.gp).map(p=>({p,oo:onOffVal(p)})).filter(x=>x.oo&&x.oo.diff!=null);
@@ -636,9 +636,9 @@ function onOffLeaders(group){
   arr.sort((a,b)=>b.oo.diff-a.oo.diff); return arr;
 }
 function lineupCombos(group,minSec){
-  let rows=(PA.lu||[]).map(e=>{ const ids=e[0].split("-"); return {e,pa:pidPlayer(ids[0]),pb:pidPlayer(ids[1])}; })
-    .filter(x=>x.pa&&x.pb&&x.pa.teamId===x.pb.teamId&&x.e[2]>=minSec);
-  if(group&&group!=="all") rows=rows.filter(x=>teamById(x.pa.teamId).group===group);
+  let rows=(PA.lu||[]).map(e=>{ const ps=e[0].split("-").map(pidPlayer); return {e,ps}; })
+    .filter(x=>x.ps.every(p=>p)&&x.e[2]>=minSec&&x.ps.every(p=>p.teamId===x.ps[0].teamId));
+  if(group&&group!=="all") rows=rows.filter(x=>teamById(x.ps[0].teamId).group===group);
   rows.forEach(x=>x.net=(x.e[3]-x.e[4])/x.e[2]*2400); rows.sort((a,b)=>b.net-a.net); return rows;
 }
 function lineupView(){
@@ -646,12 +646,12 @@ function lineupView(){
   const oo=onOffLeaders(state.chartGroup).slice(0,12);
   const combos=lineupCombos(state.chartGroup,300).slice(0,15);
   const ooRows = oo.length? oo.map(x=>'<tr class="clk" data-id="'+x.p.id+'"><td>'+chEsc(x.p.name)+'<span class="tmcode">'+chEsc(teamById(x.p.teamId).code)+'</span></td><td>'+netSpan(x.oo.onNet)+'</td><td>'+(x.oo.offNet==null?'\u2013':netSpan(x.oo.offNet))+'</td><td>'+netSpan(x.oo.diff)+'</td><td>'+x.oo.onMin.toFixed(0)+"'"+'</td></tr>').join('') : '<tr><td colspan="5" class="muted-note" style="text-align:left">No on/off data for this filter yet.</td></tr>';
-  const cmRows = combos.length? combos.map(x=>'<tr><td>'+chEsc(lastName(x.pa.name))+' + '+chEsc(lastName(x.pb.name))+'<span class="tmcode">'+chEsc(teamById(x.pa.teamId).code)+'</span></td><td>'+(x.e[2]/60).toFixed(0)+"'"+'</td><td>'+x.e[3]+'\u2013'+x.e[4]+'</td><td>'+netSpan(x.net)+'</td></tr>').join('') : '<tr><td colspan="4" class="muted-note" style="text-align:left">No combo data for this filter yet.</td></tr>';
+  const cmRows = combos.length? combos.map(x=>'<tr><td>'+comboLabel(x.ps)+'<span class="tmcode">'+chEsc(teamById(x.ps[0].teamId).code)+'</span></td><td>'+(x.e[2]/60).toFixed(0)+"'"+'</td><td>'+x.e[3]+'\u2013'+x.e[4]+'</td><td>'+netSpan(x.net)+'</td></tr>').join('') : '<tr><td colspan="4" class="muted-note" style="text-align:left">No combo data for this filter yet.</td></tr>';
   return '<div class="chartctrls"><label class="chf">Show<select id="lvGrp">'+grpOpts+'</select></label></div>'
     +'<div class="lvh">On/off impact leaders</div><div class="lvsub">Team net rating per 40 with the player on court vs. off. Click a player to open them.</div>'
     +'<table class="lvtable"><thead><tr><th>Player</th><th>On /40</th><th>Off /40</th><th>Swing</th><th>On min</th></tr></thead><tbody>'+ooRows+'</tbody></table>'
-    +'<div class="lvh">Best two-man combos</div><div class="lvsub">Highest net rating per 40 among pairs sharing \u2265300s of court time.</div>'
-    +'<table class="lvtable"><thead><tr><th>Pair</th><th>Min</th><th>PF\u2013PA</th><th>Net /40</th></tr></thead><tbody>'+cmRows+'</tbody></table>'
+    +'<div class="lvh">Best lineup combos</div><div class="lvsub">Highest net rating per 40 among 2\u20133-player units sharing \u2265300s on court together. Net = points for \u2212 against per 40.</div>'
+    +'<table class="lvtable"><thead><tr><th>Lineup</th><th>Min</th><th>PF\u2013PA</th><th>Net /40</th></tr></thead><tbody>'+cmRows+'</tbody></table>'
     +'<div class="chartnote">On/off and lineup data come from the 1\u20132 games of play-by-play parsed so far \u2014 directional, not settled.</div>';
 }function neutralGameCard(g){
   const A=codeToTeam(g.a),B=codeToTeam(g.b);
@@ -902,7 +902,18 @@ Object.keys(FEDBY).forEach(function(k){ FEDBY[k].sort(function(a,b){return b[1]-
 function pidPlayer(pid){ return D.players.find(function(p){return String(p.pid)===String(pid);}) || null; }
 function lineupsFor(p){ const pid=String(p.pid); return (PA.lu||[]).filter(function(e){ return e[0].split("-").indexOf(pid)>=0; }).sort(function(a,b){return b[2]-a[2];}); }
 function netSpan(v){ const s=(v>0?"+":"")+v.toFixed(1); const c=v>0.5?"#5E9E5E":v<-0.5?"#C6755B":"var(--muted)"; return '<b style="color:'+c+'">'+s+'</b>'; }
-function lastName(nm){ return String(nm||"").split(" ").slice(-1)[0]; }
+function lastName(nm){
+  const parts=String(nm||"").trim().split(/\s+/).filter(Boolean);
+  if(parts.length<=1) return parts[0]||"";
+  let i=parts.length-1;
+  if(["jr","jr.","sr","sr.","ii","iii","iv","v"].indexOf(parts[i].toLowerCase())>=0 && i>0) i--;
+  return parts[i];
+}
+const SURNAME_DUP=(function(){ const m={}; (D.players||[]).forEach(function(p){ const s=lastName(p.name); (m[s]=m[s]||{})[String(p.pid)]=1; }); return m; })();
+function playerLabel(p){ if(!p) return "?"; const s=lastName(p.name); const set=SURNAME_DUP[s];
+  if(!set || Object.keys(set).length<=1) return s;
+  const first=String(p.name||"").trim().split(/\s+/)[0]||""; return first?first+" "+s:s; }
+function comboLabel(ps){ return ps.map(playerLabel).map(chEsc).join(" + "); }
 function pbpBlock(p){
   const ap=assistedPct(p), oo=onOffVal(p);
   const feeds=(FEEDS[p.pid]||[]).slice(0,4), fedby=(FEDBY[p.pid]||[]).slice(0,4);
