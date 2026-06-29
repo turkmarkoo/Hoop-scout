@@ -408,9 +408,9 @@ a.logopp:hover{text-decoration:underline}
 @media print{
   body.printing > *{display:none !important}
   body.printing #printsheet{display:block !important}
-  body.printing #printsheet .op{break-after:page;page-break-after:always}
+  body.printing #printsheet .op{break-after:page;page-break-after:always;max-width:none;margin:0;padding:12mm;box-sizing:border-box}
   body.printing #printsheet .op:last-child{break-after:auto;page-break-after:auto}
-  @page{margin:12mm}
+  @page{margin:0}
 }
 .op{font-family:var(--body);color:#1c1f24;max-width:760px;margin:0 auto;padding:6px}
 .op-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #C5824E;padding-bottom:10px;margin-bottom:14px;gap:16px}
@@ -544,6 +544,9 @@ a.logopp:hover{text-decoration:underline}
         </button>
         <button class="btn" id="watchBtn" title="Your watchlist & note-based filters">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>Watchlist<span class="wl-count" id="wlCount" hidden></span>
+        </button>
+        <button class="btn" id="bbBtn" title="Your big board — every player you've rated, ranked by stars (drag to fine-tune)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h15M4 12h10M4 18h5"/></svg>Big board<span class="wl-count" id="bbCount" hidden></span>
         </button>
         <button class="btn" id="posBtn" title="Rank players and badges within their own position (guards vs guards, etc.) instead of against the whole field">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="3.2"/><path d="M5.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M3 11h3M18 11h3"/></svg><span id="posLabel">By field</span>
@@ -894,7 +897,7 @@ function filterTitle(f){
 const SCOUT_FILTERS=[["watch","Watchlist"],["r4","\u2605 4+"],["r3","\u2605 3+"],["tagged","Tagged"],["untagged","Flagged, untagged"],["notes","Has notes"],["unseen","Not seen yet"]];
 function isScoutFilter(f){ return !!(f && SCOUT_FILTERS.some(s=>s[0]===f.type)); }
 function scoutBar(active){ let html='<div class="scoutbar">'+SCOUT_FILTERS.map(s=>'<button class="scoutchip'+(s[0]===active?" on":"")+'" data-ft="'+s[0]+'" data-lb="'+chEsc(s[1])+'">'+s[1]+'</button>').join('')+'</div>';
-  if(active==="watch"&&watchCount()>0) html+='<div class="wlexport"><button class="btn" id="bbOpen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:5px"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>Rank on big board</button> <button class="btn" id="wlExport"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:5px"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>Export watchlist as PDF</button></div>';
+  if(active==="watch"&&watchCount()>0) html+='<div class="wlexport"><button class="btn" id="wlExport"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:5px"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>Export watchlist as PDF</button></div>';
   return html; }
 function scoutEmptyMsg(type){
   if(type==="watch") return "Open any player and tap the bookmark to add them to your watchlist.";
@@ -1277,10 +1280,17 @@ let _bbDrag=null;
 function boardOrder(){ const b=NOTES["__board"]; return (b&&Array.isArray(b.order))?b.order.slice():[]; }
 function setBoardOrder(order){ NOTES["__board"]={order:order.slice(),updated:Date.now()}; saveNotes(NOTES); pushCloud(); }
 function bigBoardIds(){
-  const watch=Object.keys(NOTES).filter(id=>id!=="__board"&&NOTES[id]&&NOTES[id].watch&&D.players.some(p=>p.id===id));
-  const set=new Set(watch); const ord=boardOrder().filter(id=>set.has(id));
-  watch.forEach(id=>{ if(!ord.includes(id)) ord.push(id); });
-  return ord;
+  // Members of the board = anyone you've rated (stars) OR bookmarked.
+  const members=Object.keys(NOTES).filter(id=>id!=="__board"&&NOTES[id]&&(((NOTES[id].rating||0)>0)||NOTES[id].watch)&&D.players.some(p=>p.id===id));
+  const set=new Set(members);
+  const ord=boardOrder().filter(id=>set.has(id));            // your saved manual order wins for players already placed
+  const rest=members.filter(id=>!ord.includes(id));          // newly rated/bookmarked, not yet hand-ranked
+  rest.sort((a,b)=>{                                          // default order: 5-star first, then by scoring
+    const ra=NOTES[a].rating||0, rb=NOTES[b].rating||0; if(rb!==ra) return rb-ra;
+    const pa=(D.players.find(p=>p.id===a)||{}).stats||{}, pb=(D.players.find(p=>p.id===b)||{}).stats||{};
+    return (pb.ppg||0)-(pa.ppg||0);
+  });
+  return ord.concat(rest);
 }
 function moveBoard(id,dir){ const ord=bigBoardIds(); const i=ord.indexOf(id), j=i+dir; if(i<0||j<0||j>=ord.length) return; const t=ord[i]; ord[i]=ord[j]; ord[j]=t; setBoardOrder(ord); render(); }
 function reorderBoard(from,to){ const ord=bigBoardIds(); const fi=ord.indexOf(from), ti=ord.indexOf(to); if(fi<0||ti<0) return; const x=ord.splice(fi,1)[0]; ord.splice(ti,0,x); setBoardOrder(ord); render(); }
@@ -1296,7 +1306,7 @@ function exportBigBoard(){
 }
 function bigBoardView(){
   const ids=bigBoardIds();
-  if(!ids.length) return '<div class="empty"><div class="big">Your big board is empty</div>Bookmark players with the ribbon icon to add them here, then drag to rank your targets.</div>';
+  if(!ids.length) return '<div class="empty"><div class="big">Your big board is empty</div>Give players a star rating in their profile (or bookmark them) and they\'ll appear here, ranked 5\u2605 first \u2014 then drag to fine-tune.</div>';
   const rows=ids.map((id,i)=>{ const p=D.players.find(x=>x.id===id); if(!p) return ""; const n=noteFor(id); const s=p.stats||{}; const t=teamById(p.teamId);
     const stars=n.rating?'<b class="bbstars">'+"\u2605".repeat(n.rating)+'</b>':'';
     const tags=(n.tags&&n.tags.length)?' \u00b7 '+chEsc(n.tags.slice(0,3).join(", ")):'';
@@ -1322,7 +1332,7 @@ function wireBigBoard(board){
     row.addEventListener("click",e=>{ if(e.target.closest(".bbbtn")||e.target.closest(".bbrm")||e.target.closest(".bbgrip")) return; openPlayer(id); });
     const up=row.querySelector('[data-mv="up"]'); if(up) up.onclick=e=>{ e.stopPropagation(); moveBoard(id,-1); };
     const dn=row.querySelector('[data-mv="down"]'); if(dn) dn.onclick=e=>{ e.stopPropagation(); moveBoard(id,1); };
-    const rm=row.querySelector(".bbrm"); if(rm) rm.onclick=e=>{ e.stopPropagation(); toggleWatch(id); render(); };
+    const rm=row.querySelector(".bbrm"); if(rm) rm.onclick=e=>{ e.stopPropagation(); setNote(id,{watch:false,rating:0}); updateWatchCount(); render(); };
     row.addEventListener("dragstart",e=>{ _bbDrag=id; row.classList.add("bbdragging"); try{ e.dataTransfer.effectAllowed="move"; e.dataTransfer.setData("text/plain",id); }catch(_){} });
     row.addEventListener("dragend",()=>{ _bbDrag=null; board.querySelectorAll(".bbrow").forEach(r=>r.classList.remove("bbover","bbdragging")); });
     row.addEventListener("dragover",e=>{ e.preventDefault(); if(_bbDrag&&_bbDrag!==id) row.classList.add("bbover"); });
@@ -1470,6 +1480,7 @@ function renderView(){
   const cBtn=$("#chartsBtn"); if(cBtn) cBtn.classList.toggle("on", state.view==="charts");
   const pBtn=$("#posBtn"); if(pBtn){ pBtn.classList.toggle("on", state.posRel); const pl=$("#posLabel"); if(pl) pl.textContent = state.posRel?"By position":"By field"; }
   const wB=$("#watchBtn"); if(wB) wB.classList.toggle("on", isScoutFilter(state.filter));
+  const bB=$("#bbBtn"); if(bB){ bB.classList.toggle("on", state.view==="bigboard"); const bc=$("#bbCount"); if(bc){ const nb=bigBoardIds().length; bc.hidden=nb===0; bc.textContent=nb; } }
   updateWatchCount();
   const board = $("#board"); board.innerHTML="";
 
@@ -1540,7 +1551,7 @@ function renderView(){
   if(state.view==="bigboard"){
     $("#secTitle").textContent="Big board";
     const ids=bigBoardIds(); const cEl=$("#secCount"); cEl.hidden=false; cEl.textContent=ids.length+" player"+(ids.length!==1?"s":"");
-    $("#secMeta").innerHTML = 'Your ranked targets \u00b7 <a href="#" onclick="filterBy(\'watch\',\'1\',\'Watchlist\');return false">list view</a>';
+    $("#secMeta").innerHTML = 'Players you\'ve rated, ranked 5\u2605 first \u2014 drag a row (or use \u25b2\u25bc) to fine-tune';
     board.innerHTML = bigBoardView();
     wireBigBoard(board);
     return;
@@ -1586,7 +1597,7 @@ function renderView(){
     if(isScoutFilter(state.filter)){
       board.innerHTML = scoutBar(state.filter.type) + `<div class="empty"><div class="big">Nothing here yet</div>${scoutEmptyMsg(state.filter.type)}</div>`;
       board.querySelectorAll(".scoutchip").forEach(c=> c.onclick=()=> filterBy(c.dataset.ft,"1",c.dataset.lb));
-      { const we=$("#wlExport"); if(we) we.onclick=exportWatchlist; const bo=$("#bbOpen"); if(bo) bo.onclick=()=>{ state.view="bigboard"; state.team=null; render(); }; }
+      { const we=$("#wlExport"); if(we) we.onclick=exportWatchlist; }
       return;
     }
     board.innerHTML = `<div class="empty"><div class="big">No players yet</div>${state.query?"Nothing matches your search.":`Roster not loaded for this team. Run <code>scraper.js</code> on the FIBA roster page and add the players to <code>players.js</code>.`}</div>`;
@@ -1597,7 +1608,7 @@ function renderView(){
   const grid = document.createElement("div"); grid.className="grid";
   list.forEach(p=> grid.appendChild(playerCard(p)));
   board.appendChild(grid);
-  if(isScoutFilter(state.filter)){ board.querySelectorAll(".scoutchip").forEach(c=> c.onclick=()=> filterBy(c.dataset.ft,"1",c.dataset.lb)); const we=$("#wlExport"); if(we) we.onclick=exportWatchlist; const bo=$("#bbOpen"); if(bo) bo.onclick=()=>{ state.view="bigboard"; state.team=null; render(); }; }
+  if(isScoutFilter(state.filter)){ board.querySelectorAll(".scoutchip").forEach(c=> c.onclick=()=> filterBy(c.dataset.ft,"1",c.dataset.lb)); const we=$("#wlExport"); if(we) we.onclick=exportWatchlist; }
 }
 function render(){ renderView(); writeHash(); }
 
@@ -1876,7 +1887,7 @@ function updateCharInfo(){
 
 function setNote(id, patch){
   const cur = noteFor(id);
-  NOTES[id] = {text:cur.text||"", rating:cur.rating||0, tags:cur.tags||[], ...patch, updated:Date.now()};
+  NOTES[id] = {text:"", rating:0, tags:[], ...cur, ...patch, updated:Date.now()};
   saveNotes(NOTES);
   pushCloud();
 }
@@ -1960,6 +1971,12 @@ if($("#chartsBtn")) $("#chartsBtn").onclick = ()=>{
 if($("#watchBtn")) $("#watchBtn").onclick = ()=>{
   if(state.filter && state.filter.type==="watch"){ clearFilter(); }
   else { filterBy("watch","1","Watchlist"); }
+};
+if($("#bbBtn")) $("#bbBtn").onclick = ()=>{
+  state.view = state.view==="bigboard" ? "board" : "bigboard";
+  state.team=null; state.query=""; state.filter=null;
+  const sb=$("#search"); if(sb) sb.value="";
+  if(activeId) closeDrawer(); else render();
 };
 if($("#posBtn")) $("#posBtn").onclick = ()=>{ state.posRel=!state.posRel; if(activeId) openPlayer(activeId); render(); };
 
