@@ -443,6 +443,10 @@ a.logopp:hover{text-decoration:underline}
 .op-id{min-width:0}
 .op-photo{position:relative;width:58px;height:58px;flex:none;border-radius:10px;border:1px solid #e0d8c8;background:#ECE7DC;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:20px;color:#B0A487;overflow:hidden}
 .op-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top center}
+#prepOverlay{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(20,18,14,.32);backdrop-filter:blur(2px)}
+.prep-box{display:flex;align-items:center;gap:10px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:14px 20px;font-family:var(--body);font-size:14px;font-weight:600;box-shadow:0 10px 34px rgba(0,0,0,.22)}
+.prep-spin{width:16px;height:16px;border:2.5px solid var(--line);border-top-color:var(--clay);border-radius:50%;animation:prepspin .7s linear infinite}
+@keyframes prepspin{to{transform:rotate(360deg)}}
 .op-name{font-family:var(--disp);font-size:26px;font-weight:800;line-height:1}
 .op-num{color:#A96A38;font-size:18px}
 .op-sub{font-size:12.5px;color:#555;margin-top:5px}
@@ -1019,17 +1023,34 @@ function toggleWatch(id){
   updateWatchCount();
   if(state.view==="board") render();
 }
+function preloadImg(src){
+  return new Promise(res=>{
+    let done=false; const fin=()=>{ if(done) return; done=true; res(); };
+    try{ const im=new Image(); im.onload=()=>{ if(im.decode){ im.decode().then(fin,fin); } else fin(); }; im.onerror=fin; im.src=src; }catch(_){ fin(); }
+    setTimeout(fin,4000);
+  });
+}
+function prepOverlay(show){
+  let o=document.getElementById("prepOverlay");
+  if(show){ if(!o){ o=document.createElement("div"); o.id="prepOverlay"; o.innerHTML='<div class="prep-box"><span class="prep-spin"></span>Preparing export\u2026</div>'; document.body.appendChild(o); } o.style.display="flex"; }
+  else if(o){ o.style.display="none"; }
+}
 function printSheet(){
   const sheet=$("#printsheet"); if(!sheet) return;
-  document.body.classList.add("printing");
-  const done=()=>{ document.body.classList.remove("printing"); window.removeEventListener("afterprint",done); };
-  window.addEventListener("afterprint",done);
-  const imgs=Array.from(sheet.querySelectorAll("img")).filter(im=>!im.complete);
-  let fired=false; const go=()=>{ if(fired) return; fired=true; setTimeout(()=>window.print(),60); };
-  if(!imgs.length){ go(); return; }
-  let left=imgs.length;
-  imgs.forEach(im=>{ const hcb=()=>{ im.removeEventListener("load",hcb); im.removeEventListener("error",hcb); if(--left<=0) go(); }; im.addEventListener("load",hcb); im.addEventListener("error",hcb); });
-  setTimeout(go,2500);
+  // iOS/Safari won't load images inside a display:none sheet, so prime the cache + decode first.
+  const srcs=Array.from(sheet.querySelectorAll("img")).map(im=>im.getAttribute("src")).filter(Boolean);
+  const doPrint=()=>{
+    prepOverlay(false);
+    document.body.classList.add("printing");
+    const done=()=>{ document.body.classList.remove("printing"); window.removeEventListener("afterprint",done); };
+    window.addEventListener("afterprint",done);
+    setTimeout(()=>window.print(),80);
+  };
+  if(!srcs.length){ doPrint(); return; }
+  prepOverlay(true);
+  let fired=false; const go=()=>{ if(fired) return; fired=true; doPrint(); };
+  Promise.all(srcs.map(preloadImg)).then(go);
+  setTimeout(go,6000);
 }
 function exportOnePager(id){
   const p=D.players.find(x=>x.id===id); if(!p) return;
@@ -1040,7 +1061,7 @@ function exportOnePager(id){
 function opPhoto(p){
   const parts=(p.name||"").trim().split(/\s+/).filter(Boolean);
   const ini=(((parts[0]||"")[0]||"")+((parts.length>1?parts[parts.length-1]:"")[0]||"")).toUpperCase();
-  return '<div class="op-photo">'+chEsc(ini)+(p.pid?'<img src="'+IMG(p.pid)+'" alt="" onerror="this.remove()">':'')+'</div>';
+  return '<div class="op-photo">'+chEsc(ini)+(p.pid?'<img src="'+IMG(p.pid)+'" alt="" width="58" height="58" decoding="sync" onerror="this.remove()">':'')+'</div>';
 }
 function onePagerHTML(p){
   const s=p.stats||{}, t=teamById(p.teamId), n=noteFor(p.id);
