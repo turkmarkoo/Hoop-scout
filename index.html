@@ -343,6 +343,22 @@ a.logopp:hover{text-decoration:underline}
 .bar2 .val2{font-family:var(--mono);font-size:12px;color:var(--text);text-align:right}
 .pctl{font-family:var(--mono);font-size:11px;font-weight:700;color:#fff;text-align:center;border-radius:6px;padding:2px 0;min-width:26px}
 .barkey{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:10px;color:var(--muted-2);flex-wrap:wrap}
+.chartwrap{padding:2px 0 8px}
+.chartctrls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.chartctrls .chf{display:flex;flex-direction:column;gap:4px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.chartctrls select{font-family:var(--body);font-size:13px;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 9px;cursor:pointer;min-width:124px;text-transform:none;letter-spacing:0}
+.scatter{width:100%;height:auto;display:block;background:var(--panel);border:1px solid var(--line-soft);border-radius:12px;padding:4px}
+.scatter .cg{stroke:var(--line-soft);stroke-width:1}
+.scatter .cmean{stroke:var(--muted-2);stroke-width:1.4;stroke-dasharray:5 4;opacity:.85}
+.scatter .cax{fill:var(--muted-2);font-family:var(--mono);font-size:10px}
+.scatter .cttl{fill:var(--muted);font-family:var(--disp);font-size:13px;font-weight:600;letter-spacing:.04em}
+.scatter .cdot{stroke:#fff;stroke-width:1.4;cursor:pointer;transition:r .08s}
+.scatter .cdot:hover{stroke:var(--text)}
+.chleg{display:flex;flex-wrap:wrap;gap:9px 14px;margin-top:12px}
+.chleg .chl{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.chleg .sw{width:10px;height:10px;border-radius:50%}
+.chartnote{margin-top:10px;font-size:11px;color:var(--muted-2);line-height:1.5}
+.ctip{position:fixed;z-index:60;pointer-events:none;background:var(--text);color:#fff;font-size:11.5px;line-height:1.45;padding:6px 9px;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.18);max-width:210px}
 .barswitch{margin:18px 0 0}
 .barpane .bars{margin-top:10px}
 .barpane.bp-hide{display:none}
@@ -367,6 +383,9 @@ a.logopp:hover{text-decoration:underline}
       <div class="io">
         <button class="btn" id="statsBtn" title="Sortable stats table for every player">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M9 19v-8M14 19v-5M19 19V9"/></svg>Stats
+        </button>
+        <button class="btn" id="chartsBtn" title="Visual scatter charts of every player">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><circle cx="8" cy="15" r="1.7"/><circle cx="12" cy="9" r="1.7"/><circle cx="17" cy="12" r="1.7"/><circle cx="20" cy="5" r="1.7"/></svg>Charts
         </button>
         <button class="btn authbtn" id="authBtn" title="Sign in to sync your notes across devices">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6"/></svg><span id="authLabel">Sign in</span>
@@ -485,7 +504,7 @@ function homeView(){
 function goHome(){ state.team=null; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); }
 
 
-let state = { team:null, query:"", filter:null, view:"board", statsTab:"basic", sortKey:"ppg", sortDir:"desc" };
+let state = { team:null, query:"", filter:null, view:"board", statsTab:"basic", sortKey:"ppg", sortDir:"desc", chartX:"usg", chartY:"ts", chartColor:"pos", chartGroup:"all" };
 
 /* ---------- tournament averages & percentiles ---------- */
 const QUALIFIED = (D.players||[]).filter(p=>p.stats && p.stats.gp>0);
@@ -710,6 +729,75 @@ function sortedPlayers(){
   });
   return list;
 }
+/* ---------- charts: scatter explorer ---------- */
+const CHART_STATS = [
+  ["ppg","Points","n"],["rpg","Rebounds","n"],["apg","Assists","n"],["spg","Steals","n"],["bpg","Blocks","n"],["tpg","Turnovers","n"],["mpg","Minutes","n"],
+  ["ts","TS%","p"],["efg","eFG%","p"],["usg","USG%","u"],["astto","A/TO","r2"],
+  ["p36","Pts / 36","n"],["r36","Reb / 36","n"],["a36","Ast / 36","n"],["stk","Stocks","n"],["prod","Production","n"],
+  ["fgPct","FG%","p"],["tpPct","3P%","p"],["ftPct","FT%","p"],
+  ["height","Height (cm)","i"],["gp","Games","i"]
+];
+const chEsc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function chLabel(k){ const s=CHART_STATS.find(x=>x[0]===k); return s?s[1]:k; }
+function chType(k){ const s=CHART_STATS.find(x=>x[0]===k); return s?s[2]:"n"; }
+function chFmt(k,v){ if(v==null||isNaN(v)) return "-"; const t=chType(k);
+  if(t==="p") return Math.round(v*100)+"%"; if(t==="u") return v.toFixed(0); if(t==="r2") return v.toFixed(2); if(t==="i") return String(Math.round(v)); return v.toFixed(1); }
+function chVal(p,k){ if(k==="height") return p.height||null; if(k==="gp") return (p.stats&&p.stats.gp)||null;
+  const v=metric(p,k); return (v===Infinity||v===-Infinity||v==null||isNaN(v))?null:v; }
+const POS_COL={G:"#4F86C6",F:"#5E9E5E",C:"#C5824E"};
+const GRP_COL={A:"#C5824E",B:"#4F86C6",C:"#5E9E5E",D:"#9B6FB0"};
+const TEAM_PAL=["#C5824E","#4F86C6","#5E9E5E","#9B6FB0","#C6755B","#C99A3C","#5BA7A0","#B0556F","#7A86C0","#6FA35E","#CB8A3A","#8E7CC3","#D08C6A","#5E9E8C","#A86AA0","#6E94B8"];
+function chColor(p){ const mode=state.chartColor;
+  if(mode==="pos") return POS_COL[(p.pos||"").charAt(0)]||"#A0A6B0";
+  if(mode==="group"){ const g=teamById(p.teamId).group; return GRP_COL[g]||"#A0A6B0"; }
+  const idx=D.teams.findIndex(t=>t.id===p.teamId); return TEAM_PAL[((idx%TEAM_PAL.length)+TEAM_PAL.length)%TEAM_PAL.length]||"#A0A6B0"; }
+function chLegend(){ const mode=state.chartColor; let items;
+  if(mode==="pos") items=[["Guards",POS_COL.G],["Forwards",POS_COL.F],["Centers",POS_COL.C]];
+  else if(mode==="group") items=["A","B","C","D"].map(g=>["Group "+g,GRP_COL[g]]);
+  else items=D.teams.map((t,i)=>[t.code,TEAM_PAL[i%TEAM_PAL.length]]);
+  return '<div class="chleg">'+items.map(it=>'<span class="chl"><span class="sw" style="background:'+it[1]+'"></span>'+chEsc(it[0])+'</span>').join('')+'</div>'; }
+function scatterSVG(){
+  const xk=state.chartX, yk=state.chartY;
+  let base=D.players.filter(p=>p.stats&&p.stats.gp>0);
+  if(state.chartGroup!=="all") base=base.filter(p=>teamById(p.teamId).group===state.chartGroup);
+  const pts=base.map(p=>({p,x:chVal(p,xk),y:chVal(p,yk)})).filter(d=>d.x!=null&&d.y!=null);
+  if(pts.length<2) return '<div class="muted-note" style="padding:26px 4px">Not enough players have both of these stats for this filter — try different axes or a wider group.</div>';
+  const W=720,H=470,mL=58,mR=20,mT=18,mB=46,PW=W-mL-mR,PH=H-mT-mB;
+  const xs=pts.map(d=>d.x), ys=pts.map(d=>d.y);
+  let xmin=Math.min.apply(null,xs),xmax=Math.max.apply(null,xs),ymin=Math.min.apply(null,ys),ymax=Math.max.apply(null,ys);
+  const padx=(xmax-xmin)*0.07||1, pady=(ymax-ymin)*0.07||1; xmin-=padx;xmax+=padx;ymin-=pady;ymax+=pady;
+  const X=v=>mL+(v-xmin)/(xmax-xmin)*PW, Y=v=>mT+PH-(v-ymin)/(ymax-ymin)*PH;
+  const xmean=xs.reduce((a,b)=>a+b,0)/xs.length, ymean=ys.reduce((a,b)=>a+b,0)/ys.length;
+  const ticks=(mn,mx)=>{const o=[];for(let i=0;i<=4;i++)o.push(mn+(mx-mn)*i/4);return o;};
+  let g="";
+  ticks(xmin,xmax).forEach(t=>{ g+='<line class="cg" x1="'+X(t).toFixed(1)+'" y1="'+mT+'" x2="'+X(t).toFixed(1)+'" y2="'+(mT+PH)+'"/><text class="cax" x="'+X(t).toFixed(1)+'" y="'+(mT+PH+16)+'" text-anchor="middle">'+chFmt(xk,t)+'</text>'; });
+  ticks(ymin,ymax).forEach(t=>{ g+='<line class="cg" x1="'+mL+'" y1="'+Y(t).toFixed(1)+'" x2="'+(mL+PW)+'" y2="'+Y(t).toFixed(1)+'"/><text class="cax" x="'+(mL-9)+'" y="'+(Y(t)+3).toFixed(1)+'" text-anchor="end">'+chFmt(yk,t)+'</text>'; });
+  g+='<line class="cmean" x1="'+X(xmean).toFixed(1)+'" y1="'+mT+'" x2="'+X(xmean).toFixed(1)+'" y2="'+(mT+PH)+'"/>';
+  g+='<line class="cmean" x1="'+mL+'" y1="'+Y(ymean).toFixed(1)+'" x2="'+(mL+PW)+'" y2="'+Y(ymean).toFixed(1)+'"/>';
+  const xl=chLabel(xk), yl=chLabel(yk);
+  pts.forEach(d=>{ g+='<circle class="cdot" cx="'+X(d.x).toFixed(1)+'" cy="'+Y(d.y).toFixed(1)+'" r="5" fill="'+chColor(d.p)+'" data-id="'+d.p.id+'" data-nm="'+chEsc(d.p.name)+'" data-xl="'+chEsc(xl)+'" data-yl="'+chEsc(yl)+'" data-xv="'+chFmt(xk,d.x)+'" data-yv="'+chFmt(yk,d.y)+'"><title>'+chEsc(d.p.name)+' - '+chEsc(yl)+' '+chFmt(yk,d.y)+', '+chEsc(xl)+' '+chFmt(xk,d.x)+'</title></circle>'; });
+  g+='<text class="cttl" x="'+(mL+PW/2)+'" y="'+(H-7)+'" text-anchor="middle">'+chEsc(xl)+'</text>';
+  g+='<text class="cttl" x="14" y="'+(mT+PH/2)+'" text-anchor="middle" transform="rotate(-90 14 '+(mT+PH/2)+')">'+chEsc(yl)+'</text>';
+  return '<svg class="scatter" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scatter plot">'+g+'</svg>';
+}
+function chartsView(){
+  const opts=sel=>CHART_STATS.map(s=>'<option value="'+s[0]+'"'+(s[0]===sel?" selected":"")+'>'+s[1]+'</option>').join('');
+  const colOpts=[["pos","Position"],["group","Group"],["team","Team"]].map(c=>'<option value="'+c[0]+'"'+(c[0]===state.chartColor?" selected":"")+'>'+c[1]+'</option>').join('');
+  const grpOpts=["all","A","B","C","D"].map(gp=>'<option value="'+gp+'"'+(gp===state.chartGroup?" selected":"")+'>'+(gp==="all"?"All groups":"Group "+gp)+'</option>').join('');
+  return '<div class="chartwrap">'
+    +'<div class="chartctrls">'
+      +'<label class="chf">Y axis<select id="chY">'+opts(state.chartY)+'</select></label>'
+      +'<label class="chf">X axis<select id="chX">'+opts(state.chartX)+'</select></label>'
+      +'<label class="chf">Colour<select id="chC">'+colOpts+'</select></label>'
+      +'<label class="chf">Show<select id="chG">'+grpOpts+'</select></label>'
+    +'</div>'
+    +scatterSVG()
+    +chLegend()
+    +'<div class="chartnote">Dashed lines mark the tournament average on each axis - click any dot to open that player. Only players with at least one game are shown.</div>'
+    +'<div class="ctip" id="ctip" hidden></div>'
+  +'</div>';
+}
+
 function statsView(){
   const tab = state.statsTab==="advanced" ? "advanced" : "basic";
   const cols = STAT_COLS[tab];
@@ -744,7 +832,25 @@ function statsView(){
 function render(){
   renderGroups();
   const sBtn=$("#statsBtn"); if(sBtn) sBtn.classList.toggle("on", state.view==="stats");
+  const cBtn=$("#chartsBtn"); if(cBtn) cBtn.classList.toggle("on", state.view==="charts");
   const board = $("#board"); board.innerHTML="";
+
+  if(state.view==="charts"){
+    $("#secTitle").textContent = "Charts";
+    const cEl=$("#secCount"); cEl.hidden=true;
+    $("#secMeta").innerHTML = "Scatter explorer - pick any two stats to compare every player";
+    board.innerHTML = chartsView();
+    const bind=(id,prop)=>{ const el=$(id); if(el) el.onchange=()=>{ state[prop]=el.value; render(); }; };
+    bind("#chY","chartY"); bind("#chX","chartX"); bind("#chC","chartColor"); bind("#chG","chartGroup");
+    const tip=$("#ctip");
+    board.querySelectorAll(".cdot").forEach(c=>{
+      c.onclick=()=>openPlayer(c.dataset.id);
+      c.addEventListener("mouseenter",()=>{ if(tip){ tip.innerHTML="<b>"+c.dataset.nm+"</b><br>"+c.dataset.yl+": "+c.dataset.yv+" \u00b7 "+c.dataset.xl+": "+c.dataset.xv; tip.hidden=false; } c.setAttribute("r","7.5"); });
+      c.addEventListener("mousemove",e=>{ if(tip){ tip.style.left=(e.clientX+14)+"px"; tip.style.top=(e.clientY+14)+"px"; } });
+      c.addEventListener("mouseleave",()=>{ if(tip) tip.hidden=true; c.setAttribute("r","5"); });
+    });
+    return;
+  }
 
   if(state.view==="stats"){
     $("#secTitle").textContent = "Player stats";
@@ -1142,6 +1248,13 @@ $("#statsBtn").onclick = ()=>{
   if(activeId) closeDrawer(); else render();
 };
 
+if($("#chartsBtn")) $("#chartsBtn").onclick = ()=>{
+  state.view = state.view==="charts" ? "board" : "charts";
+  state.team=null; state.query=""; state.filter=null;
+  const sb=$("#search"); if(sb) sb.value="";
+  if(activeId) closeDrawer(); else render();
+};
+
 /* ---------- toast ---------- */
 let toastTimer=null;
 function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on");
@@ -1173,10 +1286,10 @@ render();
 ============================================================================ -->
 <script type="module">
   const firebaseConfig = {
-    apiKey:     "AIzaSyCHoFmBnxUxwB4_mHfiJ8dk4BQFZlLziWA",
-    authDomain: "mt-scouting.firebaseapp.com",
-    projectId:  "mt-scouting",
-    appId:      "1:169154127842:web:cff3ad61b45884c2e8fbbb"
+    apiKey:     "PASTE_API_KEY",
+    authDomain: "PASTE_PROJECT.firebaseapp.com",
+    projectId:  "PASTE_PROJECT_ID",
+    appId:      "PASTE_APP_ID"
   };
 
   const configured = firebaseConfig.apiKey && !/PASTE_/.test(firebaseConfig.apiKey);
