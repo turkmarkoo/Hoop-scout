@@ -223,6 +223,11 @@ table.log .res-l{color:var(--warn)}
 .note-area:focus{border-color:var(--clay-deep); background-color:#fff}
 .note-area::placeholder{color:#A8946A}
 .note-foot{display:flex; align-items:center; justify-content:space-between; margin-top:9px; font-size:11px; color:#9A865C}
+.authbtn .av{width:18px;height:18px;border-radius:50%;object-fit:cover;margin-right:5px;vertical-align:middle}
+.authbtn.in{border-color:var(--clay);color:var(--clay-deep)}
+.synchint{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--muted-2);margin:2px 0 10px}
+.synchint .dot{width:6px;height:6px;border-radius:50%;background:#C6755B;flex:none}
+.synchint.on .dot{background:#5E9E5E}
 .saved{display:inline-flex; align-items:center; gap:5px; font-family:var(--mono)}
 .saved .d{width:7px; height:7px; border-radius:50%; background:var(--good)}
 .saved.dirty .d{background:var(--clay-deep)}
@@ -363,6 +368,9 @@ a.logopp:hover{text-decoration:underline}
         <button class="btn" id="statsBtn" title="Sortable stats table for every player">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M9 19v-8M14 19v-5M19 19V9"/></svg>Stats
         </button>
+        <button class="btn authbtn" id="authBtn" title="Sign in to sync your notes across devices">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.3 3.6-6 8-6s8 2.7 8 6"/></svg><span id="authLabel">Sign in</span>
+        </button>
       </div>
       <div class="evt">
         <span class="a" id="evtName">U17 World Cup 2026</span>
@@ -399,6 +407,7 @@ const $ = (s,r=document)=>r.querySelector(s);
 function loadNotes(){ try{return JSON.parse(localStorage.getItem(NOTE_KEY))||{}}catch{return{}} }
 function saveNotes(n){ try{localStorage.setItem(NOTE_KEY,JSON.stringify(n))}catch{toast("Couldn't save — storage blocked")} }
 let NOTES = loadNotes();
+let cloudUser=null;
 function noteFor(id){ return NOTES[id] || {text:"",rating:0,tags:[]} }
 
 /* ---------- helpers ---------- */
@@ -995,6 +1004,7 @@ function openPlayer(id){
 
       <div class="notes">
         <h4>Scout notes</h4>
+        ${cloudUser?`<div class="synchint on" id="syncHint"><span class="dot"></span>Synced to ${cloudUser.email||"your account"}</div>`:`<div class="synchint" id="syncHint"><span class="dot"></span>Saved on this device · sign in to sync across devices</div>`}
         <div class="rate">
           <span class="lbl">Talent</span>
           <div class="stars" id="stars">
@@ -1059,6 +1069,7 @@ function setNote(id, patch){
   const cur = noteFor(id);
   NOTES[id] = {text:cur.text||"", rating:cur.rating||0, tags:cur.tags||[], ...patch, updated:Date.now()};
   saveNotes(NOTES);
+  pushCloud();
 }
 function markDirty(){ const f=$("#savedFlag"); if(f){ f.classList.add("dirty"); $("#savedTxt").textContent="Saving…"; } updateCharInfo(); }
 let saveTimer=null;
@@ -1078,6 +1089,42 @@ function closeDrawer(){
 }
 $("#scrim").onclick = closeDrawer;
 $("#brand").onclick = goHome;
+
+/* ---------- cloud sync (Firebase) glue ---------- */
+function pushCloud(){ if(window.CloudSync && window.CloudSync.enabled && cloudUser) window.CloudSync.pushNotes(NOTES); }
+function applyRemoteNotes(cloud){
+  if(!cloud) return; let changed=false;
+  for(const id in cloud){ const c=cloud[id]; if(!c) continue; const l=NOTES[id];
+    if(!l || (c.updated||0) > (l.updated||0)){ NOTES[id]=c; changed=true; } }
+  if(changed){ saveNotes(NOTES);
+    if(activeId){ const ta=$("#noteArea"); if(ta){ if(document.activeElement!==ta) ta.value=noteFor(activeId).text||"";
+      if($("#stars")&&typeof paintStars==="function") paintStars();
+      if($("#tagList")&&typeof renderTags==="function") renderTags(); } }
+    render(); }
+}
+function updateAuthUI(user){
+  cloudUser = user || null;
+  const b=$("#authBtn"), lab=$("#authLabel");
+  if(b && lab){
+    if(user){ b.classList.add("in"); b.title="Synced as "+(user.email||"your account")+" — click to sign out";
+      const nm=(user.displayName||user.email||"Account").split(" ")[0];
+      lab.innerHTML=(user.photoURL?('<img class="av" referrerpolicy="no-referrer" src="'+user.photoURL+'" alt="">'):"")+nm; }
+    else { b.classList.remove("in"); b.title="Sign in to sync your notes across devices"; lab.textContent="Sign in"; }
+  }
+  const hh=$("#syncHint"); if(hh){ hh.className="synchint"+(user?" on":""); hh.innerHTML='<span class="dot"></span>'+(user?("Synced to "+(user.email||"your account")):"Saved on this device · sign in to sync across devices"); }
+}
+if($("#authBtn")) $("#authBtn").onclick=()=>{
+  if(!(window.CloudSync && window.CloudSync.enabled)){ toast("Cloud sync isn't set up yet — paste your Firebase keys into index.html (see the CLOUD SYNC SETUP comment)."); return; }
+  if(cloudUser){ if(confirm("Sign out of note sync?\nYour notes stay saved on this device.")) window.CloudSync.signOut(); }
+  else window.CloudSync.signIn();
+};
+function wireCloud(cs){
+  if(!cs || !cs.enabled){ updateAuthUI(null); return; }
+  cs.onAuth(user=>{ updateAuthUI(user); if(user) setTimeout(pushCloud, 1200); });
+  cs.onRemote(cloud=>applyRemoteNotes(cloud));
+}
+if(window.CloudSync) wireCloud(window.CloudSync);
+else window.addEventListener("cloud-ready", ()=>wireCloud(window.CloudSync), {once:true});
 document.addEventListener("keydown", e=>{ if(e.key==="Escape" && activeId) closeDrawer(); });
 
 /* ---------- search ---------- */
@@ -1106,6 +1153,74 @@ function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("on
    — the data refreshes only when players.js is updated. */
 render();
 
+</script>
+<!-- ============================================================================
+     CLOUD SYNC SETUP (Firebase Auth + Firestore) — sync notes to your Google account
+       1. Create a free project: https://console.firebase.google.com
+       2. Build > Authentication > Sign-in method > enable Google
+       3. Build > Firestore Database > Create database (Production mode)
+       4. Project settings (gear) > General > Your apps > Web app (</>) > register,
+          then copy the firebaseConfig values into the block below.
+       5. Authentication > Settings > Authorized domains > Add: turkmarkoo.github.io
+       6. Firestore > Rules > paste, then Publish:
+            rules_version = '2';
+            service cloud.firestore { match /databases/{database}/documents {
+              match /scouts/{uid} {
+                allow read, write: if request.auth != null && request.auth.uid == uid;
+            } } }
+     Until the keys below are filled in, the app behaves exactly as before
+     (notes saved on this device only — nothing is sent anywhere).
+============================================================================ -->
+<script type="module">
+  const firebaseConfig = {
+    apiKey:     "PASTE_API_KEY",
+    authDomain: "PASTE_PROJECT.firebaseapp.com",
+    projectId:  "PASTE_PROJECT_ID",
+    appId:      "PASTE_APP_ID"
+  };
+
+  const configured = firebaseConfig.apiKey && !/PASTE_/.test(firebaseConfig.apiKey);
+  if(!configured){
+    window.CloudSync={enabled:false,signIn(){},signOut(){},pushNotes(){},onAuth(){},onRemote(){}};
+    window.dispatchEvent(new Event("cloud-ready"));
+  } else {
+    const V="https://www.gstatic.com/firebasejs/10.12.2/";
+    const appMod=await import(V+"firebase-app.js");
+    const authMod=await import(V+"firebase-auth.js");
+    const fsMod=await import(V+"firebase-firestore.js");
+    const app=appMod.initializeApp(firebaseConfig);
+    const auth=authMod.getAuth(app);
+    const db=fsMod.getFirestore(app);
+    const provider=new authMod.GoogleAuthProvider();
+    let authCb=null, remoteCb=null, unsub=null, lastCloud={}, curUser=null, pushT=null, hadUser=false;
+
+    function merge(a,b){ const out=Object.assign({},a||{}); for(const id in (b||{})){ const x=b[id], y=out[id]; if(!y || (x.updated||0) >= (y.updated||0)) out[id]=x; } return out; }
+    async function signIn(){ try{ await authMod.signInWithPopup(auth, provider); }catch(e){ try{ await authMod.signInWithRedirect(auth, provider); }catch(_){} } }
+    try{ await authMod.getRedirectResult(auth); }catch(_){}
+
+    authMod.onAuthStateChanged(auth, user=>{
+      curUser=user||null; hadUser=true;
+      if(unsub){ unsub(); unsub=null; }
+      if(user){
+        const ref=fsMod.doc(db,"scouts",user.uid);
+        unsub=fsMod.onSnapshot(ref, snap=>{ const data=(snap.exists()&&snap.data().notes)?snap.data().notes:{}; lastCloud=data; remoteCb&&remoteCb(data); }, ()=>{});
+      } else lastCloud={};
+      authCb&&authCb(curUser);
+    });
+
+    window.CloudSync={
+      enabled:true,
+      signIn,
+      signOut(){ return authMod.signOut(auth); },
+      pushNotes(notes){ if(!curUser) return; clearTimeout(pushT); pushT=setTimeout(async()=>{
+        const merged=merge(lastCloud, notes); lastCloud=merged;
+        try{ await fsMod.setDoc(fsMod.doc(db,"scouts",curUser.uid), {notes:merged, updatedAt:Date.now()}, {merge:true}); }catch(e){}
+      }, 800); },
+      onAuth(cb){ authCb=cb; if(hadUser) cb(curUser); },
+      onRemote(cb){ remoteCb=cb; if(curUser) cb(lastCloud); }
+    };
+    window.dispatchEvent(new Event("cloud-ready"));
+  }
 </script>
 </body>
 </html>
