@@ -294,6 +294,14 @@ button.brand:hover .mark b{color:var(--clay-deep)}
 
 /* avatars */
 .avatar{width:46px;height:46px;border-radius:11px;object-fit:cover;object-position:top center;background:var(--panel-3);border:1px solid var(--line);flex:none}
+.av-zoom{cursor:zoom-in}
+.imglb{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(20,18,16,.74);backdrop-filter:blur(5px);cursor:zoom-out}
+.imglb.on{display:flex}
+.imglb-inner{display:flex;flex-direction:column;align-items:center;gap:10px;max-width:92vw;max-height:90vh}
+.imglb-inner img{max-width:min(460px,88vw);max-height:80vh;width:auto;height:auto;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5);background:var(--panel-3);border:2px solid rgba(255,255,255,.16);object-fit:contain;display:block}
+.imglb-cap{color:#fff;font-family:var(--disp);font-weight:700;font-size:16px;letter-spacing:.02em;text-align:center}
+.imglb-x{position:absolute;top:16px;right:18px;width:40px;height:40px;border:0;border-radius:50%;background:rgba(255,255,255,.15);color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s}
+.imglb-x:hover{background:rgba(255,255,255,.28)}
 .card-top{align-items:center}
 .dr-avatar{width:80px;height:80px;border-radius:16px;object-fit:cover;object-position:top center;background:var(--panel-3);border:1px solid var(--line);flex:none}
 .dr-num-name{align-items:center}
@@ -836,6 +844,7 @@ html[data-theme="dark"] .tg{color:#E3C7A0}
 <div class="tlb" id="tlb" aria-hidden="true"><div class="tlb-back" onclick="closeTeamLeaderboard()"></div><div class="tlb-card" id="tlbCard" role="dialog" aria-modal="true"></div></div>
 <div class="tlb plb" id="plb" aria-hidden="true"><div class="tlb-back" onclick="closePlayerLb()"></div><div class="tlb-card" id="plbCard" role="dialog" aria-modal="true"></div></div>
 <div class="tlb sfb" id="sfb" aria-hidden="true"><div class="tlb-back" onclick="closeSmartFilter()"></div><div class="tlb-card" id="sfbCard" role="dialog" aria-modal="true"></div></div>
+<div class="imglb" id="imgLB" aria-hidden="true" onclick="closeImgZoom()"><button class="imglb-x" type="button" aria-label="Close" onclick="closeImgZoom()">✕</button><div class="imglb-inner"></div></div>
 <aside class="drawer" id="drawer" aria-hidden="true"></aside>
 <div class="toast" id="toast"></div>
 
@@ -863,7 +872,10 @@ function hasContent(n){ return !!(n && ((n.nAth&&n.nAth.trim()) || (n.nOff&&n.nO
 
 /* ---------- images / games / standings ---------- */
 const IMG = pid => pid ? `https://assets.fiba.basketball/image/upload/c_fill,g_face,w_200,h_200/q_auto/f_auto/.headshot--person_${pid}--competition_208545` : "";
-const avatarHTML = (p,cls)=>{ const u=IMG(p.pid); return u?`<img class="${cls}" loading="lazy" src="${u}" alt="" onerror="this.remove()">`:""; };
+const IMGBIG = pid => pid ? `https://assets.fiba.basketball/image/upload/c_fill,g_face,w_512,h_640/q_auto/f_auto/.headshot--person_${pid}--competition_208545` : "";
+const avatarHTML = (p,cls)=>{ const u=IMG(p.pid); return u?`<img class="${cls} av-zoom" loading="lazy" src="${u}" alt="" onclick="imgZoom(event,${p.pid})" onerror="this.remove()">`:""; };
+function imgZoom(e,pid){ if(e){ e.stopPropagation(); } const big=IMGBIG(pid); if(!big) return; const lb=document.getElementById("imgLB"); if(!lb) return; const pl=pidPlayer(pid); const cap=pl?('<div class="imglb-cap">'+chEsc(pl.name)+(pl.number!=null?' \u00b7 #'+pl.number:'')+'</div>'):''; const inner=lb.querySelector(".imglb-inner"); if(inner) inner.innerHTML='<img src="'+big+'" alt="" onerror="this.style.display=\'none\'">'+cap; lb.classList.add("on"); lb.setAttribute("aria-hidden","false"); }
+function closeImgZoom(){ const lb=document.getElementById("imgLB"); if(lb){ lb.classList.remove("on"); lb.setAttribute("aria-hidden","true"); const inner=lb.querySelector(".imglb-inner"); if(inner) inner.innerHTML=""; } }
 const codeToTeam = code => D.teams.find(t=>t.code===code);
 const TEAM_ISO={ITA:'it',USA:'us',FRA:'fr',JPN:'jp',CMR:'cm',CAN:'ca',LTU:'lt',CHN:'cn',NZL:'nz',SLO:'si',PUR:'pr',TUR:'tr',VEN:'ve',AUS:'au',SRB:'rs',CIV:'ci'};
 function FLAG(code,w){ const iso=TEAM_ISO[code]; return iso?('https://flagcdn.com/w'+(w||40)+'/'+iso+'.png'):''; }
@@ -2835,7 +2847,7 @@ function closeDrawer(){
   $("#scrim").classList.remove("on"); activeId=null; render();
 }
 $("#scrim").onclick = closeDrawer;
-document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ const sf=document.getElementById("sfb"); if(sf&&sf.classList.contains("on")){ e.stopPropagation(); closeSmartFilter(); return; } const pl=document.getElementById("plb"); if(pl&&pl.classList.contains("on")){ e.stopPropagation(); closePlayerLb(); return; } const el=document.getElementById("tlb"); if(el&&el.classList.contains("on")){ e.stopPropagation(); closeTeamLeaderboard(); } } }, true);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ const iz=document.getElementById("imgLB"); if(iz&&iz.classList.contains("on")){ e.stopPropagation(); closeImgZoom(); return; } const sf=document.getElementById("sfb"); if(sf&&sf.classList.contains("on")){ e.stopPropagation(); closeSmartFilter(); return; } const pl=document.getElementById("plb"); if(pl&&pl.classList.contains("on")){ e.stopPropagation(); closePlayerLb(); return; } const el=document.getElementById("tlb"); if(el&&el.classList.contains("on")){ e.stopPropagation(); closeTeamLeaderboard(); } } }, true);
 $("#brand").onclick = goHome;
 
 /* ---------- cloud sync (Firebase) glue ---------- */
