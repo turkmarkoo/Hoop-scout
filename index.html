@@ -282,7 +282,7 @@ table.log .res-l{color:var(--warn)}
   .avg{grid-template-columns:repeat(3,1fr)}
   .top-meta{width:100%; justify-content:space-between}
   .row1-right{width:100%; justify-content:space-between; gap:8px}
-  .matchup{order:-1; width:100%}
+  .matchup{width:100%}
   .search input{max-width:none; width:100%}
   .search{flex:1}
 }
@@ -770,8 +770,8 @@ html[data-theme="dark"] .tg{color:#E3C7A0}
       <img class="brand-logo" src="data:image/png;base64,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" alt="MT Scouting logo" width="32" height="32">
       <span class="mark">MT <b>Scouting</b></span>
     </button>
+    <div class="matchup" id="matchup"></div>
     <div class="row1-right">
-      <div class="matchup" id="matchup"></div>
       <div class="evt">
         <span class="a" id="evtName">U17 World Cup 2026</span>
         <span class="b" id="evtMeta">Istanbul · 27 Jun–5 Jul</span>
@@ -2338,7 +2338,7 @@ function initMatchup(){
   if(best){ state.matchA=best.a; state.matchB=best.b; }
 }
 function setMatchTeam(which,teamId){ if(which==='a'){ state.matchA=teamId; const o=smartOpponent(teamId); if(o&&o!==teamId) state.matchB=o; } else state.matchB=teamId; }
-function openTeamFromMatch(teamId){ if(!teamId) return; state.team=teamId; state.query=''; state.filter=null; state.view='board'; const s=$('#search'); if(s) s.value=''; if(activeId) closeDrawer(); else render(); try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){} }
+function openTeamFromMatch(teamId){ if(!teamId) return; state.team=teamId; state.query=''; state.filter=null; state.view='board'; const s=$('#search'); if(s) s.value=''; if(activeId) closeDrawer(); else render(); setTimeout(()=>{ const g=document.getElementById('rosterGrid'); if(g){ try{ g.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){ g.scrollIntoView(); } } else { try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){} } }, 70); }
 function renderMatchup(){
   const box=document.getElementById('matchup'); if(!box) return;
   const opts=D.teams.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(t=>'<option value="'+t.id+'"'+(t.id===state.matchA?' selected':'')+'>'+chEsc(t.code)+' \u00b7 '+chEsc(t.name)+'</option>').join('');
