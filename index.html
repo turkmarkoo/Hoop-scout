@@ -588,6 +588,28 @@ html[data-theme="dark"] .qchip{background:rgba(255,255,255,.04)}
 .dictarow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
 .dictahint{font-size:10.5px;color:var(--muted-2)}
 .micstatus{font-size:10.5px;color:var(--clay-deep);font-family:var(--mono);font-style:italic;white-space:nowrap}
+.brk-wrap{padding:2px 0 20px}
+.brk-sec{margin-bottom:24px}
+.brk-sechd{font-family:var(--disp);font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--clay-deep);margin:0 0 12px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+.brk-scroll{display:flex;gap:18px;overflow-x:auto;padding-bottom:10px;align-items:stretch;-webkit-overflow-scrolling:touch}
+.brk-col{min-width:172px;flex:1 0 172px;display:flex;flex-direction:column}
+.brk-colhead{font-family:var(--disp);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:9px;text-align:center}
+.brk-colhead.sm{font-size:10px;margin:8px 0 4px;color:var(--muted-2)}
+.brk-cards{display:flex;flex-direction:column;justify-content:space-around;gap:9px;flex:1}
+.brk-cards.brk-final{justify-content:center;gap:14px}
+.brk-card{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:7px 10px;box-shadow:var(--shadow)}
+.brk-card.done{border-color:var(--clay-soft)}
+.brk-num{font-family:var(--mono);font-size:9px;color:var(--muted-2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.brk-slot{display:flex;align-items:center;gap:7px;padding:2px 0}
+.brk-vs{height:1px;background:var(--line-soft);margin:2px 0}
+.brk-dot{width:9px;height:9px;border-radius:3px;flex:none}
+.brk-dot.ghost{background:var(--line)}
+.brk-tm{flex:1;font-size:12.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brk-slot.tbd .brk-tm{color:var(--muted-2);font-weight:500}
+.brk-sc{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--muted)}
+.brk-slot.win .brk-tm{color:var(--clay-deep);font-weight:800}
+.brk-slot.win .brk-sc{color:var(--clay-deep)}
+.brk-3rd{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
 .note-area.na-s{min-height:74px;margin-bottom:0;background-image:none}
 .roles{margin:0 0 12px;border:1px solid var(--parch-line);border-radius:10px;background:rgba(255,255,255,.35);overflow:hidden}
 html[data-theme="dark"] .roles{background:rgba(255,255,255,.04)}
@@ -642,6 +664,9 @@ html[data-theme="dark"] .tg{color:#E3C7A0}
         </button>
         <button class="btn" id="bbBtn" title="Your big board — every player you've rated, ranked by stars (drag to fine-tune)">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h15M4 12h10M4 18h5"/></svg>Big board<span class="wl-count" id="bbCount" hidden></span>
+        </button>
+        <button class="btn" id="brkBtn" title="Final-phase bracket — Round of 16 through the Final, plus 5–8 and 9–16 classification">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h6M3 5v14M3 19h6M9 8h5v8H9M14 12h4M18 9v6"/></svg>Bracket
         </button>
         <button class="btn" id="posBtn" title="Rank players and badges within their own position (guards vs guards, etc.) instead of against the whole field">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="3.2"/><path d="M5.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M3 11h3M18 11h3"/></svg><span id="posLabel">By field</span>
@@ -1443,6 +1468,63 @@ function exportBigBoard(){
   sheet.innerHTML=players.map(p=>onePagerHTML(p)).join("");
   printSheet();
 }
+function brkByNum(){ if(!D.bracket) return {}; const m={}; D.bracket.games.forEach(g=>m[g.num]=g); return m; }
+function brkColor(code){ const i=D.teams.findIndex(t=>t.code===code); return i>=0?TEAM_PAL[((i%TEAM_PAL.length)+TEAM_PAL.length)%TEAM_PAL.length]:"#A0A6B0"; }
+function brkTeamName(code){ const t=D.teams.find(x=>x.code===code); return t?t.name:code; }
+function brkSlot(g, side){
+  const _n=brkByNum();
+  const code=side==='a'?g.a:g.b, from=side==='a'?g.aFrom:g.bFrom, score=side==='a'?g.sa:g.sb;
+  if(code) return {code, label:brkTeamName(code), resolved:true, score};
+  const m=/^(Winner|Loser) of Game (\d+)$/.exec(from||"");
+  if(m){ const ref=_n[+m[2]], wl=m[1]==='Winner'?'W':'L';
+    if(ref){
+      if(ref.st==='VALID'&&ref.sa!=null&&ref.sb!=null&&ref.a&&ref.b){ const aWon=ref.sa>ref.sb; const pick=(m[1]==='Winner')===aWon?ref.a:ref.b; return {code:pick,label:brkTeamName(pick),resolved:true}; }
+      if(ref.a&&ref.b){ return {code:null,label:wl+' \u00b7 '+ref.a+'/'+ref.b,resolved:false}; }
+      return {code:null,label:wl+' \u00b7 '+ref.short,resolved:false};
+    }
+  }
+  return {code:null,label:from||'\u2014',resolved:false};
+}
+function brkCard(num){
+  const g=brkByNum()[num]; if(!g) return '';
+  const A=brkSlot(g,'a'), B=brkSlot(g,'b');
+  const played=g.st==='VALID'&&g.sa!=null&&g.sb!=null&&g.a&&g.b;
+  const aW=played&&g.sa>g.sb, bW=played&&g.sb>g.sa;
+  const slot=(S,win,score)=>`<div class="brk-slot${win?' win':''}${(S.resolved&&S.code)?'':' tbd'}">`
+    +(S.code?`<span class="brk-dot" style="background:${brkColor(S.code)}"></span>`:`<span class="brk-dot ghost"></span>`)
+    +`<span class="brk-tm">${chEsc(S.label)}</span>`
+    +(played?`<span class="brk-sc">${score}</span>`:``)+`</div>`;
+  return `<div class="brk-card${played?' done':''}">`
+    +`<div class="brk-num">${chEsc(g.short)}</div>`
+    +slot(A,aW,g.sa)+`<div class="brk-vs"></div>`+slot(B,bW,g.sb)+`</div>`;
+}
+function brkCol(title, nums){
+  return `<div class="brk-col"><div class="brk-colhead">${title}</div><div class="brk-cards">`+nums.map(brkCard).join('')+`</div></div>`;
+}
+function bracketView(){
+  if(!D.bracket) return `<p class="muted-note">Bracket data isn\'t loaded yet.</p>`;
+  const champ=`<div class="brk-scroll">`
+    +brkCol('Round of 16',[25,30,27,32,26,29,28,31])
+    +brkCol('Quarterfinals',[37,39,38,40])
+    +brkCol('Semifinals',[47,48])
+    +`<div class="brk-col"><div class="brk-colhead">Final</div><div class="brk-cards brk-final">`+brkCard(56)
+    +`<div class="brk-3rd"><div class="brk-colhead sm">3rd place</div>`+brkCard(55)+`</div></div></div>`
+    +`</div>`;
+  const c58=`<div class="brk-scroll">`
+    +brkCol('5\u20138 Semifinals',[45,46])
+    +`<div class="brk-col"><div class="brk-colhead">Placement</div><div class="brk-cards">`+brkCard(54)+brkCard(53)+`</div></div>`
+    +`</div>`;
+  const c916=`<div class="brk-scroll">`
+    +brkCol('9\u201316 Round 1',[33,34,35,36])
+    +`<div class="brk-col"><div class="brk-colhead">Semifinals</div><div class="brk-cards">`+brkCard(43)+brkCard(44)+brkCard(41)+brkCard(42)+`</div></div>`
+    +`<div class="brk-col"><div class="brk-colhead">Placement</div><div class="brk-cards">`+brkCard(52)+brkCard(51)+brkCard(50)+brkCard(49)+`</div></div>`
+    +`</div>`;
+  return `<div class="brk-wrap">`
+    +`<div class="brk-sec"><div class="brk-sechd">Championship</div>${champ}</div>`
+    +`<div class="brk-sec"><div class="brk-sechd">5\u20138 Classification</div>${c58}</div>`
+    +`<div class="brk-sec"><div class="brk-sechd">9\u201316 Classification</div>${c916}</div>`
+    +`</div>`;
+}
 function bigBoardView(){
   const ids=bigBoardIds();
   if(!ids.length) return '<div class="empty"><div class="big">Your big board is empty</div>Give players a star rating in their profile (or bookmark them) and they\'ll appear here, ranked 5\u2605 first \u2014 then drag to fine-tune.</div>';
@@ -1651,6 +1733,7 @@ function renderView(){
   const pBtn=$("#posBtn"); if(pBtn){ pBtn.classList.toggle("on", state.posRel); const pl=$("#posLabel"); if(pl) pl.textContent = state.posRel?"By position":"By field"; }
   const wB=$("#watchBtn"); if(wB) wB.classList.toggle("on", isScoutFilter(state.filter));
   const bB=$("#bbBtn"); if(bB){ bB.classList.toggle("on", state.view==="bigboard"); const bc=$("#bbCount"); if(bc){ const nb=bigBoardIds().length; bc.hidden=nb===0; bc.textContent=nb; } }
+  const brB=$("#brkBtn"); if(brB) brB.classList.toggle("on", state.view==="bracket");
   updateWatchCount();
   const board = $("#board"); board.innerHTML="";
 
@@ -1717,6 +1800,13 @@ function renderView(){
     return;
   }
 
+  if(state.view==="bracket"){
+    $("#secTitle").textContent="Bracket";
+    const cEl=$("#secCount"); if(cEl) cEl.hidden=true;
+    $("#secMeta").innerHTML='Final phase \u2014 Round of 16 through the Final, plus 5\u20138 and 9\u201316 classification. Slots resolve to winners as games are played.';
+    board.innerHTML=bracketView();
+    return;
+  }
   if(state.view==="bigboard"){
     $("#secTitle").textContent="Big board";
     const ids=bigBoardIds(); const cEl=$("#secCount"); cEl.hidden=false; cEl.textContent=ids.length+" player"+(ids.length!==1?"s":"");
@@ -2226,6 +2316,12 @@ if($("#bbBtn")) $("#bbBtn").onclick = ()=>{
   const sb=$("#search"); if(sb) sb.value="";
   if(activeId) closeDrawer(); else render();
 };
+if($("#brkBtn")) $("#brkBtn").onclick = ()=>{
+  state.view = state.view==="bracket" ? "board" : "bracket";
+  state.team=null; state.query=""; state.filter=null;
+  const sb=$("#search"); if(sb) sb.value="";
+  if(activeId) closeDrawer(); else render();
+};
 if($("#posBtn")) $("#posBtn").onclick = ()=>{ state.posRel=!state.posRel; if(activeId) openPlayer(activeId); render(); };
 if($("#themeBtn")) $("#themeBtn").onclick = ()=>{ const dark=document.documentElement.getAttribute("data-theme")==="dark"; applyTheme(dark?"light":"dark"); if(activeId) openPlayer(activeId); render(); };
 
@@ -2240,6 +2336,7 @@ function currentHash(){
   if(state.view==="stats") return "#stats";
   if(state.view==="charts") return "#charts";
   if(state.view==="bigboard") return "#bigboard";
+  if(state.view==="bracket") return "#bracket";
   if(state.filter && state.filter.type==="watch") return "#watchlist";
   if(state.team) return "#t/"+state.team;
   return "";
@@ -2266,6 +2363,7 @@ function routeTo(h){
   if(h==="#stats"){ state.view="stats"; state.team=null; state.filter=null; }
   else if(h==="#charts"){ state.view="charts"; state.team=null; state.filter=null; }
   else if(h==="#bigboard"){ state.view="bigboard"; state.team=null; state.filter=null; }
+  else if(h==="#bracket"){ state.view="bracket"; state.team=null; state.filter=null; }
   else if(h==="#watchlist"){ state.view="board"; state.team=null; state.filter={type:"watch",value:"1",label:"Watchlist"}; }
   else if(tm && D.teams.some(t=>t.id===tm[1])){ state.view="board"; state.team=tm[1]; state.filter=null; }
   else { state.view="board"; state.team=null; state.filter=null; }
