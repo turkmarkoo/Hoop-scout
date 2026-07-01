@@ -134,7 +134,7 @@ input,textarea{font-family:inherit}
 .statline .s:last-child{border-right:0}
 .statline .v{font-family:var(--mono); font-weight:600; font-size:16px; color:var(--text)}
 .statline .k{font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted-2); margin-top:2px}
-.badges{position:absolute; top:12px; right:12px; display:flex; gap:6px; align-items:center}
+.badges{position:absolute; top:42px; right:11px; display:flex; flex-direction:column; gap:5px; align-items:flex-end}
 .notedot{width:9px; height:9px; border-radius:50%; background:var(--sage); box-shadow:0 0 0 3px rgba(111,163,155,.18)}
 .rate-chip{font-family:var(--mono); font-size:11px; font-weight:600; color:var(--clay-deep); display:flex; align-items:center; gap:2px}
 .sample-tag{font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--warn); border:1px solid var(--warn); border-radius:4px; padding:1px 4px}
@@ -315,7 +315,11 @@ button.brand:hover .mark b{color:var(--clay-deep)}
 .home-note{color:var(--muted);font-size:13px;margin:0 0 14px;font-family:var(--mono)}
 .home-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:12px}
 .gamecard .gc-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.gamecard .gc-teams{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;font-family:var(--disp);font-size:16px}
+.gamecard .gc-teams{display:flex;align-items:center;gap:8px;margin-top:10px;font-family:var(--disp);font-size:16px}
+.gc-tn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gc-tn:last-child{text-align:right}
+.gc-score{flex:none;font-family:var(--mono);font-weight:700;font-size:15px;color:var(--text)}
+.gc-time{flex:none;font-family:var(--mono);font-weight:600;font-size:12px;color:var(--sage)}
 .win-name{font-weight:700;color:var(--text)}
 .lose-name{font-weight:500;color:var(--muted)}
 a.gamecard{text-decoration:none;color:inherit;display:block;transition:border-color .12s,transform .12s}
@@ -620,6 +624,11 @@ html[data-theme="dark"] .venue-chip.v-N{background:#1F2E33;color:#8FC3D2}
 .chip-btn.vfil.on{background:var(--clay);border-color:var(--clay);color:#fff}
 .chip-btn.vfil.on:hover{background:var(--clay-deep);color:#fff}
 .groups{gap:14px 22px}
+.brk-flag{width:20px;height:14px;border-radius:3px;overflow:hidden;flex:none;display:inline-block;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+.brk-flag img{width:100%;height:100%;object-fit:cover;display:block}
+.leg-flag{width:18px;height:12px;border-radius:2px;object-fit:cover;vertical-align:middle;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+.today-chip{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--clay);border-radius:5px;padding:2px 7px;margin-left:2px;vertical-align:middle}
+.scatter .cdotf{cursor:pointer}
 .grp.pairing h3.pair-h{justify-content:flex-start;flex-wrap:wrap;gap:6px;text-transform:none;letter-spacing:.01em}
 .grp.pairing h3.pair-h::before{display:none}
 .pair-when{font-family:var(--mono);font-size:10px;color:var(--muted-2);font-weight:500;letter-spacing:0}
@@ -746,6 +755,8 @@ function hasContent(n){ return !!(n && ((n.nAth&&n.nAth.trim()) || (n.nOff&&n.nO
 const IMG = pid => pid ? `https://assets.fiba.basketball/image/upload/c_fill,g_face,w_200,h_200/q_auto/f_auto/.headshot--person_${pid}--competition_208545` : "";
 const avatarHTML = (p,cls)=>{ const u=IMG(p.pid); return u?`<img class="${cls}" loading="lazy" src="${u}" alt="" onerror="this.remove()">`:""; };
 const codeToTeam = code => D.teams.find(t=>t.code===code);
+const TEAM_ISO={ITA:'it',USA:'us',FRA:'fr',JPN:'jp',CMR:'cm',CAN:'ca',LTU:'lt',CHN:'cn',NZL:'nz',SLO:'si',PUR:'pr',TUR:'tr',VEN:'ve',AUS:'au',SRB:'rs',CIV:'ci'};
+function FLAG(code,w){ const iso=TEAM_ISO[code]; return iso?('https://flagcdn.com/w'+(w||40)+'/'+iso+'.png'):''; }
 
 const GAME_BASE = (D.event && D.event.url ? D.event.url : "") + "/games/";
 function gameUrl(g){ return GAME_BASE + g.id + "-" + g.a + "-" + g.b; }
@@ -915,9 +926,6 @@ function schedGames(){
 }
 function schedCard(e){
   const venue=e.venue?('<span class="venue-chip v-'+venShort(e.venue)+'" title="'+chEsc(e.venue)+'">'+venLabel(e.venue)+'</span>'):'';
-  let badge;
-  if(e.final) badge='<span class="sc">'+e.sa+'\u2013'+e.sb+'</span> <span class="gst final">Final</span>';
-  else badge='<span class="gst upcoming">'+koGameTime(e.time)+'</span>';
   let aName,bName,aCls,bCls;
   if(e.kind==='group'){ const A=codeToTeam(e.a),B=codeToTeam(e.b);
     aName=chEsc(A?A.name:e.a); bName=chEsc(B?B.name:e.b);
@@ -927,10 +935,12 @@ function schedCard(e){
     aCls=e.final&&e.sa>e.sb?'win-name':((A.resolved&&A.code)?'lose-name':'tbd-name');
     bCls=e.final&&e.sb>e.sa?'win-name':((B.resolved&&B.code)?'lose-name':'tbd-name');
   }
+  const mid = e.final ? '<span class="gc-score">'+e.sa+'\u2013'+e.sb+'</span>'
+                      : '<span class="gc-time">'+koGameTime(e.time)+'</span>';
   const href=e.url?(' href="'+e.url+'" target="_blank" rel="noopener"'):'';
   return '<a class="panelcard gamecard"'+href+' title="Open on FIBA \u2197">'
-    +'<div class="gc-top"><span class="cd">'+chEsc(e.label)+'</span>'+venue+badge+'</div>'
-    +'<div class="gc-teams"><span class="'+aCls+'">'+aName+'</span><span class="cd">vs</span><span class="'+bCls+'">'+bName+'</span></div></a>';
+    +'<div class="gc-top"><span class="cd">'+chEsc(e.label)+'</span>'+venue+'</div>'
+    +'<div class="gc-teams"><span class="gc-tn '+aCls+'">'+aName+'</span>'+mid+'<span class="gc-tn '+bCls+'">'+bName+'</span></div></a>';
 }
 function homeNote(){
   const upd=D.updated?new Date(D.updated).toUTCString().replace('GMT','UTC'):'';
@@ -946,10 +956,16 @@ function homeView(){
   let games=schedGames();
   if(state.venueFilter) games=games.filter(g=>venShort(g.venue)===state.venueFilter);
   const byDate={}; games.forEach(g=>{(byDate[g.date]=byDate[g.date]||[]).push(g);});
-  const dates=Object.keys(byDate).sort().reverse();
+  const pad=n=>String(n).padStart(2,'0'); const now=new Date();
+  const todayStr=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  const allDates=Object.keys(byDate);
+  const upcoming=allDates.filter(d=>d>=todayStr).sort();
+  const past=allDates.filter(d=>d<todayStr).sort().reverse();
+  const dates=upcoming.concat(past);
   const blocks=dates.map(d=>{
     const day=byDate[d].slice().sort((a,b)=>String(a.time||'').localeCompare(String(b.time||'')));
-    return '<div class="day-block"><div class="day-label">'+fmtDate(d)+'</div><div class="home-results">'+day.map(schedCard).join('')+'</div></div>';
+    const chip=(d===todayStr)?' <span class="today-chip">Today</span>':'';
+    return '<div class="day-block"><div class="day-label">'+fmtDate(d)+chip+'</div><div class="home-results">'+day.map(schedCard).join('')+'</div></div>';
   }).join('');
   const empty=!games.length?'<p class="muted-note" style="margin:10px 0">No games at this venue.</p>':'';
   return '<div class="home-note">'+homeNote()+'</div>'
@@ -1392,10 +1408,11 @@ function chColor(p){ const mode=state.chartColor;
   if(mode==="pos") return POS_COL[(p.pos||"").charAt(0)]||"#A0A6B0";
   if(mode==="group"){ const g=teamById(p.teamId).group; return GRP_COL[g]||"#A0A6B0"; }
   const idx=D.teams.findIndex(t=>t.id===p.teamId); return TEAM_PAL[((idx%TEAM_PAL.length)+TEAM_PAL.length)%TEAM_PAL.length]||"#A0A6B0"; }
-function chLegend(){ const mode=state.chartColor; let items;
+function chLegend(){ const mode=state.chartColor;
+  if(mode==="team"){ return '<div class="chleg">'+D.teams.map(t=>'<span class="chl">'+(FLAG(t.code)?'<img class="leg-flag" src="'+FLAG(t.code,40)+'" alt="" loading="lazy">':'')+chEsc(t.code)+'</span>').join('')+'</div>'; }
+  let items;
   if(mode==="pos") items=[["Guards",POS_COL.G],["Forwards",POS_COL.F],["Centers",POS_COL.C]];
-  else if(mode==="group") items=["A","B","C","D"].map(g=>["Group "+g,GRP_COL[g]]);
-  else items=D.teams.map((t,i)=>[t.code,TEAM_PAL[i%TEAM_PAL.length]]);
+  else items=["A","B","C","D"].map(g=>["Group "+g,GRP_COL[g]]);
   return '<div class="chleg">'+items.map(it=>'<span class="chl"><span class="sw" style="background:'+it[1]+'"></span>'+chEsc(it[0])+'</span>').join('')+'</div>'; }
 function scatterSVG(){
   const xk=state.chartX, yk=state.chartY;
@@ -1416,10 +1433,22 @@ function scatterSVG(){
   g+='<line class="cmean" x1="'+X(xmean).toFixed(1)+'" y1="'+mT+'" x2="'+X(xmean).toFixed(1)+'" y2="'+(mT+PH)+'"/>';
   g+='<line class="cmean" x1="'+mL+'" y1="'+Y(ymean).toFixed(1)+'" x2="'+(mL+PW)+'" y2="'+Y(ymean).toFixed(1)+'"/>';
   const xl=chLabel(xk), yl=chLabel(yk);
-  pts.forEach(d=>{ g+='<circle class="cdot" cx="'+X(d.x).toFixed(1)+'" cy="'+Y(d.y).toFixed(1)+'" r="5" fill="'+chColor(d.p)+'" data-id="'+d.p.id+'" data-nm="'+chEsc(d.p.name)+'" data-xl="'+chEsc(xl)+'" data-yl="'+chEsc(yl)+'" data-xv="'+chFmt(xk,d.x)+'" data-yv="'+chFmt(yk,d.y)+'"><title>'+chEsc(d.p.name)+' - '+chEsc(yl)+' '+chFmt(yk,d.y)+', '+chEsc(xl)+' '+chFmt(xk,d.x)+'</title></circle>'; });
+  const useFlag=state.chartColor==="team";
+  pts.forEach(d=>{ const cx=X(d.x).toFixed(1), cy=Y(d.y).toFixed(1), col=chColor(d.p), t=teamById(d.p.teamId);
+    const dat='data-id="'+d.p.id+'" data-nm="'+chEsc(d.p.name)+'" data-xl="'+chEsc(xl)+'" data-yl="'+chEsc(yl)+'" data-xv="'+chFmt(xk,d.x)+'" data-yv="'+chFmt(yk,d.y)+'"';
+    const ttl='<title>'+chEsc(d.p.name)+' - '+chEsc(yl)+' '+chFmt(yk,d.y)+', '+chEsc(xl)+' '+chFmt(xk,d.x)+'</title>';
+    const fl=useFlag?FLAG(t.code,40):'';
+    if(fl){ const r=7.5;
+      g+='<g class="cdot cdotf" '+dat+'>'+ttl
+        +'<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+col+'" stroke="#fff" stroke-width="1.2"/>'
+        +'<image href="'+fl+'" x="'+(cx-r)+'" y="'+(cy-r)+'" width="'+(r*2)+'" height="'+(r*2)+'" preserveAspectRatio="xMidYMid slice" clip-path="url(#flagClip)"/></g>';
+    } else {
+      g+='<circle class="cdot" cx="'+cx+'" cy="'+cy+'" r="5" fill="'+col+'" '+dat+'>'+ttl+'</circle>';
+    }
+  });
   g+='<text class="cttl" x="'+(mL+PW/2)+'" y="'+(H-7)+'" text-anchor="middle">'+chEsc(xl)+'</text>';
   g+='<text class="cttl" x="14" y="'+(mT+PH/2)+'" text-anchor="middle" transform="rotate(-90 14 '+(mT+PH/2)+')">'+chEsc(yl)+'</text>';
-  return '<svg class="scatter" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scatter plot">'+g+'</svg>';
+  return '<svg class="scatter" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Scatter plot"><defs><clipPath id="flagClip" clipPathUnits="objectBoundingBox"><circle cx="0.5" cy="0.5" r="0.5"/></clipPath></defs>'+g+'</svg>';
 }
 function chartsView(){
   const modes=[["scatter","Scatter"],["board","Leaderboards"],["compare","Compare"],["hist","Distribution"],["lineups","Lineups"]];
@@ -1557,7 +1586,7 @@ function brkCard(num){
   const played=g.st==='VALID'&&g.sa!=null&&g.sb!=null&&g.a&&g.b;
   const aW=played&&g.sa>g.sb, bW=played&&g.sb>g.sa;
   const slot=(S,win,score)=>`<div class="brk-slot${win?' win':''}${(S.resolved&&S.code)?'':' tbd'}">`
-    +(S.code?`<span class="brk-dot" style="background:${brkColor(S.code)}"></span>`:`<span class="brk-dot ghost"></span>`)
+    +(S.code?`<span class="brk-flag" style="background:${brkColor(S.code)}">${FLAG(S.code)?`<img src="${FLAG(S.code,40)}" alt="" loading="lazy" onerror="this.remove()">`:``}</span>`:`<span class="brk-dot ghost"></span>`)
     +`<span class="brk-tm">${chEsc(S.label)}</span>`
     +(played?`<span class="brk-sc">${score}</span>`:``)+`</div>`;
   return `<div class="brk-card${played?' done':''}">`
@@ -1793,7 +1822,9 @@ function statsView(){
 }
 
 function renderView(){
-  renderGroups();
+  const showRail = state.view==="board" && !isScoutFilter(state.filter);
+  if(showRail) renderGroups(); else { const gr=$("#groups"); if(gr) gr.innerHTML=""; }
+  const dv=document.querySelector(".divider"); if(dv) dv.style.display=showRail?"":"none";
   const sBtn=$("#statsBtn"); if(sBtn) sBtn.classList.toggle("on", state.view==="stats");
   const cBtn=$("#chartsBtn"); if(cBtn) cBtn.classList.toggle("on", state.view==="charts");
   const pBtn=$("#posBtn"); if(pBtn){ pBtn.classList.toggle("on", state.posRel); const pl=$("#posLabel"); if(pl) pl.textContent = state.posRel?"By position":"By field"; }
