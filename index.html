@@ -560,6 +560,29 @@ a.logopp:hover{text-decoration:underline}
 .avg .a.clk:active,.shoot .a.clk:active{transform:scale(.96)}
 .tlb.plb .tlb-card{overflow:hidden}
 .tlb.plb .tlb-list{max-height:64vh;overflow:auto;margin-top:10px}
+.sfb .tlb-card{overflow:auto}
+.sf-plabel{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted-2);margin:14px 0 6px}
+.sf-presets{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.sf-preset{border:1px solid var(--line);background:var(--panel-2);color:var(--text);border-radius:999px;padding:5px 11px;font-size:12px;cursor:pointer;transition:border-color .12s,background .12s}
+.sf-preset:hover{border-color:var(--clay);background:var(--clay-soft)}
+.sf-rows{display:flex;flex-direction:column;gap:2px;margin:2px 0 4px}
+.sf-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sf-sel,.sf-num,.sf-txt{height:34px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;font:inherit;font-size:13px;padding:0 8px;outline:none}
+.sf-sel:focus,.sf-num:focus,.sf-txt:focus{border-color:var(--clay)}
+.sf-op{width:56px;text-align:center}
+.sf-num{width:88px}
+.sf-txt{flex:1;min-width:120px}
+.sf-unit{font-size:12px;color:var(--muted-2);font-family:var(--mono)}
+.sf-rm{width:28px;height:28px;flex:none;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:7px;cursor:pointer;font-size:12px;line-height:1;margin-left:auto}
+.sf-rm:hover{border-color:var(--clay);color:var(--clay)}
+.sf-add{margin-top:8px;border:1px dashed var(--line);background:none;color:var(--muted);border-radius:8px;padding:8px 12px;font:inherit;font-size:13px;cursor:pointer;width:100%}
+.sf-add:hover{border-color:var(--clay);color:var(--clay)}
+.sf-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap}
+.sf-count{font-size:13px;color:var(--muted);font-family:var(--mono)}
+.sf-actions{display:flex;gap:8px}
+.sf-apply{background:var(--clay);color:#fff;border-color:var(--clay)}
+.sf-apply:hover{background:var(--clay-deep);border-color:var(--clay-deep)}
+.filt-desc{color:var(--muted)}
 .tlb-sub2{font-size:11px;color:var(--muted-2);font-family:var(--body);font-weight:500}
 .gloss{max-width:840px}
 .gl-lead{font-size:13.5px;color:var(--muted);line-height:1.55;margin:2px 0 6px;max-width:720px}
@@ -784,6 +807,9 @@ html[data-theme="dark"] .tg{color:#E3C7A0}
         <button class="btn" id="brkBtn" title="Final-phase bracket — Round of 16 through the Final, plus 5–8 and 9–16 classification">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h6M3 5v14M3 19h6M9 8h5v8H9M14 12h4M18 9v6"/></svg>Bracket
         </button>
+        <button class="btn" id="sfBtn" title="Build a smart filter - combine position, height and stat thresholds">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18l-7 8v6l-4-2v-4z"/></svg>Filter
+        </button>
         <button class="btn" id="posBtn" title="Rank players and badges within their own position (guards vs guards, etc.) instead of against the whole field">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="3.2"/><path d="M5.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M3 11h3M18 11h3"/></svg><span id="posLabel">By field</span>
         </button>
@@ -809,6 +835,7 @@ html[data-theme="dark"] .tg{color:#E3C7A0}
 <div class="scrim" id="scrim"></div>
 <div class="tlb" id="tlb" aria-hidden="true"><div class="tlb-back" onclick="closeTeamLeaderboard()"></div><div class="tlb-card" id="tlbCard" role="dialog" aria-modal="true"></div></div>
 <div class="tlb plb" id="plb" aria-hidden="true"><div class="tlb-back" onclick="closePlayerLb()"></div><div class="tlb-card" id="plbCard" role="dialog" aria-modal="true"></div></div>
+<div class="tlb sfb" id="sfb" aria-hidden="true"><div class="tlb-back" onclick="closeSmartFilter()"></div><div class="tlb-card" id="sfbCard" role="dialog" aria-modal="true"></div></div>
 <aside class="drawer" id="drawer" aria-hidden="true"></aside>
 <div class="toast" id="toast"></div>
 
@@ -1285,6 +1312,7 @@ function matchesFilter(p,f){
   if(f.type==="untagged"){ const nn=NOTES[p.id]; return !!(nn&&(nn.watch||nn.rating>0||(nn.text&&nn.text.trim()))&&!(nn.tags&&nn.tags.length)); }
   if(f.type==="notes"){ const nn=NOTES[p.id]; return !!(nn&&nn.text&&nn.text.trim()); }
   if(f.type==="unseen"){ const nn=NOTES[p.id]; return !hasContent(nn) && !(nn&&nn.watch); }
+  if(f.type==="smart"){ let conds; try{ conds=JSON.parse(f.value); }catch(e){ return false; } return smartMatch(p,conds); }
   return false;
 }
 function filterTitle(f){
@@ -1292,6 +1320,7 @@ function filterTitle(f){
   if(f.type==="group") return "Group "+f.value;
   if(f.type==="birthYear") return "Born "+f.value;
   if(f.type==="young") return "Young for the level \u00b7 born 2010+";
+  if(f.type==="smart") return "Custom filter";
   const sf=SCOUT_FILTERS.find(s=>s[0]===f.type); if(sf) return sf[1];
   return f.label || f.value;
 }
@@ -2132,6 +2161,7 @@ function renderView(){
   const bB=$("#bbBtn"); if(bB){ bB.classList.toggle("on", state.view==="bigboard"); const bc=$("#bbCount"); if(bc){ const nb=bigBoardIds().length; bc.hidden=nb===0; bc.textContent=nb; } }
   const brB=$("#brkBtn"); if(brB) brB.classList.toggle("on", state.view==="bracket");
   const glB=$("#glosBtn"); if(glB) glB.classList.toggle("on", state.view==="glossary");
+  const sfB=$("#sfBtn"); if(sfB) sfB.classList.toggle("on", !!(state.filter&&state.filter.type==="smart"));
   updateWatchCount();
   const board = $("#board"); board.innerHTML="";
 
@@ -2253,7 +2283,7 @@ function renderView(){
       list.sort((a,b)=>((b.stats?.ppg??-1)-(a.stats?.ppg??-1)) || a.name.localeCompare(b.name));
     }
     title = filterTitle(f); count = list.length;
-    meta = `<a href="#" onclick="clearFilter();return false">clear ✕</a>`;
+    meta = (f.type==="smart" ? (chEsc(f.label||"")+' · <a href="#" onclick="openSmartFilter();return false">edit</a> · ') : "") + '<a href="#" onclick="clearFilter();return false">clear ✕</a>';
   } else {
     title = "Schedule & results"; list=null;
   }
@@ -2320,6 +2350,101 @@ function renderMatchup(){
   const sel=document.getElementById('matchSel'); if(sel) sel.onchange=()=>{ if(!sel.value) return; setMatchTeam('a',sel.value); openTeamFromMatch(state.matchA); };
   box.querySelectorAll('.mchip').forEach(c=>{ c.onclick=()=>openTeamFromMatch(c.dataset.mt); });
 }
+/* ---------- smart compound filters ---------- */
+const SMART_FIELDS=[
+  ["pos","Position","pos"],
+  ["height","Height","height"],
+  ["birthYear","Birth year","year"],
+  ["ppg","Points / g","num"],["rpg","Rebounds / g","num"],["apg","Assists / g","num"],
+  ["spg","Steals / g","num"],["bpg","Blocks / g","num"],["tpg","Turnovers / g","num"],
+  ["mpg","Minutes / g","num"],["orpg","OReb / g","num"],["drpg","DReb / g","num"],["stk","Stocks / g","num"],
+  ["fgPct","FG%","pct01"],["tpPct","3P%","pct01"],["ftPct","FT%","pct01"],
+  ["ts","TS%","pct01"],["efg","eFG%","pct01"],["rimfg","Rim FG%","pct01"],["tovpct","TOV%","pct01"],
+  ["usg","Usage%","num100"],["astratio","Assist ratio","num100"],["scshare","Scoring share","num100"],["astto","A/TO","num"],
+  ["tag","My tag","tag"]
+];
+const SMART_FIELD_MAP=Object.fromEntries(SMART_FIELDS.map(f=>[f[0],f]));
+const SMART_PRESETS=[
+  ["Crafty guards \u2265188cm, 3P>35%", [{f:"pos",op:"is",v:"G"},{f:"height",op:"gte",v:"188"},{f:"tpPct",op:"gte",v:"35"}]],
+  ["Tall shooters \u2265195cm, 3P\u226535%", [{f:"height",op:"gte",v:"195"},{f:"tpPct",op:"gte",v:"35"}]],
+  ["Rim-running bigs", [{f:"pos",op:"is",v:"C"},{f:"rimfg",op:"gte",v:"60"},{f:"orpg",op:"gte",v:"2"}]],
+  ["Young risers 2010+, 15+ pts", [{f:"birthYear",op:"gte",v:"2010"},{f:"ppg",op:"gte",v:"15"}]],
+  ["3&D wings", [{f:"pos",op:"is",v:"F"},{f:"tpPct",op:"gte",v:"34"},{f:"stk",op:"gte",v:"1.5"}]],
+  ["High-usage creators", [{f:"usg",op:"gte",v:"24"},{f:"astratio",op:"gte",v:"15"}]]
+];
+function smartFieldVal(p,key,kind){
+  if(kind==="pos") return p.pos||"";
+  if(kind==="height") return p.height||null;
+  if(kind==="year") return p.birthYear||null;
+  const v=metric(p,key);
+  if(v===-Infinity||v==null||(typeof v==="number"&&isNaN(v))) return null;
+  return kind==="pct01" ? v*100 : v;
+}
+function smartMatch(p,conds){
+  if(!conds||!conds.length) return true;
+  return conds.every(c=>{
+    const fld=SMART_FIELD_MAP[c.f]; if(!fld) return true; const kind=fld[2];
+    if(c.op==="is"){ return (p.pos||"")===c.v; }
+    if(c.op==="has"){ const tags=(NOTES[p.id]&&NOTES[p.id].tags)||[]; const q=String(c.v||"").toLowerCase().trim(); return q?tags.some(t=>String(t).toLowerCase().includes(q)):true; }
+    const val=smartFieldVal(p,c.f,kind); if(val==null) return false;
+    const num=parseFloat(c.v); if(isNaN(num)) return true;
+    if(c.op==="gte") return val>=num;
+    if(c.op==="lte") return val<=num;
+    return true;
+  });
+}
+function smartDescribe(conds){
+  const sym={gte:"\u2265",lte:"\u2264"};
+  return (conds||[]).map(c=>{ const fld=SMART_FIELD_MAP[c.f]; if(!fld) return "";
+    if(c.f==="pos") return ({G:"Guards",F:"Forwards",C:"Centers"}[c.v]||("Pos "+c.v));
+    if(c.f==="tag") return "tag \u201c"+c.v+"\u201d";
+    const suff=fld[2]==="pct01"?"%":(c.f==="height"?" cm":"");
+    return fld[1]+" "+(sym[c.op]||c.op)+" "+c.v+suff;
+  }).filter(Boolean).join(" \u00b7 ");
+}
+function sfDefaultOp(kind){ return kind==="pos"?"is":kind==="tag"?"has":"gte"; }
+function sfDefaultVal(kind){ return kind==="pos"?"G":kind==="tag"?"":kind==="height"?"190":kind==="year"?"2010":kind==="pct01"?"35":kind==="num100"?"20":"10"; }
+function sfFieldSel(i,c){ return '<select class="sf-sel" onchange="sfSetField('+i+',this.value)">'+SMART_FIELDS.map(f=>'<option value="'+f[0]+'"'+(f[0]===c.f?" selected":"")+'>'+f[1]+'</option>').join("")+'</select>'; }
+function sfOpSel(i,c){ const kind=SMART_FIELD_MAP[c.f][2]; const ops=kind==="pos"?[["is","is"]]:kind==="tag"?[["has","contains"]]:[["gte","\u2265"],["lte","\u2264"]]; return '<select class="sf-sel sf-op" onchange="sfSetOp('+i+',this.value)">'+ops.map(o=>'<option value="'+o[0]+'"'+(o[0]===c.op?" selected":"")+'>'+o[1]+'</option>').join("")+'</select>'; }
+function sfValInput(i,c){ const kind=SMART_FIELD_MAP[c.f][2];
+  if(kind==="pos"){ return '<select class="sf-sel" onchange="sfSetVal('+i+',this.value)">'+[["G","Guards"],["F","Forwards"],["C","Centers"]].map(o=>'<option value="'+o[0]+'"'+(o[0]===c.v?" selected":"")+'>'+o[1]+'</option>').join("")+'</select>'; }
+  if(kind==="tag"){ return '<input class="sf-txt" type="text" value="'+chEsc(String(c.v||""))+'" placeholder="e.g. crafty" oninput="sfSetVal('+i+',this.value)">'; }
+  const unit=kind==="pct01"?"%":(c.f==="height"?"cm":"");
+  return '<input class="sf-num" type="number" step="any" value="'+chEsc(String(c.v))+'" oninput="sfSetVal('+i+',this.value)">'+(unit?'<span class="sf-unit">'+unit+'</span>':""); }
+function renderSFB(){
+  const card=document.getElementById("sfbCard"); if(!card) return;
+  const conds=state.sfConds||[];
+  const rows=conds.map((c,i)=>'<div class="sf-row">'+sfFieldSel(i,c)+sfOpSel(i,c)+sfValInput(i,c)+'<button class="sf-rm" title="Remove condition" onclick="sfRemoveCond('+i+')">\u2715</button></div>').join("");
+  const presets=SMART_PRESETS.map((p,i)=>'<button class="sf-preset" onclick="sfLoadPreset('+i+')">'+chEsc(p[0])+'</button>').join("");
+  card.innerHTML='<div class="tlb-h"><div><div class="tlb-title">Build a filter</div><div class="tlb-sub">Combine position, height and stat thresholds \u2014 every condition must match</div></div>'
+    +'<button type="button" class="tlb-x" onclick="closeSmartFilter()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>'
+    +'<div class="sf-plabel">Quick starts</div><div class="sf-presets">'+presets+'</div>'
+    +'<div class="sf-rows">'+rows+'</div>'
+    +'<button class="sf-add" onclick="sfAddCond()">+ Add condition</button>'
+    +'<div class="sf-foot"><span class="sf-count" id="sfCount"></span><div class="sf-actions"><button class="btn sf-cancel" onclick="closeSmartFilter()">Cancel</button><button class="btn sf-apply" onclick="applySmartFilter()">Show players</button></div></div>';
+  sfUpdateCount();
+}
+function sfUpdateCount(){ const el=document.getElementById("sfCount"); if(!el) return; const n=D.players.filter(p=>smartMatch(p,state.sfConds||[])).length; el.textContent=n+" player"+(n!==1?"s":"")+" match"; }
+function sfAddCond(){ (state.sfConds=state.sfConds||[]).push({f:"ppg",op:"gte",v:"12"}); renderSFB(); }
+function sfRemoveCond(i){ state.sfConds.splice(i,1); if(!state.sfConds.length) state.sfConds.push({f:"pos",op:"is",v:"G"}); renderSFB(); }
+function sfSetField(i,val){ const kind=SMART_FIELD_MAP[val][2]; state.sfConds[i]={f:val,op:sfDefaultOp(kind),v:sfDefaultVal(kind)}; renderSFB(); }
+function sfSetOp(i,val){ state.sfConds[i].op=val; sfUpdateCount(); }
+function sfSetVal(i,val){ state.sfConds[i].v=val; sfUpdateCount(); }
+function sfLoadPreset(i){ state.sfConds=SMART_PRESETS[i][1].map(c=>({f:c.f,op:c.op,v:c.v})); renderSFB(); }
+function openSmartFilter(){
+  if(state.filter&&state.filter.type==="smart"){ try{ state.sfConds=JSON.parse(state.filter.value); }catch(e){} }
+  if(!state.sfConds||!state.sfConds.length) state.sfConds=[{f:"pos",op:"is",v:"G"}];
+  renderSFB(); const el=document.getElementById("sfb"); if(el){ el.classList.add("on"); el.setAttribute("aria-hidden","false"); }
+}
+function closeSmartFilter(){ const el=document.getElementById("sfb"); if(el){ el.classList.remove("on"); el.setAttribute("aria-hidden","true"); } }
+function applySmartFilter(){
+  const conds=(state.sfConds||[]).filter(c=>c&&c.f); if(!conds.length){ closeSmartFilter(); return; }
+  state.team=null; state.query=""; const sb=$("#search"); if(sb) sb.value=""; state.view="board";
+  state.filter={type:"smart",value:JSON.stringify(conds),label:smartDescribe(conds)};
+  closeSmartFilter(); if(activeId) closeDrawer(); render();
+  try{ window.scrollTo({top:0,behavior:"smooth"}); }catch(e){}
+}
+
 function render(){ renderView(); renderMatchup(); writeHash(); }
 
 /* ---------- drawer ---------- */
@@ -2710,7 +2835,7 @@ function closeDrawer(){
   $("#scrim").classList.remove("on"); activeId=null; render();
 }
 $("#scrim").onclick = closeDrawer;
-document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ const pl=document.getElementById("plb"); if(pl&&pl.classList.contains("on")){ e.stopPropagation(); closePlayerLb(); return; } const el=document.getElementById("tlb"); if(el&&el.classList.contains("on")){ e.stopPropagation(); closeTeamLeaderboard(); } } }, true);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ const sf=document.getElementById("sfb"); if(sf&&sf.classList.contains("on")){ e.stopPropagation(); closeSmartFilter(); return; } const pl=document.getElementById("plb"); if(pl&&pl.classList.contains("on")){ e.stopPropagation(); closePlayerLb(); return; } const el=document.getElementById("tlb"); if(el&&el.classList.contains("on")){ e.stopPropagation(); closeTeamLeaderboard(); } } }, true);
 $("#brand").onclick = goHome;
 
 /* ---------- cloud sync (Firebase) glue ---------- */
@@ -2794,6 +2919,7 @@ if($("#glosBtn")) $("#glosBtn").onclick = ()=>{
   const sb=$("#search"); if(sb) sb.value="";
   if(activeId) closeDrawer(); else render();
 };
+if($("#sfBtn")) $("#sfBtn").onclick = openSmartFilter;
 if($("#posBtn")) $("#posBtn").onclick = ()=>{ state.posRel=!state.posRel; if(activeId) openPlayer(activeId); render(); };
 if($("#themeBtn")) $("#themeBtn").onclick = ()=>{ const dark=document.documentElement.getAttribute("data-theme")==="dark"; applyTheme(dark?"light":"dark"); if(activeId) openPlayer(activeId); render(); };
 
