@@ -610,6 +610,24 @@ html[data-theme="dark"] .qchip{background:rgba(255,255,255,.04)}
 .brk-slot.win .brk-tm{color:var(--clay-deep);font-weight:800}
 .brk-slot.win .brk-sc{color:var(--clay-deep)}
 .brk-3rd{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+.venue-chip{font-family:var(--mono);font-size:8.5px;letter-spacing:.03em;text-transform:uppercase;padding:2px 6px;border-radius:5px;font-weight:700;white-space:nowrap}
+.venue-chip.v-M{background:#EAE0F0;color:#7A4FA0}
+.venue-chip.v-N{background:#E1EDF0;color:#3F7E90}
+html[data-theme="dark"] .venue-chip.v-M{background:#332845;color:#C9A9E0}
+html[data-theme="dark"] .venue-chip.v-N{background:#1F2E33;color:#8FC3D2}
+.tbd-name{font-weight:500;color:var(--muted-2);font-style:italic}
+.gamecard .gc-top{flex-wrap:wrap}
+.chip-btn.vfil.on{background:var(--clay);border-color:var(--clay);color:#fff}
+.chip-btn.vfil.on:hover{background:var(--clay-deep);color:#fff}
+.groups{gap:14px 22px}
+.grp.pairing h3.pair-h{justify-content:flex-start;flex-wrap:wrap;gap:6px;text-transform:none;letter-spacing:.01em}
+.grp.pairing h3.pair-h::before{display:none}
+.pair-when{font-family:var(--mono);font-size:10px;color:var(--muted-2);font-weight:500;letter-spacing:0}
+.pair-ven{font-family:var(--mono);font-size:8px;letter-spacing:.02em;text-transform:uppercase;padding:1px 5px;border-radius:4px;font-weight:700}
+.pair-ven.v-M{background:#EAE0F0;color:#7A4FA0}
+.pair-ven.v-N{background:#E1EDF0;color:#3F7E90}
+html[data-theme="dark"] .pair-ven.v-M{background:#332845;color:#C9A9E0}
+html[data-theme="dark"] .pair-ven.v-N{background:#1F2E33;color:#8FC3D2}
 .note-area.na-s{min-height:74px;margin-bottom:0;background-image:none}
 .roles{margin:0 0 12px;border:1px solid var(--parch-line);border-radius:10px;background:rgba(255,255,255,.35);overflow:hidden}
 html[data-theme="dark"] .roles{background:rgba(255,255,255,.04)}
@@ -879,37 +897,73 @@ function lineupView(){
     +'<div class="lvh">Best lineup combos</div><div class="lvsub">Highest net rating per 40 among 2\u20133-player units sharing \u2265300s on court together. Net = points for \u2212 against per 40.</div>'
     +'<table class="lvtable"><thead><tr><th>Lineup</th><th>Min</th><th>PF\u2013PA</th><th>Net /40</th></tr></thead><tbody>'+cmRows+'</tbody></table>'
     +'<div class="chartnote">On/off and lineup data come from the 1\u20132 games of play-by-play parsed so far \u2014 directional, not settled.</div>';
-}function neutralGameCard(g){
-  const A=codeToTeam(g.a),B=codeToTeam(g.b);
+}function venShort(v){ return v && v.indexOf('Main')>=0 ? 'M' : v ? 'N' : ''; }
+function venLabel(v){ return v && v.indexOf('Main')>=0 ? 'Main Venue' : v ? 'Nat. Teams Venue' : ''; }
+function koGameTime(dt){ if(!dt) return 'Scheduled'; const d=new Date(dt); if(isNaN(d)) return 'Scheduled'; try{ return d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }catch(e){ return 'Scheduled'; } }
+function schedGames(){
+  const out=[];
+  (D.games||[]).forEach(g=>{ out.push({kind:'group', id:g.id, date:g.date, time:g.time, label:'Group '+g.group,
+    a:g.a, b:g.b, sa:g.sa, sb:g.sb, final:g.status==='final', venue:g.venue, url:gameUrl(g)}); });
+  if(D.bracket && D.bracket.games){ D.bracket.games.forEach(g=>{
+    const date=(g.dt||'').slice(0,10);
+    const label=(D.bracket.rcName&&D.bracket.rcName[g.rc])||g.short||g.rc;
+    const url=(g.a&&g.b)?(GAME_BASE+g.id+'-'+g.a+'-'+g.b):((D.event&&D.event.url)?D.event.url+'/games':'');
+    out.push({kind:'ko', bg:g, id:g.id, date, time:g.dt, label, a:g.a, b:g.b, sa:g.sa, sb:g.sb,
+      final:g.st==='VALID'&&g.sa!=null&&g.sb!=null&&g.a&&g.b, venue:g.venue, url});
+  }); }
+  return out;
+}
+function schedCard(e){
+  const venue=e.venue?('<span class="venue-chip v-'+venShort(e.venue)+'" title="'+chEsc(e.venue)+'">'+venLabel(e.venue)+'</span>'):'';
   let badge;
-  if(g.status==='final') badge=`<span class="sc">${g.sa}–${g.sb}</span> <span class="gst final">Final</span>`;
-  else badge=`<span class="gst upcoming">${gameTime(g)}</span>`;
-  const aw=g.status==='final'&&g.sa>g.sb, bw=g.status==='final'&&g.sb>g.sa;
-  return `<a class="panelcard gamecard" href="${gameUrl(g)}" target="_blank" rel="noopener" title="Open full game stats on FIBA ↗">
-    <div class="gc-top"><span class="cd">Group ${g.group}</span>${badge}</div>
-    <div class="gc-teams"><span class="${aw?'win-name':'lose-name'}">${A?A.name:g.a}</span><span class="cd">vs</span><span class="${bw?'win-name':'lose-name'}">${B?B.name:g.b}</span></div>
-  </a>`;
+  if(e.final) badge='<span class="sc">'+e.sa+'\u2013'+e.sb+'</span> <span class="gst final">Final</span>';
+  else badge='<span class="gst upcoming">'+koGameTime(e.time)+'</span>';
+  let aName,bName,aCls,bCls;
+  if(e.kind==='group'){ const A=codeToTeam(e.a),B=codeToTeam(e.b);
+    aName=chEsc(A?A.name:e.a); bName=chEsc(B?B.name:e.b);
+    aCls=e.final&&e.sa>e.sb?'win-name':'lose-name'; bCls=e.final&&e.sb>e.sa?'win-name':'lose-name';
+  } else { const A=brkSlot(e.bg,'a'),B=brkSlot(e.bg,'b');
+    aName=chEsc(A.label); bName=chEsc(B.label);
+    aCls=e.final&&e.sa>e.sb?'win-name':((A.resolved&&A.code)?'lose-name':'tbd-name');
+    bCls=e.final&&e.sb>e.sa?'win-name':((B.resolved&&B.code)?'lose-name':'tbd-name');
+  }
+  const href=e.url?(' href="'+e.url+'" target="_blank" rel="noopener"'):'';
+  return '<a class="panelcard gamecard"'+href+' title="Open on FIBA \u2197">'
+    +'<div class="gc-top"><span class="cd">'+chEsc(e.label)+'</span>'+venue+badge+'</div>'
+    +'<div class="gc-teams"><span class="'+aCls+'">'+aName+'</span><span class="cd">vs</span><span class="'+bCls+'">'+bName+'</span></div></a>';
 }
 function homeNote(){
   const upd=D.updated?new Date(D.updated).toUTCString().replace('GMT','UTC'):'';
-  return `Group-phase schedule & results — tap a game for full stats${upd?` · snapshot ${upd}`:''}`;
+  return 'Full schedule &amp; results \u2014 group phase and knockout bracket \u00b7 newest at the top'+(upd?' \u00b7 snapshot '+upd:'');
+}
+function setVenue(v){ state.venueFilter=v||null; render(); }
+function venueBar(){
+  const cur=state.venueFilter||'';
+  const chip=(v,lab)=>'<button class="chip-btn vfil'+(cur===v?' on':'')+'" onclick="setVenue(\''+v+'\');return false">'+lab+'</button>';
+  return '<div class="qfbar"><span class="qfl">Venue</span>'+chip('','All venues')+chip('M','BDC Main Venue')+chip('N','BDC National Teams Venue')+'</div>';
 }
 function homeView(){
-  const games=(D.games||[]).slice().sort((a,b)=>(a.date||"").localeCompare(b.date||"")||(a.group||"").localeCompare(b.group||""));
+  let games=schedGames();
+  if(state.venueFilter) games=games.filter(g=>venShort(g.venue)===state.venueFilter);
   const byDate={}; games.forEach(g=>{(byDate[g.date]=byDate[g.date]||[]).push(g);});
-  const blocks=Object.keys(byDate).sort().map(d=>
-    `<div class="day-block"><div class="day-label">${fmtDate(d)}</div><div class="home-results">${byDate[d].map(neutralGameCard).join("")}</div></div>`).join("");
-  return `<div class="home-note">${homeNote()}</div>
-    <div class="qfbar"><span class="qfl">Quick filters</span>
-      <button class="chip-btn" onclick="filterBy('young','1','');return false">Young for level · 2010+</button>
-      <button class="chip-btn" onclick="filterBy('birthYear','2010','');return false">Born 2010</button>
-      <button class="chip-btn" onclick="filterBy('birthYear','2011','');return false">Born 2011</button>
-      <button class="chip-btn" onclick="filterBy('pos','G','Guards');return false">Guards</button>
-      <button class="chip-btn" onclick="filterBy('pos','F','Forwards');return false">Forwards</button>
-      <button class="chip-btn" onclick="filterBy('pos','C','Centers');return false">Centers</button>
-    </div>
-    ${blocks}
-    <p class="muted-note" style="margin-top:16px">Pick any of the 16 teams above for its roster, team profile, best lineups, per-player averages and your scouting notes.</p>`;
+  const dates=Object.keys(byDate).sort().reverse();
+  const blocks=dates.map(d=>{
+    const day=byDate[d].slice().sort((a,b)=>String(a.time||'').localeCompare(String(b.time||'')));
+    return '<div class="day-block"><div class="day-label">'+fmtDate(d)+'</div><div class="home-results">'+day.map(schedCard).join('')+'</div></div>';
+  }).join('');
+  const empty=!games.length?'<p class="muted-note" style="margin:10px 0">No games at this venue.</p>':'';
+  return '<div class="home-note">'+homeNote()+'</div>'
+    + venueBar()
+    + '<div class="qfbar"><span class="qfl">Quick filters</span>'
+      +'<button class="chip-btn" onclick="filterBy(\'young\',\'1\',\'\');return false">Young for level \u00b7 2010+</button>'
+      +'<button class="chip-btn" onclick="filterBy(\'birthYear\',\'2010\',\'\');return false">Born 2010</button>'
+      +'<button class="chip-btn" onclick="filterBy(\'birthYear\',\'2011\',\'\');return false">Born 2011</button>'
+      +'<button class="chip-btn" onclick="filterBy(\'pos\',\'G\',\'Guards\');return false">Guards</button>'
+      +'<button class="chip-btn" onclick="filterBy(\'pos\',\'F\',\'Forwards\');return false">Forwards</button>'
+      +'<button class="chip-btn" onclick="filterBy(\'pos\',\'C\',\'Centers\');return false">Centers</button>'
+    +'</div>'
+    + empty + blocks
+    + '<p class="muted-note" style="margin-top:16px">Pick either team in any pairing above for its roster, team profile, best lineups, per-player averages and your scouting notes.</p>';
 }
 function deburr(s){
   return String(s||"")
@@ -924,7 +978,7 @@ function applyTheme(t){ const v=(t==="dark")?"dark":"light"; document.documentEl
 function goHome(){ state.team=null; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); }
 
 
-let state = { team:null, query:"", filter:null, view:"board", statsTab:"basic", sortKey:"ppg", sortDir:"desc", chartX:"usg", chartY:"ts", chartColor:"pos", chartGroup:"all", chartMode:"scatter", lbStat:"ppg", lbN:15, lbDir:"desc", cmpA:null, cmpB:null, histStat:"ppg", histPlayer:null, posRel:false };
+let state = { team:null, query:"", filter:null, view:"board", venueFilter:null, statsTab:"basic", sortKey:"ppg", sortDir:"desc", chartX:"usg", chartY:"ts", chartColor:"pos", chartGroup:"all", chartMode:"scatter", lbStat:"ppg", lbN:15, lbDir:"desc", cmpA:null, cmpB:null, histStat:"ppg", histPlayer:null, posRel:false };
 
 /* ---------- tournament averages & percentiles ---------- */
 const QUALIFIED = (D.players||[]).filter(p=>p.stats && p.stats.gp>0);
@@ -1127,22 +1181,34 @@ $("#evtName").textContent = D.event.short || D.event.name || "";
 $("#evtMeta").textContent = (D.event.city? D.event.city.split(",")[0] : "") + (D.event.dates? " · "+D.event.dates.replace(/ /g,"") : "");
 
 /* ---------- group / team rail ---------- */
+function makeTeamBtn(tid,t){
+  const count = D.players.filter(p=>p.teamId===tid).length;
+  const b = document.createElement("button");
+  b.className = "team"+(state.team===tid?" active":"");
+  b.innerHTML = '<span class="code">'+t.code+'</span><span class="nm">'+chEsc(t.name)+'</span><span class="ct">'+(count||"")+'</span>';
+  b.onclick = ()=>{ state.team=tid; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; render(); };
+  return b;
+}
 function renderGroups(){
   const wrap = $("#groups"); wrap.innerHTML="";
-  const order = Object.keys(D.groups);
-  order.forEach(g=>{
-    const col = document.createElement("div"); col.className="grp";
-    col.innerHTML = `<h3>Group ${g}</h3>`;
-    const row = document.createElement("div"); row.className="teamrow";
-    D.groups[g].forEach(tid=>{
-      const t = teamById(tid);
-      const count = D.players.filter(p=>p.teamId===tid).length;
-      const b = document.createElement("button");
-      b.className = "team"+(state.team===tid?" active":"");
-      b.innerHTML = `<span class="code">${t.code}</span><span class="nm">${t.name}</span><span class="ct">${count||""}</span>`;
-      b.onclick = ()=>{ state.team=tid; state.query=""; state.filter=null; state.view="board"; $("#search").value=""; render(); };
-      row.appendChild(b);
+  const r16 = (D.bracket && D.bracket.games) ? D.bracket.games.filter(g=>g.rc==='R16').slice().sort((a,b)=>a.num-b.num) : [];
+  if(!r16.length){
+    Object.keys(D.groups||{}).forEach(g=>{
+      const col=document.createElement("div"); col.className="grp";
+      col.innerHTML='<h3>Group '+g+'</h3>';
+      const row=document.createElement("div"); row.className="teamrow";
+      (D.groups[g]||[]).forEach(tid=>{ row.appendChild(makeTeamBtn(tid,teamById(tid))); });
+      col.appendChild(row); wrap.appendChild(col);
     });
+    return;
+  }
+  r16.forEach(g=>{
+    const col=document.createElement("div"); col.className="grp pairing";
+    const when=fmtDate((g.dt||'').slice(0,10)), tm=koGameTime(g.dt);
+    const ven=g.venue?('<span class="pair-ven v-'+venShort(g.venue)+'" title="'+chEsc(g.venue)+'">'+venLabel(g.venue)+'</span>'):'';
+    col.innerHTML='<h3 class="pair-h"><span class="pair-when">'+when+' \u00b7 '+tm+'</span>'+ven+'</h3>';
+    const row=document.createElement("div"); row.className="teamrow";
+    [g.a,g.b].forEach(code=>{ const t=codeToTeam(code); if(t) row.appendChild(makeTeamBtn(t.id,t)); });
     col.appendChild(row); wrap.appendChild(col);
   });
 }
