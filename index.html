@@ -833,17 +833,36 @@ function teamPanel(teamId){
   </div>`;
 }
 /* ---------- tournament rankings ---------- */
+let _teamRebCtx=null;
+function teamRebCtx(){
+  if(_teamRebCtx) return _teamRebCtx;
+  const gt={};
+  D.players.forEach(p=>{ (p.gamelog||[]).forEach(g=>{ const m=(g.url||'').match(/games\/(\d+)-/); const gid=m?m[1]:null; if(!gid)return;
+    gt[gid]=gt[gid]||{}; const a=gt[gid][p.teamId]=gt[gid][p.teamId]||[0,0]; a[0]+=g.oreb||0; a[1]+=g.dreb||0; }); });
+  const out={}; (D.teams||[]).forEach(t=>out[t.id]={oreb:0,dreb:0,oppOreb:0,oppDreb:0});
+  (D.games||[]).forEach(g=>{ const A=codeToTeam(g.a), B=codeToTeam(g.b); if(!A||!B||!out[A.id]||!out[B.id])return; const gg=gt[g.id]; if(!gg)return;
+    const x=gg[A.id]||[0,0], y=gg[B.id]||[0,0];
+    out[A.id].oreb+=x[0]; out[A.id].dreb+=x[1]; out[A.id].oppOreb+=y[0]; out[A.id].oppDreb+=y[1];
+    out[B.id].oreb+=y[0]; out[B.id].dreb+=y[1]; out[B.id].oppOreb+=x[0]; out[B.id].oppDreb+=x[1]; });
+  _teamRebCtx=out; return out;
+}
 function teamStatVals(t){
   const G=(t.record&&(t.record.w+t.record.l))||0; if(!G||!t.record) return null;
   let a={fgm:0,fga:0,tpm:0,tpa:0,ftm:0,fta:0,ast:0,tov:0,pts:0,reb:0,stl:0,blk:0};
   D.players.filter(p=>p.teamId===t.id&&p.stats&&p.stats.gp).forEach(p=>{ const s=p.stats,g=s.gp;
     a.fgm+=(s.fgm||0)*g; a.fga+=(s.fga||0)*g; a.tpm+=(s.tpm||0)*g; a.tpa+=(s.tpa||0)*g; a.ftm+=(s.ftm||0)*g; a.fta+=(s.fta||0)*g;
     a.ast+=(s.apg||0)*g; a.tov+=(s.tpg||0)*g; a.pts+=(s.ppg||0)*g; a.reb+=(s.rpg||0)*g; a.stl+=(s.spg||0)*g; a.blk+=(s.bpg||0)*g; });
-  return { pf:t.record.pf/G, pa:(t.record.pf-t.record.diff)/G, nd:t.record.diff/G,
-    rpg:a.reb/G, apg:a.ast/G, spg:a.stl/G, bpg:a.blk/G, tov:a.tov/G,
+  const rc=teamRebCtx()[t.id]||{oreb:0,dreb:0,oppOreb:0,oppDreb:0};
+  const poss=a.fga - rc.oreb + a.tov + 0.44*a.fta;
+  const oppPts=t.record.pf - t.record.diff;
+  return { pf:t.record.pf/G, pa:oppPts/G, nd:t.record.diff/G,
+    rpg:a.reb/G, orpg:rc.oreb/G, drpg:rc.dreb/G, apg:a.ast/G, spg:a.stl/G, bpg:a.blk/G, tov:a.tov/G,
     fgPct:a.fga?a.fgm/a.fga:null, tpPct:a.tpa?a.tpm/a.tpa:null, ftPct:a.fta?a.ftm/a.fta:null,
     efg:a.fga?(a.fgm+0.5*a.tpm)/a.fga:null, ts:(a.fga||a.fta)?a.pts/(2*(a.fga+0.44*a.fta)):null,
-    tr:a.fga?a.tpa/a.fga:null, ftr:a.fga?a.fta/a.fga:null, astto:a.tov?a.ast/a.tov:null };
+    tr:a.fga?a.tpa/a.fga:null, ftr:a.fga?a.fta/a.fga:null, astto:a.tov?a.ast/a.tov:null,
+    ortg:poss>0?a.pts/poss*100:null, drtg:poss>0?oppPts/poss*100:null, netrtg:poss>0?(a.pts-oppPts)/poss*100:null,
+    pace:G?poss/G:null,
+    orebpct:(rc.oreb+rc.oppDreb)?rc.oreb/(rc.oreb+rc.oppDreb):null, drebpct:(rc.dreb+rc.oppOreb)?rc.dreb/(rc.dreb+rc.oppOreb):null };
 }
 const _tpc=x=>x==null?'\u2013':Math.round(x*100)+'%';
 const _t1=x=>x==null?'\u2013':x.toFixed(1);
@@ -863,7 +882,15 @@ const TEAM_STATS={
   ts:{short:"TS%",lab:"True shooting %",dir:1,fmt:_tpc},
   tr:{short:"3PA rate",lab:"Share of FGA from three",dir:1,fmt:_tpc},
   ftr:{short:"FT rate",lab:"Free throws drawn per FGA",dir:1,fmt:_tpc},
-  astto:{short:"AST / TO",lab:"Assist-to-turnover ratio",dir:1,fmt:x=>x==null?'\u2013':x.toFixed(2)}
+  astto:{short:"AST / TO",lab:"Assist-to-turnover ratio",dir:1,fmt:x=>x==null?'\u2013':x.toFixed(2)},
+  orpg:{short:"OREB",lab:"Offensive rebounds / game",dir:1,fmt:_t1},
+  drpg:{short:"DREB",lab:"Defensive rebounds / game",dir:1,fmt:_t1},
+  ortg:{short:"ORtg",lab:"Offensive rating (points / 100 possessions)",dir:1,fmt:_t1},
+  drtg:{short:"DRtg",lab:"Defensive rating (points allowed / 100 possessions)",dir:-1,fmt:_t1},
+  netrtg:{short:"Net /100",lab:"Net rating per 100 possessions",dir:1,fmt:x=>x==null?'\u2013':(x>0?'+':'')+x.toFixed(1)},
+  pace:{short:"Pace",lab:"Possessions per game (estimated)",dir:1,fmt:_t1},
+  orebpct:{short:"OREB%",lab:"Offensive-rebound rate",dir:1,fmt:_tpc},
+  drebpct:{short:"DREB%",lab:"Defensive-rebound rate",dir:1,fmt:_tpc}
 };
 const TEAM_RANK_DIR=Object.fromEntries(Object.entries(TEAM_STATS).map(([k,m])=>[k,m.dir]));
 let _teamRankCache=null;
@@ -890,7 +917,11 @@ const PLAYER_RANK_DEFS=[
   ["ts",(p)=>metric(p,"ts"),1,(p)=>metric(p,"ts")!==-Infinity],
   ["efg",(p)=>metric(p,"efg"),1,(p)=>metric(p,"efg")!==-Infinity],
   ["usg",(p)=>metric(p,"usg"),1,(p)=>metric(p,"usg")!==-Infinity],
-  ["ftr",(p,s)=>(s.fga>0)?s.fta/s.fga:null,1,(p,s)=>(s.fga||0)*(s.gp||0)>=10]
+  ["ftr",(p,s)=>(s.fga>0)?s.fta/s.fga:null,1,(p,s)=>(s.fga||0)*(s.gp||0)>=10],
+  ["rimfg",(p)=>metric(p,"rimfg"),1,(p)=>metric(p,"rimfg")!==-Infinity],
+  ["tovpct",(p)=>metric(p,"tovpct"),-1,(p,s)=>metric(p,"tovpct")!==-Infinity&&(s.fga||0)*(s.gp||0)>=10],
+  ["orpg",(p,s)=>s.orpg,1,()=>true],
+  ["drpg",(p,s)=>s.drpg,1,()=>true]
 ];
 let _playerRankCache=null, _playerRankPosCache=null;
 function playerRanks(){
@@ -927,8 +958,8 @@ function teamProfile(teamId){
     const rk=ranks[key]?rankBadge(ranks[key].rank,ranks[key].n):'';
     return '<button type="button" class="tp clk" onclick="openTeamLeaderboard(\''+key+'\',\''+teamId+'\')" title="Tap for the 16-team ranking">'
       +'<div class="v">'+disp+'</div><div class="k">'+m.short+'</div>'+rk+'</button>'; };
-  const basic=["pf","pa","nd","rpg","apg","spg","bpg","tov","fgPct","tpPct","ftPct"].map(cell).join('');
-  const adv=["efg","ts","tr","ftr","astto"].map(cell).join('');
+  const basic=["pf","pa","nd","rpg","orpg","drpg","apg","spg","bpg","tov","fgPct","tpPct","ftPct"].map(cell).join('');
+  const adv=["ortg","drtg","netrtg","pace","orebpct","drebpct","efg","ts","tr","ftr","astto"].map(cell).join('');
   return '<div class="panelcard"><h5>'+chEsc(t.name)+' \u00b7 team profile <span class="recpill">'+t.record.w+'\u2013'+t.record.l+'</span></h5>'
     +'<div class="statsubtabs tp-tabs">'
       +'<button type="button" class="subtab on" data-tt="basic" onclick="teamTab(\'basic\')">Per game</button>'
@@ -1413,9 +1444,9 @@ function pbpBlock(p){
   return h;
 }
 const STAT_COLS = {
-  basic: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["ppg","PTS","Points per game"],["rpg","REB","Rebounds per game"],["apg","AST","Assists per game"],["spg","STL","Steals per game"],["bpg","BLK","Blocks per game"],["tpg","TO","Turnovers per game"],["fgPct","FG%","Field-goal %"],["tpPct","3P%","Three-point %"],["ftPct","FT%","Free-throw %"]],
+  basic: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["ppg","PTS","Points per game"],["rpg","REB","Rebounds per game"],["orpg","OREB","Offensive rebounds per game"],["drpg","DREB","Defensive rebounds per game"],["apg","AST","Assists per game"],["spg","STL","Steals per game"],["bpg","BLK","Blocks per game"],["tpg","TO","Turnovers per game"],["fgPct","FG%","Field-goal %"],["tpPct","3P%","Three-point %"],["ftPct","FT%","Free-throw %"]],
   totals: [["pos","POS","Position"],["gp","GP","Games played"],["tmin","MIN","Total minutes played"],["tpts","PTS","Total points"],["treb","REB","Total rebounds"],["tast","AST","Total assists"],["tstl","STL","Total steals"],["tblk","BLK","Total blocks"],["tto","TO","Total turnovers"],["tfg","FG","Total field goals \u2014 made\u2013attempted"],["t3p","3P","Total threes \u2014 made\u2013attempted"],["tft","FT","Total free throws \u2014 made\u2013attempted"]],
-  advanced: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["ts","TS%","True Shooting %: PTS / (2·(FGA + 0.44·FTA)) — scoring efficiency across 2s, 3s and FTs. Shown for ≥6 FGA."],["efg","eFG%","Effective FG %: (FGM + 0.5·3PM) / FGA — credits the extra point on threes. Shown for ≥6 FGA."],["p36","P36","Points per 36 minutes (rate-normalised)"],["r36","R36","Rebounds per 36 minutes"],["a36","A36","Assists per 36 minutes"],["astto","A/TO","Assists per turnover — playmaking control"],["stk","STK","Stocks: steals + blocks per game"],["prod","PROD","Box production: PTS+REB+AST+STL+BLK − TO"],["usg","USG%","Usage rate — share of team possessions a player uses (FGA + 0.44·FTA + TOV), minute-adjusted. Needs ≥20 total minutes."],["rimrate","RIM%","Shot diet — share of a player's field-goal attempts taken at the rim, from play-by-play. Needs ≥8 FGA."],["threerate","3PA%","Shot diet — share of field-goal attempts that are threes, from play-by-play. Needs ≥8 FGA."],["astpct","AST%","Assisted field-goal rate — share of a player's made field goals that came off a teammate's pass (from play-by-play). Needs ≥5 makes."],["onoff","ON/OFF","On/off net rating per 40 — team net rating with the player on court minus off court. Small single-tournament samples; read with caution. Needs ≥10 on-court minutes."]]
+  advanced: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["ts","TS%","True Shooting %: PTS / (2·(FGA + 0.44·FTA)) — scoring efficiency across 2s, 3s and FTs. Shown for ≥6 FGA."],["efg","eFG%","Effective FG %: (FGM + 0.5·3PM) / FGA — credits the extra point on threes. Shown for ≥6 FGA."],["rimfg","RIMFG%","Rim FG% - how well the player finishes at the rim, from play-by-play shot locations. Needs >=6 rim attempts."],["tovpct","TOV%","Turnover rate - turnovers per possession used: TOV / (FGA + 0.44*FTA + TOV). Lower is better."],["ftr","FTr","Free-throw rate - FTA per FGA; proxy for rim pressure and drawing contact. Needs >=10 FGA for a rank."],["p36","P36","Points per 36 minutes (rate-normalised)"],["r36","R36","Rebounds per 36 minutes"],["a36","A36","Assists per 36 minutes"],["astto","A/TO","Assists per turnover — playmaking control"],["stk","STK","Stocks: steals + blocks per game"],["prod","PROD","Box production: PTS+REB+AST+STL+BLK − TO"],["usg","USG%","Usage rate — share of team possessions a player uses (FGA + 0.44·FTA + TOV), minute-adjusted. Needs ≥20 total minutes."],["rimrate","RIM%","Shot diet — share of a player's field-goal attempts taken at the rim, from play-by-play. Needs ≥8 FGA."],["threerate","3PA%","Shot diet — share of field-goal attempts that are threes, from play-by-play. Needs ≥8 FGA."],["astpct","AST%","Assisted field-goal rate — share of a player's made field goals that came off a teammate's pass (from play-by-play). Needs ≥5 makes."],["onoff","ON/OFF","On/off net rating per 40 — team net rating with the player on court minus off court. Small single-tournament samples; read with caution. Needs ≥10 on-court minutes."]]
 };
 function totByLog(p,k){ const g=p.gamelog||[]; if(g.length){ let s=0; for(const x of g) s+=(x[k]||0); return s; }
   const M={min:"mpg",pts:"ppg",reb:"rpg",ast:"apg",stl:"spg",blk:"bpg",to:"tpg"}; const s=p.stats||{}; return Math.round((s[M[k]]||0)*(s.gp||0)); }
@@ -1448,6 +1479,9 @@ function metric(p,key){
     case "tfg":  return Math.round((s.fgm||0)*(s.gp||0));
     case "t3p":  return Math.round((s.tpm||0)*(s.gp||0));
     case "tft":  return Math.round((s.ftm||0)*(s.gp||0));
+    case "rimfg": { const z=window.SHOTS&&window.SHOTS.players&&window.SHOTS.players[String(p.pid)]; const r=z&&z.rim; return (r&&r[1]>=6)? r[0]/r[1] : -Infinity; }
+    case "tovpct": { const den=(s.fga||0)+0.44*(s.fta||0)+(s.tpg||0); return den>0? s.tpg/den : -Infinity; }
+    case "ftr": return (s.fga>0)? s.fta/s.fga : -Infinity;
     default: return (s[key]!=null ? s[key] : -Infinity);
   }
 }
@@ -1460,6 +1494,10 @@ function statCell(p,key){
   if(key==="rimrate"||key==="threerate"){ const v=metric(p,key); return v===-Infinity ? "–" : pct(v); }
   if(key==="astpct"){ const v=metric(p,"astpct"); return v===-Infinity ? "–" : Math.round(v)+"%"; }
   if(key==="onoff"||key==="onnet"){ const v=metric(p,key); return v===-Infinity ? "–" : (v>0?"+":"")+v.toFixed(1); }
+  if(key==="rimfg"){ const v=metric(p,"rimfg"); return v===-Infinity?"\u2013":pct(v); }
+  if(key==="tovpct"){ const v=metric(p,"tovpct"); return v===-Infinity?"\u2013":Math.round(v*100)+"%"; }
+  if(key==="ftr"){ const v=metric(p,"ftr"); return v===-Infinity?"\u2013":v.toFixed(2); }
+  if(key==="orpg"||key==="drpg"){ const v=(p.stats&&p.stats[key]!=null)?p.stats[key]:null; return v==null?"\u2013":fmt(v); }
   if(key==="fgPct"){ const m=Math.round((s.fgm||0)*(s.gp||0)),a=Math.round((s.fga||0)*(s.gp||0)); return `<span class="sc-pct">${pct(s.fgPct)}</span>`+(a?`<span class="sc-ma">${m}\u2013${a}</span>`:""); }
   if(key==="tpPct"){ const m=Math.round((s.tpm||0)*(s.gp||0)),a=Math.round((s.tpa||0)*(s.gp||0)); return `<span class="sc-pct">${pct(s.tpPct)}</span>`+(a?`<span class="sc-ma">${m}\u2013${a}</span>`:""); }
   if(key==="ftPct"){ const m=Math.round((s.ftm||0)*(s.gp||0)),a=Math.round((s.fta||0)*(s.gp||0)); return `<span class="sc-pct">${pct(s.ftPct)}</span>`+(a?`<span class="sc-ma">${m}\u2013${a}</span>`:""); }
@@ -1491,6 +1529,7 @@ const CHART_STATS = [
   ["ts","TS%","p"],["efg","eFG%","p"],["usg","USG%","u"],["astto","A/TO","r2"],
   ["p36","Pts / 36","n"],["r36","Reb / 36","n"],["a36","Ast / 36","n"],["stk","Stocks","n"],["prod","Production","n"],
   ["fgPct","FG%","p"],["tpPct","3P%","p"],["ftPct","FT%","p"],
+  ["rimfg","Rim FG%","p"],["tovpct","TOV%","p"],["ftr","FT rate","r2"],["orpg","OREB","n"],["drpg","DREB","n"],
   ["height","Height (cm)","i"],["gp","Games","i"]
 ];
 const chEsc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -2198,6 +2237,8 @@ function openPlayer(id){
   activeId=id;
   const t = teamById(p.teamId); const s=p.stats||{}; const n=noteFor(id);
   const _ts=metric(p,'ts'),_efg=metric(p,'efg'),_uv=usgVal(p);
+  const _rf=metric(p,'rimfg'),_tv=metric(p,'tovpct');
+  const advRim=_rf===-Infinity?'\u2013':pct(_rf), advTov=_tv===-Infinity?'\u2013':Math.round(_tv*100)+'%';
   const advTs=_ts===-Infinity?'–':pct(_ts), advEfg=_efg===-Infinity?'–':pct(_efg), advUsg=_uv==null?'–':_uv.toFixed(1), advFtr=(s.fga>0)?(s.fta/s.fga).toFixed(2):'–';
   const PRk=(s&&s.gp)?(playerRanks()[p.id]||{}):{}; const RKB=o=>o?rankBadge(o.rank,o.n):'';
   const dr = $("#drawer");
@@ -2247,6 +2288,12 @@ function openPlayer(id){
           <div class="a"><div class="v">${advEfg}</div><div class="k">eFG%</div>${RKB(PRk.efg)}</div>
           <div class="a"><div class="v">${advUsg}</div><div class="k">USG%</div>${RKB(PRk.usg)}</div>
           <div class="a"><div class="v">${advFtr}</div><div class="k">FTr</div>${RKB(PRk.ftr)}</div>
+        </div>
+        <div class="shoot">
+          <div class="a"><div class="v">${fmt(s.orpg)}</div><div class="k">OREB</div>${RKB(PRk.orpg)}</div>
+          <div class="a"><div class="v">${fmt(s.drpg)}</div><div class="k">DREB</div>${RKB(PRk.drpg)}</div>
+          <div class="a"><div class="v">${advRim}</div><div class="k">Rim FG%</div>${RKB(PRk.rimfg)}</div>
+          <div class="a"><div class="v">${advTov}</div><div class="k">TOV%</div>${RKB(PRk.tovpct)}</div>
         </div>
         <div class="statsubtabs barswitch">
           <button class="subtab on" data-bt="basic">Per game</button>
