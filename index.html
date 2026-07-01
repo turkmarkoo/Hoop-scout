@@ -538,6 +538,16 @@ a.logopp:hover{text-decoration:underline}
 .tlb.plb .tlb-card{overflow:hidden}
 .tlb.plb .tlb-list{max-height:64vh;overflow:auto;margin-top:10px}
 .tlb-sub2{font-size:11px;color:var(--muted-2);font-family:var(--body);font-weight:500}
+.gloss{max-width:840px}
+.gl-lead{font-size:13.5px;color:var(--muted);line-height:1.55;margin:2px 0 6px;max-width:720px}
+.gl-sec{margin:24px 0 4px;font-family:var(--disp);font-weight:800;font-size:15.5px;color:var(--clay-deep);letter-spacing:.02em}
+.gl-intro{font-size:12.5px;color:var(--muted-2);line-height:1.5;margin:1px 0 8px;max-width:720px}
+.gl-item{padding:11px 0;border-top:1px solid var(--line-soft)}
+.gl-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.gl-code{font-family:var(--mono);font-weight:700;font-size:11.5px;color:var(--clay-deep);background:var(--clay-soft);border-radius:6px;padding:2px 7px;flex:none}
+.gl-name{font-family:var(--disp);font-weight:700;font-size:14.5px;color:var(--text)}
+.gl-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-top:4px}
+.gl-form{font-family:var(--mono);font-size:11.5px;color:var(--muted-2);margin-top:6px;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:7px;padding:6px 9px;display:inline-block}
 .histsvg .hbar{fill:#CBAB8C;transition:fill .1s}
 .histsvg .hbar.on{fill:var(--clay)}
 .histsvg .hmean{stroke:var(--muted-2);stroke-width:1.4;stroke-dasharray:5 4}
@@ -735,6 +745,9 @@ html[data-theme="dark"] .tg{color:#E3C7A0}
         <button class="btn" id="brkBtn" title="Final-phase bracket — Round of 16 through the Final, plus 5–8 and 9–16 classification">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h6M3 5v14M3 19h6M9 8h5v8H9M14 12h4M18 9v6"/></svg>Bracket
         </button>
+        <button class="btn" id="glosBtn" title="Glossary - what every stat means and how it is calculated">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4a2 2 0 0 1 2-2h12v18H7a2 2 0 0 0-2 2z"/><path d="M9 7h6M9 11h4"/></svg>Glossary
+        </button>
         <button class="btn" id="posBtn" title="Rank players and badges within their own position (guards vs guards, etc.) instead of against the whole field">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="3.2"/><path d="M5.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M3 11h3M18 11h3"/></svg><span id="posLabel">By field</span>
         </button>
@@ -866,7 +879,7 @@ function teamStatVals(t){
     rpg:a.reb/G, orpg:rc.oreb/G, drpg:rc.dreb/G, apg:a.ast/G, spg:a.stl/G, bpg:a.blk/G, tov:a.tov/G,
     fgPct:a.fga?a.fgm/a.fga:null, tpPct:a.tpa?a.tpm/a.tpa:null, ftPct:a.fta?a.ftm/a.fta:null,
     efg:a.fga?(a.fgm+0.5*a.tpm)/a.fga:null, ts:(a.fga||a.fta)?a.pts/(2*(a.fga+0.44*a.fta)):null,
-    tr:a.fga?a.tpa/a.fga:null, ftr:a.fga?a.fta/a.fga:null, astto:a.tov?a.ast/a.tov:null,
+    tr:a.fga?a.tpa/a.fga:null, ftr:a.fga?a.fta/a.fga:null, astto:a.tov?a.ast/a.tov:null, astratio:(a.fga+0.44*a.fta+a.ast+a.tov)>0?a.ast/(a.fga+0.44*a.fta+a.ast+a.tov)*100:null,
     ortg:poss>0?a.pts/poss*100:null, drtg:poss>0?oppPts/poss*100:null, netrtg:poss>0?(a.pts-oppPts)/poss*100:null,
     pace:G?poss/G:null,
     orebpct:(rc.oreb+rc.oppDreb)?rc.oreb/(rc.oreb+rc.oppDreb):null, drebpct:(rc.dreb+rc.oppOreb)?rc.dreb/(rc.dreb+rc.oppOreb):null };
@@ -897,7 +910,8 @@ const TEAM_STATS={
   netrtg:{short:"Net /100",lab:"Net rating per 100 possessions",dir:1,fmt:x=>x==null?'\u2013':(x>0?'+':'')+x.toFixed(1)},
   pace:{short:"Pace",lab:"Possessions per game (estimated)",dir:1,fmt:_t1},
   orebpct:{short:"OREB%",lab:"Offensive-rebound rate",dir:1,fmt:_tpc},
-  drebpct:{short:"DREB%",lab:"Defensive-rebound rate",dir:1,fmt:_tpc}
+  drebpct:{short:"DREB%",lab:"Defensive-rebound rate",dir:1,fmt:_tpc},
+  astratio:{short:"AST Ratio",lab:"Assist ratio (% of possessions ending in an assist)",dir:1,fmt:x=>x==null?'\u2013':x.toFixed(1)+'%'}
 };
 const TEAM_RANK_DIR=Object.fromEntries(Object.entries(TEAM_STATS).map(([k,m])=>[k,m.dir]));
 let _teamRankCache=null;
@@ -928,7 +942,9 @@ const PLAYER_RANK_DEFS=[
   ["rimfg",(p)=>metric(p,"rimfg"),1,(p)=>metric(p,"rimfg")!==-Infinity],
   ["tovpct",(p)=>metric(p,"tovpct"),-1,(p,s)=>metric(p,"tovpct")!==-Infinity&&(s.fga||0)*(s.gp||0)>=10],
   ["orpg",(p,s)=>s.orpg,1,()=>true],
-  ["drpg",(p,s)=>s.drpg,1,()=>true]
+  ["drpg",(p,s)=>s.drpg,1,()=>true],
+  ["astratio",(p)=>metric(p,"astratio"),1,(p,s)=>metric(p,"astratio")!==-Infinity&&(s.mpg||0)*(s.gp||0)>=20],
+  ["scshare",(p)=>metric(p,"scshare"),1,(p,s)=>metric(p,"scshare")!==-Infinity&&(s.mpg||0)*(s.gp||0)>=20]
 ];
 let _playerRankCache=null, _playerRankPosCache=null;
 function playerRanks(){
@@ -966,7 +982,7 @@ function teamProfile(teamId){
     return '<button type="button" class="tp clk" onclick="openTeamLeaderboard(\''+key+'\',\''+teamId+'\')" title="Tap for the 16-team ranking">'
       +'<div class="v">'+disp+'</div><div class="k">'+m.short+'</div>'+rk+'</button>'; };
   const basic=["pf","pa","nd","rpg","orpg","drpg","apg","spg","bpg","tov","fgPct","tpPct","ftPct"].map(cell).join('');
-  const adv=["ortg","drtg","netrtg","pace","orebpct","drebpct","efg","ts","tr","ftr","astto"].map(cell).join('');
+  const adv=["ortg","drtg","netrtg","pace","orebpct","drebpct","efg","ts","tr","ftr","astto","astratio"].map(cell).join('');
   return '<div class="panelcard"><h5>'+chEsc(t.name)+' \u00b7 team profile <span class="recpill">'+t.record.w+'\u2013'+t.record.l+'</span></h5>'
     +'<div class="statsubtabs tp-tabs">'
       +'<button type="button" class="subtab on" data-tt="basic" onclick="teamTab(\'basic\')">Per game</button>'
@@ -1000,13 +1016,14 @@ function openTeamLeaderboard(key, teamId){
   document.getElementById('tlb').classList.add('on');
 }
 function closeTeamLeaderboard(){ const el=document.getElementById('tlb'); if(el) el.classList.remove('on'); }
-function gotoTeamFromLb(tid){ closeTeamLeaderboard(); state.team=tid; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){window.scrollTo(0,0);} }const PLB_LABEL={ppg:'Points / game',rpg:'Rebounds / game',apg:'Assists / game',spg:'Steals / game',bpg:'Blocks / game',mpg:'Minutes / game',tpg:'Turnovers / game',fgPct:'Field-goal %',tpPct:'Three-point %',ftPct:'Free-throw %',ts:'True shooting %',efg:'Effective FG %',usg:'Usage rate',ftr:'Free-throw rate',rimfg:'Rim FG% (finishing at the rim)',tovpct:'Turnover rate',orpg:'Offensive rebounds / game',drpg:'Defensive rebounds / game'};
+function gotoTeamFromLb(tid){ closeTeamLeaderboard(); state.team=tid; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){window.scrollTo(0,0);} }const PLB_LABEL={ppg:'Points / game',rpg:'Rebounds / game',apg:'Assists / game',spg:'Steals / game',bpg:'Blocks / game',mpg:'Minutes / game',tpg:'Turnovers / game',fgPct:'Field-goal %',tpPct:'Three-point %',ftPct:'Free-throw %',ts:'True shooting %',efg:'Effective FG %',usg:'Usage rate',ftr:'Free-throw rate',rimfg:'Rim FG% (finishing at the rim)',tovpct:'Turnover rate',orpg:'Offensive rebounds / game',drpg:'Defensive rebounds / game',astratio:'Assist ratio',scshare:'Scoring share'};
 function lbVal(p,key){ const s=p.stats||{};
   if(key==='fgPct'||key==='tpPct'||key==='ftPct') return pct(s[key]);
   if(key==='ts'||key==='efg'||key==='rimfg'){ const v=metric(p,key); return v===-Infinity?'\u2013':pct(v); }
   if(key==='usg'){ const v=metric(p,'usg'); return (v==null||v===-Infinity)?'\u2013':v.toFixed(1); }
   if(key==='ftr'){ return (s.fga>0)?(s.fta/s.fga).toFixed(2):'\u2013'; }
   if(key==='tovpct'){ const v=metric(p,'tovpct'); return v===-Infinity?'\u2013':(v*100).toFixed(1)+'%'; }
+  if(key==='astratio'||key==='scshare'){ const v=metric(p,key); return v===-Infinity?'\u2013':v.toFixed(1)+'%'; }
   return fmt(s[key]); }
 function openPlayerStatLb(key, playerId){
   const def=PLAYER_RANK_DEFS.find(d=>d[0]===key); if(!def) return;
@@ -1485,7 +1502,7 @@ function pbpBlock(p){
 const STAT_COLS = {
   basic: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["ppg","PTS","Points per game"],["rpg","REB","Rebounds per game"],["orpg","OREB","Offensive rebounds per game"],["drpg","DREB","Defensive rebounds per game"],["apg","AST","Assists per game"],["spg","STL","Steals per game"],["bpg","BLK","Blocks per game"],["tpg","TO","Turnovers per game"],["fgPct","FG%","Field-goal %"],["tpPct","3P%","Three-point %"],["ftPct","FT%","Free-throw %"]],
   totals: [["pos","POS","Position"],["gp","GP","Games played"],["tmin","MIN","Total minutes played"],["tpts","PTS","Total points"],["treb","REB","Total rebounds"],["tast","AST","Total assists"],["tstl","STL","Total steals"],["tblk","BLK","Total blocks"],["tto","TO","Total turnovers"],["tfg","FG","Total field goals \u2014 made\u2013attempted"],["t3p","3P","Total threes \u2014 made\u2013attempted"],["tft","FT","Total free throws \u2014 made\u2013attempted"]],
-  advanced: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["ts","TS%","True Shooting %: PTS / (2·(FGA + 0.44·FTA)) — scoring efficiency across 2s, 3s and FTs. Shown for ≥6 FGA."],["efg","eFG%","Effective FG %: (FGM + 0.5·3PM) / FGA — credits the extra point on threes. Shown for ≥6 FGA."],["rimfg","RIMFG%","Rim FG% - how well the player finishes at the rim, from play-by-play shot locations. Needs >=6 rim attempts."],["tovpct","TOV%","Turnover rate - turnovers per possession used: TOV / (FGA + 0.44*FTA + TOV). Lower is better."],["ftr","FTr","Free-throw rate - FTA per FGA; proxy for rim pressure and drawing contact. Needs >=10 FGA for a rank."],["p36","P36","Points per 36 minutes (rate-normalised)"],["r36","R36","Rebounds per 36 minutes"],["a36","A36","Assists per 36 minutes"],["astto","A/TO","Assists per turnover — playmaking control"],["stk","STK","Stocks: steals + blocks per game"],["prod","PROD","Box production: PTS+REB+AST+STL+BLK − TO"],["usg","USG%","Usage rate — share of team possessions a player uses (FGA + 0.44·FTA + TOV), minute-adjusted. Needs ≥20 total minutes."],["rimrate","RIM%","Shot diet — share of a player's field-goal attempts taken at the rim, from play-by-play. Needs ≥8 FGA."],["threerate","3PA%","Shot diet — share of field-goal attempts that are threes, from play-by-play. Needs ≥8 FGA."],["astpct","AST%","Assisted field-goal rate — share of a player's made field goals that came off a teammate's pass (from play-by-play). Needs ≥5 makes."],["onoff","ON/OFF","On/off net rating per 40 — team net rating with the player on court minus off court. Small single-tournament samples; read with caution. Needs ≥10 on-court minutes."]]
+  advanced: [["pos","POS","Position"],["gp","GP","Games played"],["mpg","MIN","Minutes per game"],["ts","TS%","True Shooting %: PTS / (2·(FGA + 0.44·FTA)) — scoring efficiency across 2s, 3s and FTs. Shown for ≥6 FGA."],["efg","eFG%","Effective FG %: (FGM + 0.5·3PM) / FGA — credits the extra point on threes. Shown for ≥6 FGA."],["rimfg","RIMFG%","Rim FG% - how well the player finishes at the rim, from play-by-play shot locations. Needs >=6 rim attempts."],["tovpct","TOV%","Turnover rate - turnovers per possession used: TOV / (FGA + 0.44*FTA + TOV). Lower is better."],["ftr","FTr","Free-throw rate - FTA per FGA; proxy for rim pressure and drawing contact. Needs >=10 FGA for a rank."],["p36","P36","Points per 36 minutes (rate-normalised)"],["r36","R36","Rebounds per 36 minutes"],["a36","A36","Assists per 36 minutes"],["astto","A/TO","Assists per turnover — playmaking control"],["astratio","ASTR","Assist ratio - share of used possessions that end in an assist: AST / (FGA + 0.44*FTA + AST + TOV). Playmaking rate, independent of turnovers. Needs 20+ total minutes."],["scshare","PTS%","Scoring share - share of team points (per game) the player accounts for: player PPG / team PPG. Go-to-scorer indicator. Needs 20+ total minutes."],["stk","STK","Stocks: steals + blocks per game"],["prod","PROD","Box production: PTS+REB+AST+STL+BLK − TO"],["usg","USG%","Usage rate — share of team possessions a player uses (FGA + 0.44·FTA + TOV), minute-adjusted. Needs ≥20 total minutes."],["rimrate","RIM%","Shot diet — share of a player's field-goal attempts taken at the rim, from play-by-play. Needs ≥8 FGA."],["threerate","3PA%","Shot diet — share of field-goal attempts that are threes, from play-by-play. Needs ≥8 FGA."],["astpct","AST%","Assisted field-goal rate — share of a player's made field goals that came off a teammate's pass (from play-by-play). Needs ≥5 makes."],["onoff","ON/OFF","On/off net rating per 40 — team net rating with the player on court minus off court. Small single-tournament samples; read with caution. Needs ≥10 on-court minutes."]]
 };
 function totByLog(p,k){ const g=p.gamelog||[]; if(g.length){ let s=0; for(const x of g) s+=(x[k]||0); return s; }
   const M={min:"mpg",pts:"ppg",reb:"rpg",ast:"apg",stl:"spg",blk:"bpg",to:"tpg"}; const s=p.stats||{}; return Math.round((s[M[k]]||0)*(s.gp||0)); }
@@ -1521,6 +1538,8 @@ function metric(p,key){
     case "rimfg": { const z=window.SHOTS&&window.SHOTS.players&&window.SHOTS.players[String(p.pid)]; const r=z&&z.rim; return (r&&r[1]>=6)? r[0]/r[1] : -Infinity; }
     case "tovpct": { const den=(s.fga||0)+0.44*(s.fta||0)+(s.tpg||0); return den>0? s.tpg/den : -Infinity; }
     case "ftr": return (s.fga>0)? s.fta/s.fga : -Infinity;
+    case "astratio": { const den=(s.fga||0)+0.44*(s.fta||0)+(s.apg||0)+(s.tpg||0); return den>0? s.apg/den*100 : -Infinity; }
+    case "scshare": { const t=teamById(p.teamId); if(!t||!t.record) return -Infinity; const G=(t.record.w+t.record.l)||0; const tppg=G?t.record.pf/G:0; return tppg>0? (s.ppg||0)/tppg*100 : -Infinity; }
     default: return (s[key]!=null ? s[key] : -Infinity);
   }
 }
@@ -1536,6 +1555,7 @@ function statCell(p,key){
   if(key==="rimfg"){ const v=metric(p,"rimfg"); return v===-Infinity?"\u2013":pct(v); }
   if(key==="tovpct"){ const v=metric(p,"tovpct"); return v===-Infinity?"\u2013":(v*100).toFixed(1)+"%"; }
   if(key==="ftr"){ const v=metric(p,"ftr"); return v===-Infinity?"\u2013":v.toFixed(2); }
+  if(key==="astratio"||key==="scshare"){ const v=metric(p,key); return v===-Infinity?"\u2013":v.toFixed(1)+"%"; }
   if(key==="orpg"||key==="drpg"){ const v=(p.stats&&p.stats[key]!=null)?p.stats[key]:null; return v==null?"\u2013":fmt(v); }
   if(key==="fgPct"){ const m=Math.round((s.fgm||0)*(s.gp||0)),a=Math.round((s.fga||0)*(s.gp||0)); return `<span class="sc-pct">${pct(s.fgPct)}</span>`+(a?`<span class="sc-ma">${m}\u2013${a}</span>`:""); }
   if(key==="tpPct"){ const m=Math.round((s.tpm||0)*(s.gp||0)),a=Math.round((s.tpa||0)*(s.gp||0)); return `<span class="sc-pct">${pct(s.tpPct)}</span>`+(a?`<span class="sc-ma">${m}\u2013${a}</span>`:""); }
@@ -1565,7 +1585,7 @@ function sortedPlayers(){
 /* ---------- charts: scatter explorer ---------- */
 const CHART_STATS = [
   ["ppg","Points","n"],["rpg","Rebounds","n"],["apg","Assists","n"],["spg","Steals","n"],["bpg","Blocks","n"],["tpg","Turnovers","n"],["mpg","Minutes","n"],
-  ["ts","TS%","p"],["efg","eFG%","p"],["usg","USG%","u"],["astto","A/TO","r2"],
+  ["ts","TS%","p"],["efg","eFG%","p"],["usg","USG%","u"],["astto","A/TO","r2"],["astratio","Assist ratio","n"],["scshare","Scoring share","n"],
   ["p36","Pts / 36","n"],["r36","Reb / 36","n"],["a36","Ast / 36","n"],["stk","Stocks","n"],["prod","Production","n"],
   ["fgPct","FG%","p"],["tpPct","3P%","p"],["ftPct","FT%","p"],
   ["rimfg","Rim FG%","p"],["tovpct","TOV%","p"],["ftr","FT rate","r2"],["orpg","OREB","n"],["drpg","DREB","n"],
@@ -1998,6 +2018,78 @@ function statsView(){
   return toggle + `<div class="statswrap"><table class="statstable"><thead>${head}</thead><tbody>${body}</tbody></table></div>` + note;
 }
 
+function glossaryView(){
+  const gi=(c,n,d,f)=> '<div class="gl-item"><div class="gl-h"><span class="gl-code">'+c+'</span><span class="gl-name">'+n+'</span></div><div class="gl-desc">'+d+'</div>'+(f?'<div class="gl-form">'+f+'</div>':'')+'</div>';
+  const sec=(t,intro,rows)=> '<div class="gl-sec">'+t+'</div>'+(intro?'<div class="gl-intro">'+intro+'</div>':'')+rows.join('');
+  const lead='<div class="gl-lead">Every stat in the app, what it tells you, and how it is calculated. '
+    +'Rank badges (e.g. <span class="rkb t1">top 3%</span> <span class="rkb t2">top 10%</span> <span class="rkb b2">bot 10%</span>) show where a player sits across the field \u2014 or within their own position when the <b>By position</b> toggle is on. '
+    +'Tap any stat tile on a player card, or a team stat, to open its full ranking. '
+    +'Advanced stats have minimum-attempt gates so tiny samples do not top the leaderboards.</div>';
+
+  const box=sec('Box score \u2014 per game','Straight from the official box scores, averaged per game.',[
+    gi('PTS','Points','Points scored per game.'),
+    gi('REB','Rebounds','Total rebounds (offensive + defensive) per game.'),
+    gi('OREB','Offensive rebounds','Offensive boards per game, split out from the play-by-play.'),
+    gi('DREB','Defensive rebounds','Defensive boards per game, split out from the play-by-play.'),
+    gi('AST','Assists','Assists per game.'),
+    gi('STL','Steals','Steals per game.'),
+    gi('BLK','Blocks','Blocks per game.'),
+    gi('TO','Turnovers','Turnovers per game. Lower is better.'),
+    gi('MIN','Minutes','Minutes per game.'),
+    gi('GP','Games played','Number of games the player has appeared in.')
+  ]);
+
+  const shoot=sec('Shooting & efficiency','How well shots go in, and how efficient the scoring is overall.',[
+    gi('FG%','Field-goal %','Share of all field goals made. The small figure is makes\u2013attempts across the event.','FGM / FGA'),
+    gi('3P%','Three-point %','Share of three-point attempts made.','3PM / 3PA'),
+    gi('FT%','Free-throw %','Share of free throws made.','FTM / FTA'),
+    gi('TS%','True shooting %','One number for scoring efficiency across twos, threes and free throws \u2014 the fairest single shooting stat. Needs \u2265 6 FGA.','PTS / (2 \u00d7 (FGA + 0.44 \u00d7 FTA))'),
+    gi('eFG%','Effective FG %','Field-goal % that credits threes for the extra point they are worth. Needs \u2265 6 FGA.','(FGM + 0.5 \u00d7 3PM) / FGA'),
+    gi('RIMFG%','Rim FG%','How well the player finishes at the rim, using shot locations from the play-by-play. Great for bigs and slashers. Needs \u2265 6 rim attempts.','rim makes / rim attempts'),
+    gi('FTr','Free-throw rate','How often the player gets to the line relative to shooting \u2014 a proxy for rim pressure and drawing contact. Needs \u2265 10 FGA.','FTA / FGA')
+  ]);
+
+  const play=sec('Playmaking & scoring load','How much of the offense runs through a player, and how they handle it.',[
+    gi('ASTR','Assist ratio','Share of the possessions a player uses that end in an assist \u2014 a playmaking rate that, unlike A/TO, does not depend on turnovers. Shown as a %. Needs 20+ total minutes.','AST / (FGA + 0.44 \u00d7 FTA + AST + TOV) \u00d7 100'),
+    gi('PTS%','Scoring share','Share of the team scoring the player accounts for, per game \u2014 a quick read on who the go-to option is. Shown as a %. Needs 20+ total minutes.','player PPG / team PPG \u00d7 100'),
+    gi('A/TO','Assist-to-turnover','Assists per turnover \u2014 playmaking control. Higher is better.','AST / TO'),
+    gi('USG%','Usage rate','Share of the team possessions a player uses while on the floor (their shots, trips to the line and turnovers), minute-adjusted. Needs \u2265 20 total minutes.','\u2248 share of team plays a player finishes'),
+    gi('TOV%','Turnover rate','Turnovers per possession used \u2014 fair to high-usage ball-handlers. Shown as a %. Lower is better.','TOV / (FGA + 0.44 \u00d7 FTA + TOV) \u00d7 100')
+  ]);
+
+  const rate=sec('Rate & production','Per-minute rates and simple all-round impact.',[
+    gi('P36 / R36 / A36','Per-36-minute rates','Points, rebounds and assists projected to 36 minutes, so bench and starter volume can be compared on even footing.','stat / MIN \u00d7 36'),
+    gi('STK','Stocks','Steals plus blocks per game \u2014 a shorthand for disruptive defense.','STL + BLK'),
+    gi('PROD','Production','A simple box-impact tally in one number.','PTS + REB + AST + STL + BLK \u2212 TO')
+  ]);
+
+  const pbp=sec('Shot diet & passing \u2014 from play-by-play','Derived by parsing every event of every game, not just the box score.',[
+    gi('RIM%','Rim rate','Share of a player field-goal attempts taken at the rim \u2014 shows shot selection, not accuracy. Needs \u2265 8 FGA.','rim FGA / total FGA'),
+    gi('3PA%','Three rate','Share of field-goal attempts that are threes. Needs \u2265 8 FGA.','3PA / total FGA'),
+    gi('AST%','Assisted rate','Share of a player made field goals that came off a teammate pass \u2014 low values suggest a self-creator. Needs \u2265 5 makes.','assisted FGM / FGM'),
+    gi('ON/OFF','On/off net','Team net rating per 40 minutes with the player on the floor minus off it. Single-tournament samples are small \u2014 read as a hint, not proof. Needs \u2265 10 on-court minutes. (Currently rounds 1\u20132.)','on-court net/40 \u2212 off-court net/40')
+  ]);
+
+  const team=sec('Team stats','Team profiles carry per-game numbers and an Advanced tab. Possessions are estimated (see the note below), so the rating numbers are directional \u2014 the rankings are the reliable part.',[
+    gi('PF / PA','Points for / against','Points scored and allowed per game.'),
+    gi('Net','Point differential','Average margin per game.','PF \u2212 PA'),
+    gi('ORtg / DRtg','Offensive / Defensive rating','Points scored (ORtg) and allowed (DRtg) per 100 possessions \u2014 pace-adjusted, so teams that play fast and slow can be compared. Lower DRtg is better.','points / possessions \u00d7 100'),
+    gi('Net /100','Net rating','Efficiency margin per 100 possessions.','ORtg \u2212 DRtg'),
+    gi('Pace','Pace','Estimated possessions per game.','FGA \u2212 OREB + TOV + 0.44 \u00d7 FTA, per game'),
+    gi('OREB%','Offensive-rebound rate','Share of available offensive boards the team grabs \u2014 rebounding independent of pace.','team OREB / (team OREB + opponent DREB)'),
+    gi('DREB%','Defensive-rebound rate','Share of available defensive boards the team grabs.','team DREB / (team DREB + opponent OREB)'),
+    gi('AST Ratio','Team assist ratio','Share of team possessions ending in an assist \u2014 ball movement. Shown as a %.','AST / (FGA + 0.44 \u00d7 FTA + AST + TOV) \u00d7 100'),
+    gi('eFG / TS / FTr / 3PA% / A/TO','Team shooting & style','The same shooting-efficiency and style measures as the player versions, computed from team totals.')
+  ]);
+
+  const note=sec('A note on possessions & sample size','',[
+    gi('\u2248','Estimated possessions','The tournament feed does not publish official possession counts, so possessions are estimated as FGA \u2212 OREB + TOV + 0.44 \u00d7 FTA. That makes ratings, pace and rebound rates slightly high in absolute terms but reliable for ranking teams against each other.'),
+    gi('n','Small samples','Only three group games per team means rate stats are noisy. Minimum-attempt gates keep flukes off the leaderboards, but treat single-tournament advanced numbers as a guide rather than a verdict.')
+  ]);
+
+  return '<div class="gloss">'+lead+box+shoot+play+rate+pbp+team+note+'</div>';
+}
+
 function renderView(){
   const showRail = state.view==="board" && !isScoutFilter(state.filter);
   if(showRail) renderGroups(); else { const gr=$("#groups"); if(gr) gr.innerHTML=""; }
@@ -2008,6 +2100,7 @@ function renderView(){
   const wB=$("#watchBtn"); if(wB) wB.classList.toggle("on", isScoutFilter(state.filter));
   const bB=$("#bbBtn"); if(bB){ bB.classList.toggle("on", state.view==="bigboard"); const bc=$("#bbCount"); if(bc){ const nb=bigBoardIds().length; bc.hidden=nb===0; bc.textContent=nb; } }
   const brB=$("#brkBtn"); if(brB) brB.classList.toggle("on", state.view==="bracket");
+  const glB=$("#glosBtn"); if(glB) glB.classList.toggle("on", state.view==="glossary");
   updateWatchCount();
   const board = $("#board"); board.innerHTML="";
 
@@ -2087,6 +2180,14 @@ function renderView(){
     $("#secMeta").innerHTML = 'Players you\'ve rated, ranked 5\u2605 first \u2014 drag a row (or use \u25b2\u25bc) to fine-tune';
     board.innerHTML = bigBoardView();
     wireBigBoard(board);
+    return;
+  }
+
+  if(state.view==="glossary"){
+    $("#secTitle").textContent="Glossary";
+    const cEl=$("#secCount"); if(cEl) cEl.hidden=true;
+    $("#secMeta").innerHTML="What every stat means and how it is calculated";
+    board.innerHTML=glossaryView();
     return;
   }
 
@@ -2278,9 +2379,10 @@ function openPlayer(id){
   const _ts=metric(p,'ts'),_efg=metric(p,'efg'),_uv=usgVal(p);
   const _rf=metric(p,'rimfg'),_tv=metric(p,'tovpct');
   const advRim=_rf===-Infinity?'\u2013':pct(_rf), advTov=_tv===-Infinity?'\u2013':(_tv*100).toFixed(1)+'%';
+  const _ar=metric(p,'astratio'),_ss=metric(p,'scshare'); const advAstr=_ar===-Infinity?'\u2013':_ar.toFixed(1)+'%', advPsh=_ss===-Infinity?'\u2013':_ss.toFixed(1)+'%';
   const advTs=_ts===-Infinity?'–':pct(_ts), advEfg=_efg===-Infinity?'–':pct(_efg), advUsg=_uv==null?'–':_uv.toFixed(1), advFtr=(s.fga>0)?(s.fta/s.fga).toFixed(2):'–';
   const PRk=(s&&s.gp)?(playerRanks()[p.id]||{}):{}; const RKB=o=>o?rankBadge(o.rank,o.n):'';
-  const DL={ppg:'PTS',rpg:'REB',apg:'AST',spg:'STL',bpg:'BLK',mpg:'MIN',fgPct:'FG%',tpPct:'3P%',ftPct:'FT%',tpg:'TOV',ts:'TS%',efg:'eFG%',usg:'USG%',ftr:'FTr',orpg:'OREB',drpg:'DREB',rimfg:'Rim FG%',tovpct:'TOV%'};
+  const DL={ppg:'PTS',rpg:'REB',apg:'AST',spg:'STL',bpg:'BLK',mpg:'MIN',fgPct:'FG%',tpPct:'3P%',ftPct:'FT%',tpg:'TOV',ts:'TS%',efg:'eFG%',usg:'USG%',ftr:'FTr',orpg:'OREB',drpg:'DREB',rimfg:'Rim FG%',tovpct:'TOV%',astratio:'AST RATIO',scshare:'PTS SHARE'};
   const AC=(key,val)=>'<button type="button" class="a clk" onclick="openPlayerStatLb(\''+key+'\',\''+p.id+'\')" title="Tap for the full leaderboard"><div class="v">'+val+'</div><div class="k">'+DL[key]+'</div>'+RKB(PRk[key])+'</button>';
   const dr = $("#drawer");
   dr.innerHTML = `
@@ -2321,6 +2423,9 @@ function openPlayer(id){
         </div>
         <div class="shoot">
           ${AC('orpg',fmt(s.orpg))}${AC('drpg',fmt(s.drpg))}${AC('rimfg',advRim)}${AC('tovpct',advTov)}
+        </div>
+        <div class="shoot">
+          ${AC('astratio',advAstr)}${AC('scshare',advPsh)}
         </div>
         <div class="statsubtabs barswitch">
           <button class="subtab on" data-bt="basic">Per game</button>
@@ -2593,6 +2698,12 @@ if($("#brkBtn")) $("#brkBtn").onclick = ()=>{
   const sb=$("#search"); if(sb) sb.value="";
   if(activeId) closeDrawer(); else render();
 };
+if($("#glosBtn")) $("#glosBtn").onclick = ()=>{
+  state.view = state.view==="glossary" ? "board" : "glossary";
+  state.team=null; state.query=""; state.filter=null;
+  const sb=$("#search"); if(sb) sb.value="";
+  if(activeId) closeDrawer(); else render();
+};
 if($("#posBtn")) $("#posBtn").onclick = ()=>{ state.posRel=!state.posRel; if(activeId) openPlayer(activeId); render(); };
 if($("#themeBtn")) $("#themeBtn").onclick = ()=>{ const dark=document.documentElement.getAttribute("data-theme")==="dark"; applyTheme(dark?"light":"dark"); if(activeId) openPlayer(activeId); render(); };
 
@@ -2608,6 +2719,7 @@ function currentHash(){
   if(state.view==="charts") return "#charts";
   if(state.view==="bigboard") return "#bigboard";
   if(state.view==="bracket") return "#bracket";
+  if(state.view==="glossary") return "#glossary";
   if(state.filter && state.filter.type==="watch") return "#watchlist";
   if(state.team) return "#t/"+state.team;
   return "";
@@ -2635,6 +2747,7 @@ function routeTo(h){
   else if(h==="#charts"){ state.view="charts"; state.team=null; state.filter=null; }
   else if(h==="#bigboard"){ state.view="bigboard"; state.team=null; state.filter=null; }
   else if(h==="#bracket"){ state.view="bracket"; state.team=null; state.filter=null; }
+  else if(h==="#glossary"){ state.view="glossary"; state.team=null; state.filter=null; }
   else if(h==="#watchlist"){ state.view="board"; state.team=null; state.filter={type:"watch",value:"1",label:"Watchlist"}; }
   else if(tm && D.teams.some(t=>t.id===tm[1])){ state.view="board"; state.team=tm[1]; state.filter=null; }
   else { state.view="board"; state.team=null; state.filter=null; }
