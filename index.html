@@ -532,6 +532,12 @@ a.logopp:hover{text-decoration:underline}
 .tlb-name{flex:1;font-family:var(--disp);font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tlb-row.cur .tlb-name{color:var(--clay-deep)}
 .tlb-val{font-family:var(--mono);font-weight:700;font-size:14px;flex:none}
+.avg .a.clk,.shoot .a.clk{cursor:pointer;border:0;font:inherit;color:inherit;-webkit-tap-highlight-color:transparent;position:relative;transition:box-shadow .12s,transform .08s}
+.avg .a.clk:hover,.shoot .a.clk:hover{box-shadow:inset 0 0 0 2px var(--clay)}
+.avg .a.clk:active,.shoot .a.clk:active{transform:scale(.96)}
+.tlb.plb .tlb-card{overflow:hidden}
+.tlb.plb .tlb-list{max-height:64vh;overflow:auto;margin-top:10px}
+.tlb-sub2{font-size:11px;color:var(--muted-2);font-family:var(--body);font-weight:500}
 .histsvg .hbar{fill:#CBAB8C;transition:fill .1s}
 .histsvg .hbar.on{fill:var(--clay)}
 .histsvg .hmean{stroke:var(--muted-2);stroke-width:1.4;stroke-dasharray:5 4}
@@ -761,6 +767,7 @@ html[data-theme="dark"] .tg{color:#E3C7A0}
 
 <div class="scrim" id="scrim"></div>
 <div class="tlb" id="tlb" aria-hidden="true"><div class="tlb-back" onclick="closeTeamLeaderboard()"></div><div class="tlb-card" id="tlbCard" role="dialog" aria-modal="true"></div></div>
+<div class="tlb plb" id="plb" aria-hidden="true"><div class="tlb-back" onclick="closePlayerLb()"></div><div class="tlb-card" id="plbCard" role="dialog" aria-modal="true"></div></div>
 <aside class="drawer" id="drawer" aria-hidden="true"></aside>
 <div class="toast" id="toast"></div>
 
@@ -993,7 +1000,39 @@ function openTeamLeaderboard(key, teamId){
   document.getElementById('tlb').classList.add('on');
 }
 function closeTeamLeaderboard(){ const el=document.getElementById('tlb'); if(el) el.classList.remove('on'); }
-function gotoTeamFromLb(tid){ closeTeamLeaderboard(); state.team=tid; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){window.scrollTo(0,0);} }function teamLineups(teamId){
+function gotoTeamFromLb(tid){ closeTeamLeaderboard(); state.team=tid; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); try{window.scrollTo({top:0,behavior:'smooth'});}catch(e){window.scrollTo(0,0);} }const PLB_LABEL={ppg:'Points / game',rpg:'Rebounds / game',apg:'Assists / game',spg:'Steals / game',bpg:'Blocks / game',mpg:'Minutes / game',tpg:'Turnovers / game',fgPct:'Field-goal %',tpPct:'Three-point %',ftPct:'Free-throw %',ts:'True shooting %',efg:'Effective FG %',usg:'Usage rate',ftr:'Free-throw rate',rimfg:'Rim FG% (finishing at the rim)',tovpct:'Turnover rate',orpg:'Offensive rebounds / game',drpg:'Defensive rebounds / game'};
+function lbVal(p,key){ const s=p.stats||{};
+  if(key==='fgPct'||key==='tpPct'||key==='ftPct') return pct(s[key]);
+  if(key==='ts'||key==='efg'||key==='rimfg'){ const v=metric(p,key); return v===-Infinity?'\u2013':pct(v); }
+  if(key==='usg'){ const v=metric(p,'usg'); return (v==null||v===-Infinity)?'\u2013':v.toFixed(1); }
+  if(key==='ftr'){ return (s.fga>0)?(s.fta/s.fga).toFixed(2):'\u2013'; }
+  if(key==='tovpct'){ const v=metric(p,'tovpct'); return v===-Infinity?'\u2013':(v*100).toFixed(1)+'%'; }
+  return fmt(s[key]); }
+function openPlayerStatLb(key, playerId){
+  const def=PLAYER_RANK_DEFS.find(d=>d[0]===key); if(!def) return;
+  const vf=def[1],dir=def[2],qf=def[3];
+  const qual=D.players.filter(p=>p.stats&&p.stats.gp>0);
+  const arr=qual.filter(p=>{ const s=p.stats; if(!qf(p,s)) return false; const v=vf(p,s); return v!=null&&isFinite(v); })
+    .map(p=>({p,v:vf(p,p.stats)})).sort((a,b)=> dir>0 ? b.v-a.v : a.v-b.v);
+  const n=arr.length; const curIdx=arr.findIndex(x=>x.p.id===playerId);
+  const rows=arr.map((x,i)=>{ const cur=x.p.id===playerId; const t=teamById(x.p.teamId); const fl=t?FLAG(t.code,40):'';
+    return '<button type="button" class="tlb-row'+(cur?' cur':'')+'" onclick="gotoPlayerFromLb(\''+x.p.id+'\')">'
+      +'<span class="tlb-rank">'+(i+1)+'</span>'
+      +(fl?'<img class="tlb-flag" src="'+fl+'" alt="" onerror="this.style.visibility=\'hidden\'">':'<span class="tlb-flag"></span>')
+      +'<span class="tlb-name">'+chEsc(x.p.name)+'<span class="tlb-sub2"> \u00b7 '+(t?chEsc(t.code):'')+'</span></span>'
+      +'<span class="tlb-val">'+lbVal(x.p,key)+'</span></button>'; }).join('');
+  const card=document.getElementById('plbCard'); if(!card) return;
+  const meLine=curIdx>=0 ? ('this player: '+ordinal(curIdx+1)+' of '+n) : 'this player did not qualify';
+  card.innerHTML='<div class="tlb-h"><div><div class="tlb-title">'+(PLB_LABEL[key]||key)+'</div>'
+      +'<div class="tlb-sub">All qualified players \u00b7 '+(dir>0?'higher is better':'lower is better')+' \u00b7 '+meLine+'</div></div>'
+      +'<button type="button" class="tlb-x" onclick="closePlayerLb()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>'
+    +'<div class="tlb-list" id="plbList">'+rows+'</div>';
+  const el=document.getElementById('plb'); if(el){ el.classList.add('on'); el.setAttribute('aria-hidden','false'); }
+  requestAnimationFrame(()=>{ const list=document.getElementById('plbList'); if(!list||curIdx<0) return; const row=list.querySelector('.tlb-row.cur'); if(!row) return; list.scrollTop=Math.max(0, row.offsetTop - list.clientHeight/2 + row.clientHeight/2); });
+}
+function closePlayerLb(){ const el=document.getElementById('plb'); if(el){ el.classList.remove('on'); el.setAttribute('aria-hidden','true'); } }
+function gotoPlayerFromLb(pid){ closePlayerLb(); openPlayer(pid); }
+function teamLineups(teamId){
   let rows=(PA.lu||[]).map(e=>{ const ps=e[0].split("-").map(pidPlayer); return {e,ps}; })
     .filter(x=>x.ps.every(p=>p&&p.teamId===teamId)&&x.e[2]>=180);
   rows.forEach(x=>x.net=(x.e[3]-x.e[4])/x.e[2]*2400); rows.sort((a,b)=>b.net-a.net); rows=rows.slice(0,6);
@@ -1495,7 +1534,7 @@ function statCell(p,key){
   if(key==="astpct"){ const v=metric(p,"astpct"); return v===-Infinity ? "–" : Math.round(v)+"%"; }
   if(key==="onoff"||key==="onnet"){ const v=metric(p,key); return v===-Infinity ? "–" : (v>0?"+":"")+v.toFixed(1); }
   if(key==="rimfg"){ const v=metric(p,"rimfg"); return v===-Infinity?"\u2013":pct(v); }
-  if(key==="tovpct"){ const v=metric(p,"tovpct"); return v===-Infinity?"\u2013":Math.round(v*100)+"%"; }
+  if(key==="tovpct"){ const v=metric(p,"tovpct"); return v===-Infinity?"\u2013":(v*100).toFixed(1)+"%"; }
   if(key==="ftr"){ const v=metric(p,"ftr"); return v===-Infinity?"\u2013":v.toFixed(2); }
   if(key==="orpg"||key==="drpg"){ const v=(p.stats&&p.stats[key]!=null)?p.stats[key]:null; return v==null?"\u2013":fmt(v); }
   if(key==="fgPct"){ const m=Math.round((s.fgm||0)*(s.gp||0)),a=Math.round((s.fga||0)*(s.gp||0)); return `<span class="sc-pct">${pct(s.fgPct)}</span>`+(a?`<span class="sc-ma">${m}\u2013${a}</span>`:""); }
@@ -2238,9 +2277,11 @@ function openPlayer(id){
   const t = teamById(p.teamId); const s=p.stats||{}; const n=noteFor(id);
   const _ts=metric(p,'ts'),_efg=metric(p,'efg'),_uv=usgVal(p);
   const _rf=metric(p,'rimfg'),_tv=metric(p,'tovpct');
-  const advRim=_rf===-Infinity?'\u2013':pct(_rf), advTov=_tv===-Infinity?'\u2013':Math.round(_tv*100)+'%';
+  const advRim=_rf===-Infinity?'\u2013':pct(_rf), advTov=_tv===-Infinity?'\u2013':(_tv*100).toFixed(1)+'%';
   const advTs=_ts===-Infinity?'–':pct(_ts), advEfg=_efg===-Infinity?'–':pct(_efg), advUsg=_uv==null?'–':_uv.toFixed(1), advFtr=(s.fga>0)?(s.fta/s.fga).toFixed(2):'–';
   const PRk=(s&&s.gp)?(playerRanks()[p.id]||{}):{}; const RKB=o=>o?rankBadge(o.rank,o.n):'';
+  const DL={ppg:'PTS',rpg:'REB',apg:'AST',spg:'STL',bpg:'BLK',mpg:'MIN',fgPct:'FG%',tpPct:'3P%',ftPct:'FT%',tpg:'TOV',ts:'TS%',efg:'eFG%',usg:'USG%',ftr:'FTr',orpg:'OREB',drpg:'DREB',rimfg:'Rim FG%',tovpct:'TOV%'};
+  const AC=(key,val)=>'<button type="button" class="a clk" onclick="openPlayerStatLb(\''+key+'\',\''+p.id+'\')" title="Tap for the full leaderboard"><div class="v">'+val+'</div><div class="k">'+DL[key]+'</div>'+RKB(PRk[key])+'</button>';
   const dr = $("#drawer");
   dr.innerHTML = `
     <div class="dr-head">
@@ -2270,30 +2311,16 @@ function openPlayer(id){
       <div class="dr-sec">
         <h4>Event averages · ${s.gp??0} GP</h4>
         <div class="avg">
-          <div class="a"><div class="v">${fmt(s.ppg)}</div><div class="k">PTS</div>${RKB(PRk.ppg)}</div>
-          <div class="a"><div class="v">${fmt(s.rpg)}</div><div class="k">REB</div>${RKB(PRk.rpg)}</div>
-          <div class="a"><div class="v">${fmt(s.apg)}</div><div class="k">AST</div>${RKB(PRk.apg)}</div>
-          <div class="a"><div class="v">${fmt(s.spg)}</div><div class="k">STL</div>${RKB(PRk.spg)}</div>
-          <div class="a"><div class="v">${fmt(s.bpg)}</div><div class="k">BLK</div>${RKB(PRk.bpg)}</div>
-          <div class="a"><div class="v">${fmt(s.mpg)}</div><div class="k">MIN</div>${RKB(PRk.mpg)}</div>
+          ${AC('ppg',fmt(s.ppg))}${AC('rpg',fmt(s.rpg))}${AC('apg',fmt(s.apg))}${AC('spg',fmt(s.spg))}${AC('bpg',fmt(s.bpg))}${AC('mpg',fmt(s.mpg))}
         </div>
         <div class="shoot">
-          <div class="a"><div class="v">${pct(s.fgPct)}</div><div class="k">FG%</div>${RKB(PRk.fgPct)}</div>
-          <div class="a"><div class="v">${pct(s.tpPct)}</div><div class="k">3P%</div>${RKB(PRk.tpPct)}</div>
-          <div class="a"><div class="v">${pct(s.ftPct)}</div><div class="k">FT%</div>${RKB(PRk.ftPct)}</div>
-          <div class="a"><div class="v">${fmt(s.tpg)}</div><div class="k">TOV</div>${RKB(PRk.tpg)}</div>
+          ${AC('fgPct',pct(s.fgPct))}${AC('tpPct',pct(s.tpPct))}${AC('ftPct',pct(s.ftPct))}${AC('tpg',fmt(s.tpg))}
         </div>
         <div class="shoot">
-          <div class="a"><div class="v">${advTs}</div><div class="k">TS%</div>${RKB(PRk.ts)}</div>
-          <div class="a"><div class="v">${advEfg}</div><div class="k">eFG%</div>${RKB(PRk.efg)}</div>
-          <div class="a"><div class="v">${advUsg}</div><div class="k">USG%</div>${RKB(PRk.usg)}</div>
-          <div class="a"><div class="v">${advFtr}</div><div class="k">FTr</div>${RKB(PRk.ftr)}</div>
+          ${AC('ts',advTs)}${AC('efg',advEfg)}${AC('usg',advUsg)}${AC('ftr',advFtr)}
         </div>
         <div class="shoot">
-          <div class="a"><div class="v">${fmt(s.orpg)}</div><div class="k">OREB</div>${RKB(PRk.orpg)}</div>
-          <div class="a"><div class="v">${fmt(s.drpg)}</div><div class="k">DREB</div>${RKB(PRk.drpg)}</div>
-          <div class="a"><div class="v">${advRim}</div><div class="k">Rim FG%</div>${RKB(PRk.rimfg)}</div>
-          <div class="a"><div class="v">${advTov}</div><div class="k">TOV%</div>${RKB(PRk.tovpct)}</div>
+          ${AC('orpg',fmt(s.orpg))}${AC('drpg',fmt(s.drpg))}${AC('rimfg',advRim)}${AC('tovpct',advTov)}
         </div>
         <div class="statsubtabs barswitch">
           <button class="subtab on" data-bt="basic">Per game</button>
@@ -2488,7 +2515,7 @@ function closeDrawer(){
   $("#scrim").classList.remove("on"); activeId=null; render();
 }
 $("#scrim").onclick = closeDrawer;
-document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ const el=document.getElementById("tlb"); if(el&&el.classList.contains("on")){ e.stopPropagation(); closeTeamLeaderboard(); } } }, true);
+document.addEventListener("keydown", e=>{ if(e.key==="Escape"){ const pl=document.getElementById("plb"); if(pl&&pl.classList.contains("on")){ e.stopPropagation(); closePlayerLb(); return; } const el=document.getElementById("tlb"); if(el&&el.classList.contains("on")){ e.stopPropagation(); closeTeamLeaderboard(); } } }, true);
 $("#brand").onclick = goHome;
 
 /* ---------- cloud sync (Firebase) glue ---------- */
