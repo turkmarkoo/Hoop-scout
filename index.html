@@ -336,6 +336,9 @@ button.brand:hover .mark b{color:var(--clay-deep)}
 .gst.final{background:var(--panel-3);color:var(--muted)}
 .gst.live{background:#FBE7DF;color:var(--warn)}
 .gst.upcoming{background:#E7F0EE;color:var(--sage)}
+.toTop{position:fixed;right:22px;bottom:22px;z-index:40;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--sage);cursor:pointer;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .18s ease}
+.toTop.show{opacity:1;pointer-events:auto}
+.toTop:hover{background:var(--sage);color:#fff}
 .gst.win{background:rgba(110,159,106,.18);color:var(--good)}
 .gst.loss{background:#FBE7DF;color:var(--warn)}
 .muted-note{color:var(--muted);font-size:13px;margin:0}
@@ -1452,7 +1455,17 @@ function makeTeamBtn(tid,t){
 }
 function renderGroups(){
  const wrap = $("#groups"); wrap.innerHTML="";
- const r16 = (D.bracket && D.bracket.games) ? D.bracket.games.filter(g=>g.rc==='R16').slice().sort((a,b)=>a.num-b.num) : [];
+ const ko=[];
+ ((D.bracket&&D.bracket.games)||[]).forEach(g=>{
+   const A=brkSlot(g,'a'), B=brkSlot(g,'b');
+   if(A.resolved&&A.code&&B.resolved&&B.code) ko.push(Object.assign({},g,{_ca:A.code,_cb:B.code}));
+ });
+ ko.sort((a,b)=>a.num-b.num);
+ const koByDate={}; ko.forEach(g=>{ const d=(g.dt||'').slice(0,10); (koByDate[d]=koByDate[d]||[]).push(g); });
+ const koDates=Object.keys(koByDate).sort();
+ const openDates=koDates.filter(d=>koByDate[d].some(g=>g.st!=='VALID'));
+ const showDate=openDates.length?openDates[0]:(koDates.length?koDates[koDates.length-1]:null);
+ const r16 = showDate?koByDate[showDate]:[];
  if(!r16.length){
  Object.keys(D.groups||{}).forEach(g=>{
  const col=document.createElement("div"); col.className="grp";
@@ -1466,10 +1479,12 @@ function renderGroups(){
  const dtKey=g=>(g.dt||'')+String(g.num).padStart(3,'0');
  function pairCard(g){
  const col=document.createElement("div"); col.className="grp pairing";
- const when=fmtDate((g.dt||'').slice(0,10)), tm=koGameTime(g.dt);
- col.innerHTML='<h3 class="pair-h"><span class="pair-when">'+when+' \u00b7 '+tm+'</span></h3>';
+ const when=fmtDate((g.dt||'').slice(0,10));
+ const right=(g.st==='VALID'&&g.sa!=null&&g.sb!=null)?(g.sa+'\u2013'+g.sb):koGameTime(g.dt);
+ const tag=g.short?chEsc(g.short)+' \u00b7 ':'';
+ col.innerHTML='<h3 class="pair-h"><span class="pair-when">'+tag+when+' \u00b7 '+right+'</span></h3>';
  const row=document.createElement("div"); row.className="teamrow";
- [g.a,g.b].forEach(code=>{ const t=codeToTeam(code); if(t) row.appendChild(makeTeamBtn(t.id,t)); });
+ [g._ca||g.a,g._cb||g.b].forEach(code=>{ const t=codeToTeam(code); if(t) row.appendChild(makeTeamBtn(t.id,t)); });
  col.appendChild(row); return col;
  }
  function pairRow(games,vk,label){
@@ -2181,7 +2196,8 @@ function glossaryView(){
  gi('Player card','Profile, stats, notes','Opens from anywhere. Box and advanced stats (tap any tile for its leaderboard), shot chart, game log, and your private notes, tags and star rating. Use \u25b2\u25bc or the dropdown to step to the next player in whatever list you opened them from. Tap the photo to enlarge it.'),
  gi('Your data','Private & synced','Notes, tags and ratings save on your device and sync across devices when you sign in \u2014 and stay private to you. Switch light/dark theme from the top bar.')
  ]);
- return '<div class="gloss"><input class="gl-search" id="glossSearch" type="search" placeholder="Search the guide & stats \u2014 name, code, or keyword\u2026" autocomplete="off">'+lead+guide+box+shoot+play+rate+pbp+team+note+'</div>';
+ return '<div class="gloss"><input class="gl-search" id="glossSearch" type="search" placeholder="Search the guide & stats \u2014 name, code, or keyword\u2026" autocomplete="off">'+lead+guide+box+shoot+play+rate+pbp+team+note+'</div>'
+ +'<button type="button" class="toTop" id="glossTop" title="Back to top" aria-label="Back to top" onclick="try{window.scrollTo({top:0,behavior:\'smooth\'})}catch(e){window.scrollTo(0,0)}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>';
 }
 
 function renderView(){
@@ -2372,7 +2388,15 @@ function initMatchup(){
  if(best){ state.matchA=best.a; state.matchB=best.b; }
 }
 function setMatchTeam(which,teamId){ if(which==='a'){ state.matchA=teamId; const o=smartOpponent(teamId); if(o&&o!==teamId) state.matchB=o; } else state.matchB=teamId; }
-function openTeamFromMatch(teamId){ if(!teamId) return; state.team=teamId; state.query=''; state.filter=null; state.view='board'; const s=$('#search'); if(s) s.value=''; if(activeId) closeDrawer(); else render(); setTimeout(()=>{ const g=document.getElementById('rosterGrid'); if(g){ try{ g.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){ g.scrollIntoView(); } } else { try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){} } }, 70); }
+function scrollToRoster(){
+ const g=document.getElementById("rosterGrid");
+ if(!g){ try{ window.scrollTo({top:0,behavior:"smooth"}); }catch(e){} return; }
+ const hdr=document.querySelector(".top");
+ const off=(hdr?hdr.getBoundingClientRect().height:0)+14;
+ const y=Math.max(0, g.getBoundingClientRect().top + (window.pageYOffset||document.documentElement.scrollTop) - off);
+ try{ window.scrollTo({top:y,behavior:"smooth"}); }catch(e){ window.scrollTo(0,y); }
+}
+function openTeamFromMatch(teamId){ if(!teamId) return; state.team=teamId; state.query=''; state.filter=null; state.view='board'; const s=$('#search'); if(s) s.value=''; if(activeId) closeDrawer(); else render(); setTimeout(scrollToRoster, 70); }
 function renderMatchup(){
  const box=document.getElementById('matchup'); if(!box) return;
  const opts=D.teams.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(t=>'<option value="'+t.id+'"'+(t.id===state.matchA?' selected':'')+'>'+chEsc(t.code)+' \u00b7 '+chEsc(t.name)+'</option>').join('');
@@ -2616,7 +2640,7 @@ function navContext(){
 }
 function drawerStep(dir){ const ctx=navContext(); const i=ctx.list.indexOf(activeId); if(i<0) return; const j=i+dir; if(j<0||j>=ctx.list.length) return; openPlayer(ctx.list[j]); }
 function jumpToNotes(){ const sc=document.querySelector("#drawer .dr-scroll"), nt=document.getElementById("drNotesSec"); if(!sc||!nt) return; const r1=nt.getBoundingClientRect(), r0=sc.getBoundingClientRect(); const top=sc.scrollTop+(r1.top-r0.top)-8; try{ sc.scrollTo({top:top,behavior:"smooth"}); }catch(e){ sc.scrollTop=top; } }
-function jumpToRoster(){ const g=document.getElementById("rosterGrid"); if(g){ try{ g.scrollIntoView({behavior:"smooth",block:"start"}); }catch(e){ g.scrollIntoView(); } } }
+function jumpToRoster(){ scrollToRoster(); }
 function openPlayer(id){
  const p = D.players.find(x=>x.id===id); if(!p) return;
  activeId=id;
@@ -3019,6 +3043,10 @@ function applyHash(){ const h=location.hash||""; if(h===currentHash()) return; r
  — the data refreshes only when players.js is updated. */
 window.addEventListener("hashchange", applyHash);
 initMatchup();
+window.addEventListener('scroll', function(){
+ const b=document.getElementById('glossTop'); if(!b) return;
+ b.classList.toggle('show', (window.pageYOffset||document.documentElement.scrollTop)>400);
+}, {passive:true});
 if(location.hash){ routeTo(location.hash); } else { render(); }
 
 </script>
