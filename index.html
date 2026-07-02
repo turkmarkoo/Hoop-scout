@@ -894,10 +894,11 @@ function gameTime(g){
 }
 
 function standings(group, meId){
-  const ts=(D.groups[group]||[]).map(teamById).filter(t=>t.record)
-    .sort((a,b)=> b.record.pts-a.record.pts || (b.record.diff||0)-(a.record.diff||0) || (b.record.w-a.record.w));
+  const REC=t=>t.groupRecord||t.record;
+  const ts=(D.groups[group]||[]).map(teamById).filter(t=>REC(t))
+    .sort((a,b)=> REC(b).pts-REC(a).pts || (REC(b).diff||0)-(REC(a).diff||0) || (REC(b).w-REC(a).w));
   if(!ts.length) return "";
-  const rows=ts.map((t,i)=>`<tr class="${t.id===meId?'me':''}"><td>${i+1}</td><td>${t.name}</td><td>${t.record.w}-${t.record.l}</td><td>${t.record.pts}</td></tr>`).join("");
+  const rows=ts.map((t,i)=>`<tr class="${t.id===meId?'me':''}"><td>${i+1}</td><td>${t.name}</td><td>${REC(t).w}-${REC(t).l}</td><td>${REC(t).pts}</td></tr>`).join("");
   return `<table class="stand"><thead><tr><th>#</th><th>Team</th><th>W-L</th><th>Pts</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 function teamGames(teamId){
@@ -1155,7 +1156,7 @@ function venLabel(v){ return v && v.indexOf('Main')>=0 ? 'Main Venue' : v ? 'Nat
 function koGameTime(dt){ if(!dt) return 'Scheduled'; const d=new Date(dt); if(isNaN(d)) return 'Scheduled'; try{ return d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }catch(e){ return 'Scheduled'; } }
 function schedGames(){
   const out=[];
-  (D.games||[]).forEach(g=>{ out.push({kind:'group', id:g.id, date:g.date, time:g.time, label:'Group '+g.group,
+  (D.games||[]).forEach(g=>{ if(!/^[A-D]$/.test(g.group||'')) return; out.push({kind:'group', id:g.id, date:g.date, time:g.time, label:'Group '+g.group,
     a:g.a, b:g.b, sa:g.sa, sb:g.sb, final:g.status==='final', venue:g.venue, url:gameUrl(g)}); });
   if(D.bracket && D.bracket.games){ D.bracket.games.forEach(g=>{
     const date=(g.dt||'').slice(0,10);
@@ -2349,7 +2350,7 @@ function renderView(){
 }
 function eventGames(){
   const out=[];
-  (D.games||[]).forEach(g=>{ if(g.a&&g.b&&codeToTeam(g.a)&&codeToTeam(g.b)) out.push({a:g.a,b:g.b,t:g.time||g.date||'',st:g.status}); });
+  (D.games||[]).forEach(g=>{ if(!/^[A-D]$/.test(g.group||'')) return; if(g.a&&g.b&&codeToTeam(g.a)&&codeToTeam(g.b)) out.push({a:g.a,b:g.b,t:g.time||g.date||'',st:g.status}); });
   ((D.bracket&&D.bracket.games)||[]).forEach(g=>{ if(g.a&&g.b&&codeToTeam(g.a)&&codeToTeam(g.b)) out.push({a:g.a,b:g.b,t:g.dt||'',st:g.st}); });
   return out;
 }
