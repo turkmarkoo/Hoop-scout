@@ -86,14 +86,14 @@ input,textarea{font-family:inherit}
 .matchup{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
 .mlabel{font-family:var(--mono); font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted-2); white-space:nowrap}
 .msel{height:32px; border:1px solid var(--line); background:var(--panel); color:var(--text); border-radius:8px; font:inherit; font-size:12px; padding:0 6px; max-width:150px; cursor:pointer; box-shadow:var(--shadow)}
-.mflip{display:inline-flex; align-items:center; gap:6px}
-.mchip{display:inline-flex; align-items:center; gap:5px; border:1px solid var(--line); background:var(--panel); color:var(--text); border-radius:999px; padding:4px 10px 4px 6px; font-size:12.5px; cursor:pointer; box-shadow:var(--shadow); transition:border-color .12s, background .12s}
+.mflip{display:inline-flex; flex-direction:column; align-items:stretch; gap:3px}
+.mchip{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); background:var(--panel); color:var(--text); border-radius:10px; padding:5px 12px 5px 7px; font-size:13px; cursor:pointer; box-shadow:var(--shadow); transition:border-color .12s, background .12s}
 .mchip img{width:18px; height:13px; border-radius:2px; display:block; object-fit:cover}
 .mchip b{font-family:var(--mono); font-weight:700}
 .mchip:hover{border-color:var(--clay)}
 .mchip.on{background:var(--clay); color:#fff; border-color:var(--clay)}
 .mchip.on img{outline:1px solid rgba(255,255,255,.6)}
-.mvs{font-size:11px; color:var(--muted-2); font-family:var(--mono)}
+.mvs{font-size:8.5px; color:var(--muted-2); font-family:var(--mono); text-align:center; line-height:1; letter-spacing:.1em; text-transform:uppercase; margin:-1px 0}
 .btn{background:var(--panel); border:1px solid var(--line); color:var(--text); border-radius:9px;
   padding:8px 12px; font-size:13px; font-weight:500; display:inline-flex; align-items:center; gap:7px;
   box-shadow:var(--shadow); transition:background .15s,border-color .15s}
@@ -2168,7 +2168,19 @@ function glossaryView(){
     gi('n','Small samples','Only three group games per team means rate stats are noisy. Minimum-attempt gates keep flukes off the leaderboards, but treat single-tournament advanced numbers as a guide rather than a verdict.')
   ]);
 
-  return '<div class="gloss"><input class="gl-search" id="glossSearch" type="search" placeholder="Search stats \u2014 name, code, or keyword\u2026" autocomplete="off">'+lead+box+shoot+play+rate+pbp+team+note+'</div>';
+  const guide=sec('Using this app','A quick tour \u2014 what each tab shows and what you can do with the data.',[
+    gi('Home','Board & team pages','The landing board lists every team by group. Tap a team for its roster, profile and standings; tap any player for their full profile. The search box jumps to a player or team by name or jersey number.'),
+    gi('Matchup','Game switcher (top bar)','Pick a team in the top bar and its live-or-next opponent fills in automatically. The two team buttons let you flip between both sides of a game in one tap while watching, and jump straight to each roster.'),
+    gi('Stats','Sortable stat table','Every player in one sortable table, with Per game, Totals and Advanced tabs. Tap a column header to sort, tap a row to open the player.'),
+    gi('Charts','Scatter, leaderboards, distributions, lineups, compare','Visual tools: scatter any two stats, rank a single stat as a leaderboard, see distribution curves, on/off and lineup impact, and a head-to-head player comparison.'),
+    gi('Filter','Smart filters','Build multi-condition filters \u2014 e.g. guards over 188 cm shooting above 35% from three \u2014 mixing position, height, birth year, any stat and your own tags. A live counter shows how many players match.'),
+    gi('Watchlist','Your bookmarks','Bookmark players with the flag icon to build a watchlist, and filter by your own notes and tags.'),
+    gi('Big board','Your ranked board','Rate players 1\u20135 stars in their profile and they show up here, ranked by stars (drag within a tier to fine-tune) \u2014 your personal draft board.'),
+    gi('Bracket','Knockout tree & group standings','The full final phase \u2014 Round of 16 through the Final plus the 5\u20138 and 9\u201316 paths \u2014 with the group-phase standings shown at the bottom.'),
+    gi('Player card','Profile, stats, notes','Opens from anywhere. Box and advanced stats (tap any tile for its leaderboard), shot chart, game log, and your private notes, tags and star rating. Use \u25b2\u25bc or the dropdown to step to the next player in whatever list you opened them from. Tap the photo to enlarge it.'),
+    gi('Your data','Private & synced','Notes, tags and ratings save on your device and sync across devices when you sign in \u2014 and stay private to you. Switch light/dark theme from the top bar.')
+  ]);
+  return '<div class="gloss"><input class="gl-search" id="glossSearch" type="search" placeholder="Search the guide & stats \u2014 name, code, or keyword\u2026" autocomplete="off">'+lead+guide+box+shoot+play+rate+pbp+team+note+'</div>';
 }
 
 function renderView(){
