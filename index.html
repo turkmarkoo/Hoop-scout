@@ -319,6 +319,9 @@ button.brand:hover .mark b{color:var(--clay-deep)}
 .stand td:nth-child(2),.stand th:nth-child(2){text-align:left;font-family:var(--body)}
 .stand td:first-child{color:var(--muted-2)}
 .stand tr.me td{background:var(--clay-soft);color:var(--clay-deep);font-weight:600}
+.gst-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px 22px;margin-top:4px}
+.gst-col{min-width:0}
+.gst-h{font-family:var(--disp);font-weight:700;font-size:13px;color:var(--clay-deep);margin-bottom:7px;text-transform:uppercase;letter-spacing:.03em}
 .gamerow{display:flex;align-items:center;gap:10px;padding:9px 6px;border-bottom:1px solid var(--line-soft);text-decoration:none;color:var(--text);border-radius:7px;transition:background .12s}
 .gamerow:last-child{border-bottom:0}
 .gamerow:hover{background:var(--clay-soft)}
@@ -1142,8 +1145,7 @@ function lineupView(){
   const combos=lineupCombos(state.chartGroup,300).slice(0,15);
   const ooRows = oo.length? oo.map(x=>'<tr class="clk" data-id="'+x.p.id+'"><td>'+chEsc(x.p.name)+'<span class="tmcode">'+chEsc(teamById(x.p.teamId).code)+'</span></td><td>'+netSpan(x.oo.onNet)+'</td><td>'+(x.oo.offNet==null?'\u2013':netSpan(x.oo.offNet))+'</td><td>'+netSpan(x.oo.diff)+'</td><td>'+x.oo.onMin.toFixed(0)+"'"+'</td></tr>').join('') : '<tr><td colspan="5" class="muted-note" style="text-align:left">No on/off data for this filter yet.</td></tr>';
   const cmRows = combos.length? combos.map(x=>'<tr><td>'+comboLabel(x.ps)+'<span class="tmcode">'+chEsc(teamById(x.ps[0].teamId).code)+'</span></td><td>'+(x.e[2]/60).toFixed(0)+"'"+'</td><td>'+x.e[3]+'\u2013'+x.e[4]+'</td><td>'+netSpan(x.net)+'</td></tr>').join('') : '<tr><td colspan="4" class="muted-note" style="text-align:left">No combo data for this filter yet.</td></tr>';
-  return '<div class="chartctrls"><label class="chf">Show<select id="lvGrp">'+grpOpts+'</select></label></div>'
-    +'<div class="lvh">On/off impact leaders</div><div class="lvsub">Team net rating per 40 with the player on court vs. off. Click a player to open them.</div>'
+  return '<div class="lvh">On/off impact leaders</div><div class="lvsub">Team net rating per 40 with the player on court vs. off. Click a player to open them.</div>'
     +'<table class="lvtable"><thead><tr><th>Player</th><th>On /40</th><th>Off /40</th><th>Swing</th><th>On min</th></tr></thead><tbody>'+ooRows+'</tbody></table>'
     +'<div class="lvh">Best lineup combos</div><div class="lvsub">Highest net rating per 40 among 2\u20133-player units sharing \u2265300s on court together. Net = points for \u2212 against per 40.</div>'
     +'<table class="lvtable"><thead><tr><th>Lineup</th><th>Min</th><th>PF\u2013PA</th><th>Net /40</th></tr></thead><tbody>'+cmRows+'</tbody></table>'
@@ -1234,7 +1236,7 @@ function applyTheme(t){ const v=(t==="dark")?"dark":"light"; document.documentEl
 function goHome(){ state.team=null; state.query=""; state.filter=null; state.view="board"; const s=$("#search"); if(s) s.value=""; if(activeId) closeDrawer(); else render(); }
 
 
-let state = { team:null, query:"", filter:null, view:"board", venueFilter:null, statsTab:"basic", sortKey:"ppg", sortDir:"desc", chartX:"usg", chartY:"ts", chartColor:"pos", chartGroup:"all", chartMode:"scatter", lbStat:"ppg", lbN:15, lbDir:"desc", cmpA:null, cmpB:null, histStat:"ppg", histPlayer:null, posRel:false, matchA:null, matchB:null };
+let state = { team:null, query:"", filter:null, view:"board", venueFilter:null, statsTab:"basic", sortKey:"ppg", sortDir:"desc", chartX:"usg", chartY:"ts", chartColor:"pos", chartGroup:"all", chartMode:"scatter", lbStat:"ppg", lbN:15, lbDir:"desc", cmpA:null, cmpB:null, histStat:"ppg", histPlayer:null, posRel:false, matchA:null, matchB:null, navList:null, navLabel:"" };
 
 /* ---------- tournament averages & percentiles ---------- */
 const QUALIFIED = (D.players||[]).filter(p=>p.stats && p.stats.gp>0);
@@ -1772,7 +1774,6 @@ function histogramView(){
     else if(hp){ cap='<div class="histcap" style="color:var(--muted-2)">'+chEsc(hp.name)+' has no qualifying value for this stat.</div>'; } }
   return '<div class="chartctrls">'
     +'<label class="chf">Stat<select id="hStat">'+opts(state.histStat)+'</select></label>'
-    +'<label class="chf">Show<select id="hGrp">'+grpOpts+'</select></label>'
     +'<label class="chf">Highlight'+pCombo+'</label>'
     +'</div>'+histogramSVG()+cap
     +'<div class="chartnote">Each bar counts how many players fall in that range. Dashed line = tournament average; the clay line marks the highlighted player.</div>';
@@ -1865,6 +1866,12 @@ function brkCard(num){
 function brkCol(title, nums){
   return `<div class="brk-col"><div class="brk-colhead">${title}</div><div class="brk-cards">`+nums.map(brkCard).join('')+`</div></div>`;
 }
+function allGroupStandings(){
+  const gs=Object.keys(D.groups||{}).sort();
+  if(!gs.length) return "";
+  const cols=gs.map(g=>'<div class="gst-col"><div class="gst-h">Group '+g+'</div>'+(standings(g)||'<p class="muted-note">No standings yet.</p>')+'</div>').join('');
+  return '<div class="brk-sec"><div class="brk-sechd">Group phase standings</div><div class="gst-grid">'+cols+'</div></div>';
+}
 function bracketView(){
   if(!D.bracket) return `<p class="muted-note">Bracket data isn\'t loaded yet.</p>`;
   const champ=`<div class="brk-scroll">`
@@ -1887,10 +1894,12 @@ function bracketView(){
     +`<div class="brk-sec"><div class="brk-sechd">Championship</div>${champ}</div>`
     +`<div class="brk-sec"><div class="brk-sechd">5\u20138 Classification</div>${c58}</div>`
     +`<div class="brk-sec"><div class="brk-sechd">9\u201316 Classification</div>${c916}</div>`
+    +allGroupStandings()
     +`</div>`;
 }
 function bigBoardView(){
   const ids=bigBoardIds();
+  state.navList=ids.slice(); state.navLabel="Big board";
   if(!ids.length) return '<div class="empty"><div class="big">Your big board is empty</div>Give players a star rating in their profile (or bookmark them) and they\'ll appear here, ranked 5\u2605 first \u2014 then drag to fine-tune.</div>';
   const rows=ids.map((id,i)=>{ const p=D.players.find(x=>x.id===id); if(!p) return ""; const n=noteFor(id); const s=p.stats||{}; const t=teamById(p.teamId);
     const stars=n.rating?'<b class="bbstars">'+"\u2605".repeat(n.rating)+'</b>':'';
@@ -1934,7 +1943,6 @@ function scatterView(){
       +'<label class="chf">Y axis<select id="chY">'+opts(state.chartY)+'</select></label>'
       +'<label class="chf">X axis<select id="chX">'+opts(state.chartX)+'</select></label>'
       +'<label class="chf">Colour<select id="chC">'+colOpts+'</select></label>'
-      +'<label class="chf">Show<select id="chG">'+grpOpts+'</select></label>'
     +'</div>'
     +scatterSVG()+chLegend()
     +'<div class="chartnote">Dashed lines mark the tournament average on each axis - click any dot to open that player. Only players with at least one game are shown.</div>';
@@ -1948,7 +1956,6 @@ function leaderboardView(){
   const dirLab=state.lbDir==="asc"?"Low \u2192 High":"High \u2192 Low";
   return '<div class="chartctrls">'
     +'<label class="chf">Stat<select id="lbStat">'+opts(state.lbStat)+'</select></label>'
-    +'<label class="chf">Show<select id="lbGrp">'+grpOpts+'</select></label>'
     +'<label class="chf">Count<select id="lbN">'+nOpts+'</select></label>'
     +'<label class="chf">Order<button class="btn lbdir" id="lbDir">'+dirLab+'</button></label>'
     +'</div>'+leaderboardList();
@@ -1960,6 +1967,7 @@ function leaderboardList(){
   let rows=base.map(p=>({p,v:chVal(p,stat)})).filter(d=>d.v!=null);
   rows.sort((a,b)=> state.lbDir==="asc" ? a.v-b.v : b.v-a.v);
   rows=rows.slice(0,state.lbN);
+  state.navList=rows.map(r=>r.p.id); state.navLabel="Leaderboard";
   if(!rows.length) return '<div class="muted-note" style="padding:20px 4px">No qualified players for this stat and filter.</div>';
   const maxv=Math.max.apply(null,rows.map(r=>Math.abs(r.v)))||1;
   const out=rows.map((r,i)=>{ const t=teamById(r.p.teamId); const w=Math.max(3,Math.abs(r.v)/maxv*100);
@@ -2060,6 +2068,7 @@ function statsView(){
   const tab = STAT_COLS[state.statsTab] ? state.statsTab : "basic";
   const cols = STAT_COLS[tab];
   const list = sortedPlayers();
+  state.navList=list.map(p=>p.id); state.navLabel="Stats table";
   const ar=k=> state.sortKey===k ? `<span class="sortar">${state.sortDir==="asc"?"▲":"▼"}</span>` : "";
   const toggle = `<div class="statsubtabs">
     <button class="subtab${tab==="basic"?" on":""}" data-tab="basic">Per game</button>
@@ -2189,7 +2198,7 @@ function renderView(){
     board.querySelectorAll(".chartmodes .subtab").forEach(b=>{ b.onclick=()=>{ state.chartMode=b.dataset.cm; render(); }; });
     if(state.chartMode==="scatter"){
       const bind=(id,prop)=>{ const el=$(id); if(el) el.onchange=()=>{ state[prop]=el.value; render(); }; };
-      bind("#chY","chartY"); bind("#chX","chartX"); bind("#chC","chartColor"); bind("#chG","chartGroup");
+      bind("#chY","chartY"); bind("#chX","chartX"); bind("#chC","chartColor");
       const tip=$("#ctip");
       board.querySelectorAll(".cdot").forEach(c=>{
         c.onclick=()=>openPlayer(c.dataset.id);
@@ -2199,18 +2208,16 @@ function renderView(){
       });
     } else if(state.chartMode==="board"){
       const bind=(id,prop,num)=>{ const el=$(id); if(el) el.onchange=()=>{ state[prop]=num?+el.value:el.value; render(); }; };
-      bind("#lbStat","lbStat"); bind("#lbGrp","chartGroup"); bind("#lbN","lbN",true);
+      bind("#lbStat","lbStat"); bind("#lbN","lbN",true);
       const d=$("#lbDir"); if(d) d.onclick=()=>{ state.lbDir=state.lbDir==="asc"?"desc":"asc"; render(); };
       board.querySelectorAll(".lbrow").forEach(r=>{ r.onclick=()=>openPlayer(r.dataset.id); });
     } else if(state.chartMode==="compare"){
       wireCombo("cmpA",v=>{ if(v){ state.cmpA=v; render(); } });
       wireCombo("cmpB",v=>{ if(v){ state.cmpB=v; render(); } });
     } else if(state.chartMode==="lineups"){
-      const g=$("#lvGrp"); if(g) g.onchange=()=>{ state.chartGroup=g.value; render(); };
       board.querySelectorAll(".lvtable tr.clk").forEach(r=>{ r.onclick=()=>openPlayer(r.dataset.id); });
     } else if(state.chartMode==="hist"){
       const s=$("#hStat"); if(s) s.onchange=()=>{ state.histStat=s.value; render(); };
-      const g=$("#hGrp"); if(g) g.onchange=()=>{ state.chartGroup=g.value; render(); };
       wireCombo("hPlayer",v=>{ state.histPlayer=v||null; render(); });
     }
     return;
@@ -2321,6 +2328,8 @@ function renderView(){
   }
   if(state.team && !state.query){ board.insertAdjacentHTML('beforeend', teamPanel(state.team)); }
   if(isScoutFilter(state.filter)){ board.insertAdjacentHTML('beforeend', scoutBar(state.filter.type)); }
+  state.navList=list.map(p=>p.id);
+  state.navLabel = state.team ? (((teamById(state.team)||{}).name)||"Team")+" roster" : state.filter ? ("Filter: "+filterTitle(state.filter)) : state.query ? "Search results" : "All players";
   const grid = document.createElement("div"); grid.className="grid"; grid.id="rosterGrid";
   list.forEach(p=> grid.appendChild(playerCard(p)));
   board.appendChild(grid);
@@ -2585,7 +2594,14 @@ function shotChartBlock(p){
     <div class="shotfoot"><span>cold</span><span class="legramp"></span><span>hot · FG%</span><span class="shottot">${mk}/${att} FG · ${games} game${games>1?'s':''}</span></div>`;
 }
 
-function drawerStep(dir){ const p=D.players.find(x=>x.id===activeId); if(!p) return; const list=D.players.filter(x=>x.teamId===p.teamId).sort((a,b)=>((a.number==null?999:a.number)-(b.number==null?999:b.number))); const i=list.findIndex(x=>x.id===activeId); if(i<0) return; const j=i+dir; if(j<0||j>=list.length) return; openPlayer(list[j].id); }
+function navContext(){
+  const id=activeId;
+  if(state.navList&&state.navList.length&&state.navList.indexOf(id)>=0) return {list:state.navList.slice(), label:state.navLabel||"Players"};
+  const p=D.players.find(x=>x.id===id);
+  if(p){ const roster=D.players.filter(x=>x.teamId===p.teamId).sort((a,b)=>((a.number==null?999:a.number)-(b.number==null?999:b.number))).map(x=>x.id); const t=teamById(p.teamId); return {list:roster, label:(t?t.name:"Team")+" roster"}; }
+  return {list:id?[id]:[], label:""};
+}
+function drawerStep(dir){ const ctx=navContext(); const i=ctx.list.indexOf(activeId); if(i<0) return; const j=i+dir; if(j<0||j>=ctx.list.length) return; openPlayer(ctx.list[j]); }
 function jumpToNotes(){ const sc=document.querySelector("#drawer .dr-scroll"), nt=document.getElementById("drNotesSec"); if(!sc||!nt) return; const r1=nt.getBoundingClientRect(), r0=sc.getBoundingClientRect(); const top=sc.scrollTop+(r1.top-r0.top)-8; try{ sc.scrollTo({top:top,behavior:"smooth"}); }catch(e){ sc.scrollTop=top; } }
 function jumpToRoster(){ const g=document.getElementById("rosterGrid"); if(g){ try{ g.scrollIntoView({behavior:"smooth",block:"start"}); }catch(e){ g.scrollIntoView(); } } }
 function openPlayer(id){
@@ -2598,10 +2614,11 @@ function openPlayer(id){
   const _ar=metric(p,'astratio'),_ss=metric(p,'scshare'); const advAstr=_ar===-Infinity?'\u2013':_ar.toFixed(1)+'%', advPsh=_ss===-Infinity?'\u2013':_ss.toFixed(1)+'%';
   const advTs=_ts===-Infinity?'–':pct(_ts), advEfg=_efg===-Infinity?'–':pct(_efg), advUsg=_uv==null?'–':_uv.toFixed(1), advFtr=(s.fga>0)?(s.fta/s.fga).toFixed(2):'–';
   const PRk=(s&&s.gp)?(playerRanks()[p.id]||{}):{}; const RKB=o=>o?rankBadge(o.rank,o.n):'';
-  const _mates=D.players.filter(x=>x.teamId===p.teamId).sort((a,b)=>((a.number==null?999:a.number)-(b.number==null?999:b.number)));
-  const _mi=_mates.findIndex(x=>x.id===p.id);
-  const _prevId=_mi>0?_mates[_mi-1].id:'', _nextId=(_mi>=0&&_mi<_mates.length-1)?_mates[_mi+1].id:'';
-  const _mateOpts=_mates.map(x=>'<option value="'+x.id+'"'+(x.id===p.id?' selected':'')+'>'+(x.number!=null?'#'+x.number+' ':'')+chEsc(x.name)+'</option>').join('');
+  const _ctx=navContext(); const _list=_ctx.list; const _sameTeam=/roster$/.test(_ctx.label||"");
+  const _ci=_list.indexOf(p.id);
+  const _prevId=_ci>0?_list[_ci-1]:'', _nextId=(_ci>=0&&_ci<_list.length-1)?_list[_ci+1]:'';
+  const _navTitle=(_ctx.label||"")+(_ci>=0?(" \u00b7 "+(_ci+1)+"/"+_list.length):"");
+  const _mateOpts=_list.map(id=>{ const x=D.players.find(pp=>pp.id===id); if(!x) return ''; const tc=teamById(x.teamId); const lab=(x.number!=null&&_sameTeam?'#'+x.number+' ':'')+chEsc(x.name)+(_sameTeam?'':' \u00b7 '+chEsc(tc?tc.code:'')); return '<option value="'+id+'"'+(id===p.id?' selected':'')+'>'+lab+'</option>'; }).join('');
   const DL={ppg:'PTS',rpg:'REB',apg:'AST',spg:'STL',bpg:'BLK',mpg:'MIN',fgPct:'FG%',tpPct:'3P%',ftPct:'FT%',tpg:'TOV',ts:'TS%',efg:'eFG%',usg:'USG%',ftr:'FTr',orpg:'OREB',drpg:'DREB',rimfg:'Rim FG%',tovpct:'TOV%',astratio:'AST RATIO',scshare:'PTS SHARE'};
   const AC=(key,val)=>'<button type="button" class="a clk" onclick="openPlayerStatLb(\''+key+'\',\''+p.id+'\')" title="Tap for the full leaderboard"><div class="v">'+val+'</div><div class="k">'+DL[key]+'</div>'+RKB(PRk[key])+'</button>';
   const dr = $("#drawer");
@@ -2625,9 +2642,9 @@ function openPlayer(id){
       </div>
       <div class="dr-actions">
         <div class="dr-nav">
-          <button class="dr-navbtn" id="drPrev" ${_prevId?'':'disabled'} title="Previous player on this team" aria-label="Previous player">▲</button>
-          <select class="dr-mate" id="drMate" title="Jump to a teammate" aria-label="Jump to a teammate">${_mateOpts}</select>
-          <button class="dr-navbtn" id="drNext" ${_nextId?'':'disabled'} title="Next player on this team" aria-label="Next player">▼</button>
+          <button class="dr-navbtn" id="drPrev" ${_prevId?'':'disabled'} title="Previous · ${_navTitle}" aria-label="Previous player">▲</button>
+          <select class="dr-mate" id="drMate" title="Jump within: ${_navTitle}" aria-label="Jump to another player">${_mateOpts}</select>
+          <button class="dr-navbtn" id="drNext" ${_nextId?'':'disabled'} title="Next · ${_navTitle}" aria-label="Next player">▼</button>
         </div>
         <button class="dr-act ${n.watch?'on':''}" id="drWatch" title="Add to your watchlist"><svg viewBox="0 0 24 24" fill="${n.watch?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg><span>${n.watch?'On watchlist':'Watchlist'}</span></button>
         <button class="dr-act" id="drNotes" title="Jump to your scout notes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v12H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg><span>Notes</span></button>
